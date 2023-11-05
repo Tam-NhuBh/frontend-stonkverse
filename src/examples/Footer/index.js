@@ -5,6 +5,12 @@ import PropTypes from "prop-types";
 import Link from "@mui/material/Link";
 import Icon from "@mui/material/Icon";
 
+// @mui icons
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import InstagramIcon from "@mui/icons-material/Instagram";
+
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
@@ -12,17 +18,20 @@ import SoftTypography from "components/SoftTypography";
 // Soft UI Dashboard React base styles
 import typography from "assets/theme/base/typography";
 
-function Footer({ company, links }) {
-  const { href, name } = company;
+function Footer({links }) {
   const { size } = typography;
 
   const renderLinks = () =>
     links.map((link) => (
       <SoftBox key={link.name} component="li" px={2} lineHeight={1}>
         <Link href={link.href} target="_blank">
-          <SoftTypography variant="button" fontWeight="regular" color="text">
+          <SoftTypography variant="button" fontWeight="regular" color="black">
             {link.name}
           </SoftTypography>
+
+          <Icon color="inherit" fontSize="inherit">
+                {link.icon}
+          </Icon>
         </Link>
       </SoftBox>
     ));
@@ -44,21 +53,23 @@ function Footer({ company, links }) {
         color="text"
         fontSize={size.sm}
         px={1.5}
-      >
-        &copy; {new Date().getFullYear()}, made with
-        <SoftBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}>
+        >
+      
+        <SoftBox fontSize={size.md} color="black" mb={-0.5} mx={0.25}>
           <Icon color="inherit" fontSize="inherit">
             favorite
           </Icon>
         </SoftBox>
-        by
-        <Link href={href} target="_blank">
-          <SoftTypography variant="button" fontWeight="medium">
-            &nbsp;{name}&nbsp;
-          </SoftTypography>
-        </Link>
-        for a better web.
-      </SoftBox>
+        <SoftBox fontSize={size.defaultProps} color="black" mb={-0.5} mx={0.25}>
+            Welcome to become a member of our site. Hope you have a great experience
+         </SoftBox>
+          <SoftBox fontSize={size.md} color="black" mb={-0.5} mx={0.25}>
+            <Icon color="inherit" fontSize="inherit">
+              favorite
+            </Icon>
+          </SoftBox>
+        </SoftBox>
+
       <SoftBox
         component="ul"
         sx={({ breakpoints }) => ({
@@ -75,27 +86,30 @@ function Footer({ company, links }) {
             mt: 0,
           },
         })}
-      >
+        >
         {renderLinks()}
       </SoftBox>
+
+      
     </SoftBox>
   );
 }
 
 // Setting default values for the props of Footer
 Footer.defaultProps = {
-  company: { href: "https://www.creative-tim.com/", name: "Creative Tim" },
   links: [
-    { href: "https://www.creative-tim.com/", name: "Creative Tim" },
-    { href: "https://www.creative-tim.com/presentation", name: "About Us" },
-    { href: "https://www.creative-tim.com/blog", name: "Blog" },
-    { href: "https://www.creative-tim.com/license", name: "License" },
+    { name: "Contact Us:"},
+    { href: "https://www.facebook.com/tam.nhubh/", icon: <FacebookIcon fontSize="small"/> },
+    { href: "https://github.com/namnothere/frontend-stonkverse", icon: <GitHubIcon fontSize="small"/> },
+    { href: "https://www.facebook.com/tam.nhubh/", icon: <TwitterIcon fontSize="small"/> },
+    { href: "https://www.instagram.com/into.tnhubh/", icon: <InstagramIcon fontSize="small"/> },
+
   ],
+
 };
 
 // Typechecking props for the Footer
 Footer.propTypes = {
-  company: PropTypes.objectOf(PropTypes.string),
   links: PropTypes.arrayOf(PropTypes.object),
 };
 
