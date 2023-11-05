@@ -35,7 +35,14 @@ function SignIn() {
     'password': ''
   });
 
-  const { user, setUser } = useAuth();
+  const {
+    authUser,
+    setAuthUser,
+    isLoggedIn,
+    setIsLoggedIn,
+  } = useAuth();
+
+
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   const handleFormData = (e) => {
@@ -50,6 +57,7 @@ function SignIn() {
     AuthApi.Login(formData)
       .then((response) => {
         if (response.data) {
+          setIsLoggedIn(true);
           return setProfile(response.data);
         } else {
           setError(response.data.message);
@@ -68,11 +76,13 @@ function SignIn() {
   };
 
   const setProfile = (response) => {
-    let user = { ...response.data.user };
-    user.token = response.data.token;
-    user = JSON.stringify(user);
-    setUser(user);
-    localStorage.setItem("user", user);
+    let userData = { ...response.data.user };
+    userData.token = response.data.token;
+    userData = JSON.stringify(userData);
+    
+    setAuthUser({ ...response.data.user });
+    localStorage.setItem("user", userData);
+
     return navigate("/dashboard");
   };
 
@@ -108,7 +118,7 @@ function SignIn() {
   }, []);
 
   return (
-    user && user.token ? (
+    authUser && authUser.token ? (
       <div>
         <h3 style={{ textAlign: "center" }}>You are already signed in.</h3>
         <SoftBox mt={4} mb={1}>
@@ -141,7 +151,6 @@ function SignIn() {
           Username
           </SoftTypography>
         </SoftBox>
-        {/* <SoftInput type="username" name="username" value={formData?.email} onChange={handleFormData} /> */}
         <SoftInput type="username" name="username" value={formData?.username} onChange={handleFormData} placeholder="username" />
       </SoftBox>
       <SoftBox mb={2}>
@@ -180,7 +189,7 @@ function SignIn() {
             transition: ".2s all",
           }}
         >
-          {error}
+          {String(error)}
         </h6>
       </SoftBox>
 

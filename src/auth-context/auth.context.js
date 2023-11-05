@@ -1,22 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
-const AuthContext = React.createContext(" ");
+const AuthContext = React.createContext({});
 
-export const AuthProvider = ({ userData, children }) => {
+export const AuthProvider = (props) => {
   try {
-    const initialUser = typeof userData === "string" ? JSON.parse(userData) : userData;
-    let [user, setUser] = React.useState(initialUser);
-    // user = typeof user === "string" ? JSON.parse(user) : user;
-    return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>;
+    const [authUser, setAuthUser] = React.useState(null);
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+    // useEffect(() => {
+    //   const subscribe = AuthService.subscribe(user => {
+    //     if (user) {
+    //       setAuthUser(user);
+    //       setIsLoggedIn(true);
+    //     }
+    //     else {
+    //       setAuthUser(null);
+    //       setIsLoggedIn(false);
+    //     }
+    //   })
+    //   return subscribe;
+    // }, [])
+
+    const value = {
+      authUser,
+      setAuthUser,
+      isLoggedIn,
+      setIsLoggedIn,
+    }
+    return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
   } catch (error) {
-    throw new Error(error);
+    throw new Error("Failed to parse user data\n" + error);
   }
 };
 
 AuthProvider.propTypes = {
   userData: PropTypes.any,
   children: PropTypes.any,
+  props: PropTypes.any,
 };
 
 export const useAuth = () => React.useContext(AuthContext);

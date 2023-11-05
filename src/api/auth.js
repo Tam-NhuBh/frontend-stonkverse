@@ -12,7 +12,6 @@ class AuthApi {
         },
         data : data
       };
-      
     return axios.request(config);
   };
 
