@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
@@ -21,12 +21,106 @@ import Separator from "layouts/authentication/components/Separator";
 // Images
 import curved6 from "assets/images/curved-images/curved14.jpg";
 
+
+// Auth
+import AuthApi from "../../../api/auth";
+import { useAuth } from "../../../auth-context/auth.context";
+import { API_SERVER } from "../../../config/constants";
+
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(true);
+  const [error, setError] = useState("");
+
+  const [formData, setFormData] = useState({
+    'username': '',
+    'password': ''
+  });
+
+  const { setUser } = useAuth();
+  const { user } = useAuth();
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
+  const handleFormData = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const submitFormData = (e) => {
+    e.preventDefault();
+    AuthApi.Login(formData)
+      .then((response) => {
+        if (response.data.success) {
+          return setProfile(response);
+        } else {
+          setError(response.data.msg);
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          return setError(error.response.data.msg);
+        }
+        return setError("There has been an error.");
+      });
+  };
+
+  const handleRedirect = () => {
+    return navigate("/dashboard");
+  };
+
+  const setProfile = (response) => {
+    let user = { ...response.data.user };
+    user.token = response.data.token;
+    user = JSON.stringify(user);
+    setUser(user);
+    localStorage.setItem("user", user);
+    return navigate("/dashboard");
+  };
+
+  useEffect(() => {
+    const url = window.location.href;
+    const hasCode = url.includes("?code=");
+
+    // If Github API returns the code parameter
+    if (hasCode) {
+      const newUrl = url.split("?code=");
+      window.history.pushState({}, null, newUrl[0]);
+      setIsLoading(true);
+
+      const requestData = {
+        code: newUrl[1],
+      };
+
+      AuthApi.Authorize(requestData.code)
+        .then(({ data }) => {
+          if (data.user) {
+            setUser(JSON.stringify(data.user));
+            localStorage.setItem("user", JSON.stringify(data.user));
+            handleRedirect();
+          } else {
+            setError("no user returned");
+          }
+        })
+        .catch((error) => {
+          setError(error.message);
+        })
+        .finally(() => setIsLoading(false));
+    }
+  }, []);
+
   return (
+    user && user.token ? (
+      <div>
+        <h3 style={{ textAlign: "center" }}>You are already signed in.</h3>
+        <SoftBox mt={4} mb={1}>
+          <SoftButton variant="gradient" buttonColor="info" fullWidth onClick={handleRedirect}>
+            {`Let's go`}
+          </SoftButton>
+        </SoftBox>
+      </div>
+    ) : (
     <BasicLayout
       title="Welcome back"
       description="Enter your username and password to log in our site."
@@ -50,7 +144,8 @@ function SignIn() {
           Username
           </SoftTypography>
         </SoftBox>
-        <SoftInput type="username" placeholder="Username" />
+        {/* <SoftInput type="username" name="username" value={formData?.email} onChange={handleFormData} /> */}
+        <SoftInput type="username" name="username" value={formData?.username} onChange={handleFormData} placeholder="username" />
       </SoftBox>
       <SoftBox mb={2}>
         <SoftBox mb={0} ml={0.5}>
@@ -58,7 +153,13 @@ function SignIn() {
             Password
           </SoftTypography>
         </SoftBox>
-        <SoftInput type="password" placeholder="Password" />
+        <SoftInput
+          type="password"
+          name="password"
+          onChange={handleFormData}
+          placeholder="Password"
+          value={formData?.password}
+        />
       </SoftBox>
       <SoftBox display="flex" alignItems="center">
         <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -71,8 +172,23 @@ function SignIn() {
           &nbsp;&nbsp;Remember me
         </SoftTypography>
       </SoftBox>
+
+      <SoftBox mt={2} mb={2} textAlign="center">
+        <h6
+          style={{
+            fontSize: ".8em",
+            color: "red",
+            textAlign: "center",
+            fontWeight: 400,
+            transition: ".2s all",
+          }}
+        >
+          {error}
+        </h6>
+      </SoftBox>
+
       <SoftBox mt={3} mb={1}>
-        <SoftButton variant="gradient" color="info" fullWidth>
+        <SoftButton variant="gradient" color="info" fullWidth onClick={submitFormData}>
           sign in
         </SoftButton>
       </SoftBox>
@@ -95,7 +211,7 @@ function SignIn() {
       </SoftBox>
     </Card>
     </BasicLayout>
-  );
+  ));
 }
 
 export default SignIn;
