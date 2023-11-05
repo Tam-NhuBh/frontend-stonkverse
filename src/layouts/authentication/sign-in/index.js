@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -21,13 +21,12 @@ import Separator from "layouts/authentication/components/Separator";
 // Images
 import curved6 from "assets/images/curved-images/curved14.jpg";
 
-
 // Auth
 import AuthApi from "../../../api/auth";
 import { useAuth } from "../../../auth-context/auth.context";
-import { API_SERVER } from "../../../config/constants";
 
 function SignIn() {
+  const navigate = useNavigate();
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState("");
 
@@ -36,9 +35,7 @@ function SignIn() {
     'password': ''
   });
 
-  const { setUser } = useAuth();
-  const { user } = useAuth();
-
+  const { user, setUser } = useAuth();
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   const handleFormData = (e) => {
@@ -52,17 +49,17 @@ function SignIn() {
     e.preventDefault();
     AuthApi.Login(formData)
       .then((response) => {
-        if (response.data.success) {
-          return setProfile(response);
+        if (response.data) {
+          return setProfile(response.data);
         } else {
-          setError(response.data.msg);
+          setError(response.data.message);
         }
       })
       .catch((error) => {
         if (error.response) {
-          return setError(error.response.data.msg);
+          return setError(error.response.data.message);
         }
-        return setError("There has been an error.");
+        return setError(error);
       });
   };
 

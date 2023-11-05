@@ -3,13 +3,6 @@ import { API_SERVER } from "../config/constants";
 
 class AuthApi {
   static Login = (data) => {
-    // return axios.post(`${API_SERVER}/auth/login`, data); // https://backend-stonkverse.vercel.app/api/v1/auth/login
-
-    let data1 = JSON.stringify({
-        "username": "admin",
-        "password": "123456a@"
-      });
-
     let config = {
         method: 'post',
         maxBodyLength: Infinity,
@@ -17,11 +10,10 @@ class AuthApi {
         headers: { 
           'Content-Type': 'application/json', 
         },
-        data : data1
+        data : data
       };
       
-      return axios.request(config);
-
+    return axios.request(config);
   };
 
   static Register = (data) => {
