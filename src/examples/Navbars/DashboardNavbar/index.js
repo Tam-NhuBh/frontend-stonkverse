@@ -43,12 +43,20 @@ import {
 import team2 from "assets/images/team-2.jpg";
 import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
 
+//API
+import { useAuth } from "../../../auth-context/auth.context";
+import { useNavigate } from "react-router-dom";
+
+
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useSoftUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
+  //check
+  const { isLoggedIn, authUser, setIsLoggedIn, setAuthUser } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Setting the navbar type
@@ -80,6 +88,19 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
+
+  //check 
+  const handleLogout = () => {
+    // Thực hiện các bước cần thiết để đăng xuất người dùng, ví dụ: xóa token, thông tin người dùng từ localStorage
+    localStorage.removeItem("user");
+    
+    // Cập nhật trạng thái đăng nhập và thông tin người dùng
+    setIsLoggedIn(false);
+    setAuthUser(null);
+
+    // Chuyển hướng đến trang /login
+    navigate("/authentication/sign-in");
+  };
 
   // Render the notifications menu
   const renderMenu = () => (
@@ -140,25 +161,41 @@ function DashboardNavbar({ absolute, light, isMini }) {
             </SoftBox>
             
             <SoftBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in">
-                <IconButton sx={navbarIconButton} size="small">
-                  <Icon
-                    sx={({ palette: { dark, white } }) => ({
-                      color: light ? white.main : dark.main,
-                    })}
-                  >
-                    account_circle
-                  </Icon>
+            {isLoggedIn ? (
+              // Hiển thị nút "Log Out" và tên người dùng khi đã đăng nhập
+              <>
+              <Link to="/profile" style={{ textDecoration: 'none' }}>
+
+                  <IconButton size="small" sx={navbarIconButton}>
+                    <Icon
+                      sx={({ palette: { dark, white } }) => ({
+                        color: light ? white.main : dark.main,
+                      })}
+                    >
+                      account_circle
+                    </Icon>
+                    <SoftTypography
+                      variant="button"
+                      fontWeight="medium"
+                      color={light ? "white" : "dark"}
+                    >
+                      {authUser.username} {/* Hiển thị tên người dùng */}
+
+
+                    </SoftTypography>
+                  </IconButton>
+                </Link>
+
                   <SoftTypography
-                    variant="button"
-                    fontWeight="medium"
-                    color={light ? "white" : "dark"}
-                  >
-                    Sign in
-                  </SoftTypography>
-                </IconButton>
-              </Link>
-              <IconButton
+                  variant="button"
+                  fontWeight="medium"
+                  color={light ? "white" : "dark"}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </SoftTypography>
+
+                <IconButton
                 size="small"
                 color="inherit"
                 sx={navbarMobileMenu}
@@ -176,6 +213,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon>settings</Icon>
               </IconButton>
+
               <IconButton
                 size="small"
                 color="inherit"
@@ -185,16 +223,44 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 variant="contained"
                 onClick={handleOpenMenu}
               >
-                <Icon className={light ? "text-white" : "text-dark"}>notifications</Icon>
+              <Icon className={light ? "text-white" : "text-dark"}>notifications</Icon>
               </IconButton>
               {renderMenu()}
-            </SoftBox>
-          </SoftBox>
-        )}
-      </Toolbar>
-    </AppBar>
-  );
-}
+
+
+              </>
+            ) : (
+              // Hiển thị nút "Sign In" và icon "account_circle" khi chưa đăng nhập
+              <>
+                <Link to="/authentication/sign-in">
+                  <IconButton size="small" sx={navbarIconButton}>
+                    <Icon
+                      sx={({ palette: { dark, white } }) => ({
+                        color: light ? white.main : dark.main,
+                      })}
+                    >
+                      account_circle
+                    </Icon>
+                    <SoftTypography
+                      variant="button"
+                      fontWeight="medium"
+                      color={light ? "white" : "dark"}
+                    >
+                      Sign in
+                    </SoftTypography>
+                  </IconButton>
+                </Link>
+
+ 
+                  </>
+                  )}
+                </SoftBox>
+              </SoftBox>
+            )}
+          </Toolbar>
+        </AppBar>
+      );
+    }
 
 // Setting default values for the props of DashboardNavbar
 DashboardNavbar.defaultProps = {

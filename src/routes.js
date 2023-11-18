@@ -14,6 +14,9 @@ import CreditCard from "examples/Icons/CreditCard";
 import SignUp from "layouts/authentication/sign-up";
 
 const routes = [
+
+  { type: "title" },
+
   {
     type: "collapse",
     name: "Dashboard",
@@ -52,10 +55,7 @@ const routes = [
     noCollapse: true,
   },
 
-  { type: "title", title: "Account Pages", key: "account-pages" },
   {
-    type: "collapse",
-    name: "Profile",
     key: "profile",
     route: "/profile",
     icon: <CustomerSupport size="12px" />,

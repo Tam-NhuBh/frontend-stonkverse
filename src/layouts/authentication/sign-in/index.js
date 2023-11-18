@@ -38,8 +38,8 @@ function SignIn() {
   const {
     authUser,
     setAuthUser,
-    isLoggedIn,
     setIsLoggedIn,
+
   } = useAuth();
 
 
@@ -52,12 +52,19 @@ function SignIn() {
     });
   };
 
+  // const handleLogout = () => {
+  //   // Thực hiện xử lý đăng xuất ở đây
+  //   setIsLoggedIn(false);
+  //   setAuthUser(null);
+  //   localStorage.removeItem("user");
+
   const submitFormData = (e) => {
     e.preventDefault();
     AuthApi.Login(formData)
       .then((response) => {
         if (response.data) {
           setIsLoggedIn(true);
+          setAuthUser(response.data.user);
           return setProfile(response.data);
         } else {
           setError(response.data.message);
@@ -122,11 +129,11 @@ function SignIn() {
       <div>
         <h3 style={{ textAlign: "center" }}>You are already signed in.</h3>
         <SoftBox mt={4} mb={1}>
-          <SoftButton variant="gradient" buttonColor="info" fullWidth onClick={handleRedirect}>
-            {`Let's go`}
-          </SoftButton>
-        </SoftBox>
-      </div>
+        <SoftButton variant="gradient" buttonColor="info" fullWidth onClick={handleLogout}>
+          Log Out
+        </SoftButton>
+      </SoftBox>
+    </div>
     ) : (
     <BasicLayout
       title="Welcome back"
