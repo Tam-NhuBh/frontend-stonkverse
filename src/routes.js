@@ -4,6 +4,7 @@ import Tables from "layouts/tables";
 import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
+import Payment from "layouts/payment/Payment";
 
 // Soft UI Dashboard React icons
 import Shop from "examples/Icons/Shop";
@@ -37,14 +38,22 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Payment",
-    key: "payment",
-    route: "/payment",
+    name: "Course",
+    key: "course",
+    route: "/course",
     icon: <CreditCard size="12px" />,
     component: <Billing />,
     noCollapse: true,
   },
-
+  {
+    type: "collapse",
+    name: "Payment",
+    key: "payment",
+    route: "/payment",
+    icon: <CreditCard size="12px" />,
+    component: <Payment />,
+    noCollapse: true,
+  },
   {
     type: "collapse",
     name: "Post",
