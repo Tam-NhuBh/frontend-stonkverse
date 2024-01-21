@@ -28,6 +28,22 @@ function Author({ image, name, email }) {
   );
 }
 
+// DeleteUser component
+function DeleteUser({ onClick }) {
+  return (
+    <SoftTypography
+      component="a"
+      href="#"
+      variant="caption"
+      color="error" // Use your preferred color for delete action
+      fontWeight="medium"
+      onClick={onClick}
+    >
+      Delete
+    </SoftTypography>
+  );
+}
+
 function Function({ job, org }) {
   return (
     <SoftBox display="flex" flexDirection="column">
@@ -41,13 +57,22 @@ function Function({ job, org }) {
   );
 }
 
-const authorsTableData = {
+const authorsUserData = {
   columns: [
     { name: "author", align: "left" },
     { name: "function", align: "left" },
     { name: "status", align: "center" },
     { name: "employed", align: "center" },
-    { name: "action", align: "center" },
+    {
+      name: "action", // New column for Delete user
+      align: "center",
+      // Custom render function for the DeleteUser component
+      render: (rowData) => <DeleteUser onClick={() => handleDeleteUser(rowData)} />,
+    },
+
+    { name: "role", align: "center" },
+
+
   ],
 
   rows: [
@@ -63,16 +88,9 @@ const authorsTableData = {
         </SoftTypography>
       ),
       action: (
-        <SoftTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="secondary"
-          fontWeight="medium"
-        >
-          Edit
-        </SoftTypography>
+        <DeleteUser onClick={() => handleDeleteUser(rowData)} />
       ),
+
     },
     {
       author: <Author image={team3} name="Alexa Liras" email="alexa@creative-tim.com" />,
@@ -86,15 +104,7 @@ const authorsTableData = {
         </SoftTypography>
       ),
       action: (
-        <SoftTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="secondary"
-          fontWeight="medium"
-        >
-          Edit
-        </SoftTypography>
+        <DeleteUser onClick={() => handleDeleteUser(rowData)} />
       ),
     },
     {
@@ -109,16 +119,9 @@ const authorsTableData = {
         </SoftTypography>
       ),
       action: (
-        <SoftTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="secondary"
-          fontWeight="medium"
-        >
-          Edit
-        </SoftTypography>
+        <DeleteUser onClick={() => handleDeleteUser(rowData)} />
       ),
+
     },
     {
       author: <Author image={team3} name="Michael Levi" email="michael@creative-tim.com" />,
@@ -132,16 +135,10 @@ const authorsTableData = {
         </SoftTypography>
       ),
       action: (
-        <SoftTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="secondary"
-          fontWeight="medium"
-        >
-          Edit
-        </SoftTypography>
+        <DeleteUser onClick={() => handleDeleteUser(rowData)} />
       ),
+
+
     },
     {
       author: <Author image={team2} name="Richard Gran" email="richard@creative-tim.com" />,
@@ -155,16 +152,10 @@ const authorsTableData = {
         </SoftTypography>
       ),
       action: (
-        <SoftTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="secondary"
-          fontWeight="medium"
-        >
-          Edit
-        </SoftTypography>
+        <DeleteUser onClick={() => handleDeleteUser(rowData)} />
       ),
+
+
     },
     {
       author: <Author image={team4} name="Miriam Eric" email="miriam@creative-tim.com" />,
@@ -178,18 +169,10 @@ const authorsTableData = {
         </SoftTypography>
       ),
       action: (
-        <SoftTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="secondary"
-          fontWeight="medium"
-        >
-          Edit
-        </SoftTypography>
+        <DeleteUser onClick={() => handleDeleteUser(rowData)} />
       ),
     },
   ],
 };
 
-export default authorsTableData;
+export default authorsUserData;
