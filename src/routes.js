@@ -1,10 +1,11 @@
 // Soft UI Dashboard React layouts
 import Dashboard from "layouts/dashboard";
 import Users from "layouts/users";
-import Billing from "layouts/billing";
+import Course from "layouts/course";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import Payment from "layouts/payment/Payment";
+import AddCourse from "layouts/addCoursePage/index";
 
 // Soft UI Dashboard React icons
 import Shop from "examples/Icons/Shop";
@@ -42,7 +43,13 @@ const routes = [
     key: "course",
     route: "/course",
     icon: <CreditCard size="12px" />,
-    component: <Billing />,
+    component: <Course />,
+    noCollapse: true,
+  },
+
+  {
+    route: "/addcourse",
+    component: <AddCourse />,
     noCollapse: true,
   },
   {
