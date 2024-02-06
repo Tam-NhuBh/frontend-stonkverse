@@ -84,6 +84,9 @@ function Payment() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Card>
+            
+   
       <SoftBox py={3}>
         <SoftBox mb={3}>
           <Grid container spacing={3}>
@@ -155,6 +158,7 @@ function Payment() {
           </Grid>
         </Grid>
       </SoftBox>
+      </Card>
       <Footer />
     </DashboardLayout>
   );

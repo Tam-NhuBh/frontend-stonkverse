@@ -1,12 +1,12 @@
 // Soft UI Dashboard React layouts
 import Dashboard from "layouts/dashboard";
 import Users from "layouts/users";
-import Billing from "layouts/billing";
+import Course from "layouts/course";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import Payment from "layouts/payment/Payment";
-
-// Soft UI Dashboard React icons
+import AddCourse from "layouts/addCoursePage/index";
+import Post from "layouts/post/Post";// Soft UI Dashboard React icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
 import SpaceShip from "examples/Icons/SpaceShip";
@@ -27,6 +27,7 @@ const routes = [
     component: <Dashboard />,
     noCollapse: true,
   },
+
   {
     type: "collapse",
     name: "Users",
@@ -36,15 +37,33 @@ const routes = [
     component: <Users />,
     noCollapse: true,
   },
+
   {
     type: "collapse",
     name: "Course",
     key: "course",
     route: "/course",
     icon: <CreditCard size="12px" />,
-    component: <Billing />,
+    component: <Course />,
     noCollapse: true,
   },
+
+  {
+    type: "collapse",
+    name: "Post",
+    key: "post",
+    route: "/post",
+    icon: <CreditCard size="12px" />,
+    component: <Post />,
+    noCollapse: true,
+  },
+
+  {
+    route: "/addcourse",
+    component: <AddCourse />,
+    noCollapse: true,
+  },
+  
   {
     type: "collapse",
     name: "Payment",
@@ -54,17 +73,7 @@ const routes = [
     component: <Payment />,
     noCollapse: true,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Post",
-  //   key: "post",
-  //   // route: "/tables",
-  //   icon: <Office size="12px" />,
-  //   component: <Tables />,
-  //   noCollapse: true,
-  // },
-
-  {
+ {
     key: "profile",
     route: "/profile",
     icon: <CustomerSupport size="12px" />,

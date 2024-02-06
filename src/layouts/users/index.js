@@ -3,7 +3,9 @@ import Switch from "@mui/material/Switch";
 import TablePagination from "@mui/material/TablePagination";
 import IconButton from "@mui/material/IconButton";
 import SoftInput from "components/SoftInput";
-
+import Divider from "@mui/material/Divider";
+import ExcelIcon from "@mui/icons-material/InsertDriveFile"; // Thay thế bằng biểu tượng Excel tương ứng
+import IconPdf from "@mui/icons-material/PictureAsPdf";
 import {
   // Các imports khác
   Menu,
@@ -11,9 +13,8 @@ import {
   Typography,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
-  Avatar,
+
 } from "@mui/material";
 import { GetApp as GetAppIcon, FilterList as FilterListIcon, ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
@@ -36,6 +37,7 @@ import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCar
 
 // Data
 import authorsTableData from "layouts/users/data/index";
+
 
 function Users() {
   const { columns, rows } = authorsTableData;
@@ -133,7 +135,6 @@ function Users() {
                       placeholder="Search users..."
                       icon={{ component: "search", direction: "left" }}
                     />  
-  
    
                     {/* Khung Export và Filter */}
                     <div>
@@ -151,20 +152,51 @@ function Users() {
                         onClose={handleExportClose}
                         >
                         <MenuItem>
-                          <Typography variant="body1" fontWeight="bold">
+                          <SoftTypography variant="body2" fontWeight="bold">
                             Options
-                          </Typography>
+                          </SoftTypography>
                         </MenuItem>
                           
+                          <List>
+                            <ListItem onClick={handleCopyClick}>
+                              <ListItemText
+                                sx={{ paddingLeft: "25px" }} // Số px bạn muốn lùi vào trong
+                              >
+                                <Typography variant="body2" sx={{ fontSize: 17, display: "flex", alignItems: "center" }}>
+                                  <FileCopyIcon sx={{ marginRight: 1 }} />
+                                  Copy
+                                </Typography>
+                              </ListItemText>
+                            </ListItem>
+                            
+                            <ListItem onClick={handlePrintClick}>
+                              <ListItemText
+                                sx={{ paddingLeft: "25px" }} // Số px bạn muốn lùi vào trong
+                              >
+                                <Typography variant="body2" sx={{ fontSize: 17, display: "flex", alignItems: "center" }}>
+                                  <PrintIcon sx={{ marginRight: 1 }} />
+                                  Print
+                                </Typography>
+                              </ListItemText>
+                            </ListItem>
+                          </List>
+
+                          <Divider variant="middle" sx={{ margin: '0' }} />
+                          <MenuItem>
+                            <SoftTypography variant="body2" fontWeight="bold">
+                              Download Options
+                            </SoftTypography>
+                          </MenuItem>                      
+                
                         <List>
                           <ListItem onClick={handleCopyClick}>
                             <ListItemText
                               sx={{ paddingLeft: "25px" }} // Số px bạn muốn lùi vào trong
                             >
-                              <SoftTypography variant="body2" sx={{ fontSize: 17, display: "flex", alignItems: "center" }}>
-                                <FileCopyIcon sx={{ marginRight: 1 }} />
-                                Copy
-                              </SoftTypography>
+                            <Typography variant="body2" sx={{ fontSize: 17, display: "flex", alignItems: "center" }}>
+                              <ExcelIcon sx={{ color: "#008000", marginRight: 1 }} /> {/* Thay thế bằng màu của Excel */}
+                                Excel
+                            </Typography>
                             </ListItemText>
                           </ListItem>
                           
@@ -172,34 +204,17 @@ function Users() {
                             <ListItemText
                               sx={{ paddingLeft: "25px" }} // Số px bạn muốn lùi vào trong
                             >
-                              <SoftTypography variant="body2" sx={{ fontSize: 17, display: "flex", alignItems: "center" }}>
-                                <PrintIcon sx={{ marginRight: 1 }} />
-                                Print
-                              </SoftTypography>
+                              <Typography variant="body2" sx={{ fontSize: 17, display: "flex", alignItems: "center" }}>
+                                <IconPdf sx={{ marginRight: 1, color: "#CC0000	" }} />
+                                PDF
+                              </Typography>
                             </ListItemText>
                           </ListItem>
                         </List>
                       </Menu>
-
-    
-                      <IconButton onClick={handleFilterClick}>
-                        <FilterListIcon />
-                        <SoftTypography variant="body2" sx={{ marginLeft: 1 }}>
-                          Filter
-                        </SoftTypography>
-                        <ArrowDropDownIcon />
-                      </IconButton>
-                      <Menu
-                        anchorEl={filterAnchorEl}
-                        open={isFilterMenuOpen}
-                        onClose={handleFilterClose}
-                      >
-                        {/* ... (Các mục menu của Filter) */}
-                      </Menu>
+        
                     </div>
                   </SoftBox>
-
-
 
                 <SoftBox
                   sx={{

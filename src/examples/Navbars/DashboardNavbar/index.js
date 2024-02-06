@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 // react-router components
 import { useLocation, Link } from "react-router-dom";
+import { styled } from "@mui/system";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -12,6 +13,8 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
@@ -149,7 +152,23 @@ function DashboardNavbar({ absolute, light, isMini }) {
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
         <SoftBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
-          <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
+          <IconButton
+            size="small"
+            color="inherit"
+            sx={{
+              marginRight: "auto",
+              marginLeft: 0,
+              padding: 1,
+           }}
+            onClick={handleMiniSidenav}
+            >
+            {miniSidenav ? (
+              <ArrowForwardIosIcon />
+            ) : (
+              <ArrowBackIosIcon />
+            )}
+          </IconButton>
+      
         </SoftBox>
         {isMini ? null : (
           <SoftBox sx={(theme) => navbarRow(theme, { isMini })}>
