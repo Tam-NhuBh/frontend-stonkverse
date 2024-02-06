@@ -47,8 +47,8 @@ export default function data() {
       { name: "id", align: "center" },
       { name: "image", align: "center"},
       { name: "title", align: "center" },
-      { name: "subtitle", align: "center" },
-      { name: "members", align: "center" },
+      { name: "author", align: "center" },
+      { name: "username", align: "center" },
       { name: "price", align: "center" },
       { name: "rating", align: "center" },
       { name: "", align: "center" },
@@ -76,20 +76,16 @@ export default function data() {
           </SoftTypography>
         ),
         
-        subtitle: (
+        author: (
           <SoftTypography variant="caption" color="text" fontWeight="medium">
-            Trainers In White
+            1
           </SoftTypography>
         ),
 
-        members: (
+        username: (
           <SoftBox display="flex" py={1}>
-            {avatars([
-              [team1, "Ryan Tompson"],
-              [team2, "Romina Hadid"],
-              [team3, "Alexander Smith"],
-              [team4, "Jessica Doe"],
-            ])}
+              Charlie Puth
+
           </SoftBox>
         ),
         price: (
@@ -124,18 +120,16 @@ export default function data() {
           </SoftTypography>
         ),
         
-        subtitle: (
+        author: (
           <SoftTypography variant="caption" color="text" fontWeight="medium">
-            Trainers In Blue
+            1
           </SoftTypography>
         ),
 
-        members: (
+        username: (
           <SoftBox display="flex" py={1}>
-            {avatars([
-              [team2, "Romina Hadid"],
-              [team4, "Jessica Doe"],
-            ])}
+              Charlie Puth
+
           </SoftBox>
         ),
         price: (
@@ -171,17 +165,14 @@ export default function data() {
           </SoftTypography>
         ),
         
-        subtitle: (
+        author: (
           <SoftTypography variant="caption" color="text" fontWeight="medium">
-            Trainers In White
+            1
           </SoftTypography>
         ),
-        members: (
+        username: (
           <SoftBox display="flex" py={1}>
-            {avatars([
-              [team1, "Ryan Tompson"],
-              [team3, "Alexander Smith"],
-            ])}
+              Charlie Puth
           </SoftBox>
         ),
         price: (
@@ -217,19 +208,15 @@ export default function data() {
           </SoftTypography>
         ),
         
-        subtitle: (
+        author: (
           <SoftTypography variant="caption" color="text" fontWeight="medium">
-            Trainers In Blue
+            2
           </SoftTypography>
         ),
-        members: (
+        username: (
           <SoftBox display="flex" py={1}>
-            {avatars([
-              [team4, "Jessica Doe"],
-              [team3, "Alexander Smith"],
-              [team2, "Romina Hadid"],
-              [team1, "Ryan Tompson"],
-            ])}
+              Kali
+
           </SoftBox>
         ),
         price: (
@@ -265,14 +252,14 @@ export default function data() {
           </SoftTypography>
         ),
         
-        subtitle: (
+        author: (
           <SoftTypography variant="caption" color="text" fontWeight="medium">
-            Trainers In White
+            2
           </SoftTypography>
         ),
-        members: (
+        username: (
           <SoftBox display="flex" py={1}>
-            {avatars([[team4, "Jessica Doe"]])}
+            Magie
           </SoftBox>
         ),
         price: (
@@ -308,17 +295,14 @@ export default function data() {
           </SoftTypography>
         ),
         
-        subtitle: (
+        author: (
           <SoftTypography variant="caption" color="text" fontWeight="medium">
-            Trainers In Blue
+            3
           </SoftTypography>
         ),
-        members: (
+        username: (
           <SoftBox display="flex" py={1}>
-            {avatars([
-              [team1, "Ryan Tompson"],
-              [team4, "Jessica Doe"],
-            ])}
+              Canxi
           </SoftBox>
         ),
         price: (

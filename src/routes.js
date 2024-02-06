@@ -6,8 +6,7 @@ import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import Payment from "layouts/payment/Payment";
 import AddCourse from "layouts/addCoursePage/index";
-
-// Soft UI Dashboard React icons
+import Post from "layouts/post/Post";// Soft UI Dashboard React icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
 import SpaceShip from "examples/Icons/SpaceShip";
@@ -28,6 +27,7 @@ const routes = [
     component: <Dashboard />,
     noCollapse: true,
   },
+
   {
     type: "collapse",
     name: "Users",
@@ -37,6 +37,7 @@ const routes = [
     component: <Users />,
     noCollapse: true,
   },
+
   {
     type: "collapse",
     name: "Course",
@@ -48,10 +49,21 @@ const routes = [
   },
 
   {
+    type: "collapse",
+    name: "Post",
+    key: "post",
+    route: "/post",
+    icon: <CreditCard size="12px" />,
+    component: <Post />,
+    noCollapse: true,
+  },
+
+  {
     route: "/addcourse",
     component: <AddCourse />,
     noCollapse: true,
   },
+  
   {
     type: "collapse",
     name: "Payment",
@@ -61,17 +73,7 @@ const routes = [
     component: <Payment />,
     noCollapse: true,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Post",
-  //   key: "post",
-  //   // route: "/tables",
-  //   icon: <Office size="12px" />,
-  //   component: <Tables />,
-  //   noCollapse: true,
-  // },
-
-  {
+ {
     key: "profile",
     route: "/profile",
     icon: <CustomerSupport size="12px" />,

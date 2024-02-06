@@ -9,14 +9,20 @@ import { FilterList as FilterListIcon, ArrowDropDown as ArrowDropDownIcon } from
 import { Link } from "react-router-dom";  // Import thư viện Link từ React Router
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit"; // Import Edit icon from MUI library
 
 import {
-  Menu,
   MenuItem,
   List,
   ListItem,
   ListItemText,
+   MenuList,
+  Paper,
+  Typography,
 } from "@mui/material";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import DeleteIcon from "@mui/icons-material/Delete"; // Import Delete icon from MUI library
+
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -56,8 +62,11 @@ function Course() {
     setActiveMoreIndex(activeMoreIndex === index ? null : index);
   };
 
-  const MoreClose = () => {
-    setActiveMoreIndex(null);
+  const handleCopyClick = () => {
+    // Xử lý khi người dùng click vào mục Copy
+    // Đặt mã xử lý ở đây
+    console.log("Copy clicked");
+    // Ví dụ: alert("Copy clicked");
   };
 
   const tags = ["VietNam", "US", "Chinese", "Canada"];
@@ -85,7 +94,7 @@ function Course() {
               <Link to="/addCourse">
               <Button
                 variant="contained"
-                sx={{ backgroundColor: '#02CBEC', color: 'white', '&:hover': { backgroundColor: '#7cb342' } }}
+                sx={{ backgroundColor: '#02CBEC', color: 'white'}}
                 startIcon={<AddIcon style={{ color: 'white' }} />} // Đặt màu trắng cho biểu tượng
               >
                 <span style={{ textTransform: 'none', color: 'white' }}>Add Course</span>
@@ -172,35 +181,38 @@ function Course() {
                         </IconButton>
         
                         {activeMoreIndex === index && (
-                          <Menu
-                              anchorEl={document.body}
-                              open={activeMoreIndex !== null}
-                              onClose={MoreClose}
-                              anchorOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                              }}
-                              transformOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                              }}
-                              getContentAnchorEl={null}
-                            >
+                          <Paper>
+                            <MenuList>
                               <MenuItem>
                                 <SoftTypography variant="body2" fontWeight="bold">
                                   Options
                                 </SoftTypography>
                               </MenuItem>
+                        
+                              <ListItem onClick={handleCopyClick}>
+                                  <ListItemText
+                                    sx={{ paddingLeft: "25px" }} // Số px bạn muốn lùi vào trong
+                                    >
+                                    <Typography variant="body2" sx={{ fontSize: 17, display: "flex", alignItems: "center" }}>
+                                      <EditIcon sx={{ marginRight: 1 }} />
+                                      Edit
+                                    </Typography>
+                                  </ListItemText>
+                              </ListItem>
+                              
+                              <ListItem>
+                                  <ListItemText
+                                    sx={{ paddingLeft: "25px" }} // Số px bạn muốn lùi vào trong
+                                    >
+                                    <Typography variant="body2" sx={{ fontSize: 17, display: "flex", alignItems: "center" }}>
+                                      <DeleteIcon sx={{ marginRight: 1 }} />
+                                      Delete
+                                    </Typography>
+                                  </ListItemText>
+                              </ListItem>
 
-          
-                              <Divider variant="middle" sx={{ margin: '0' }} />
-          
-                              <MenuItem>
-                                <SoftTypography variant="body2" fontWeight="bold">
-                                  Download Options
-                                </SoftTypography>
-                              </MenuItem>
-                          </Menu>
+                            </MenuList>
+                          </Paper>
                         )}
                       </div>
                     ),
