@@ -183,8 +183,28 @@ function DashboardNavbar({ absolute, light, isMini }) {
             {isLoggedIn ? (
               // Hiển thị nút "Log Out" và tên người dùng khi đã đăng nhập
               <>
-              <Link to="/profile" style={{ textDecoration: 'none' }}>
 
+                <IconButton
+                  size="small"
+                  color="inherit"
+                  sx={navbarIconButton}
+                  onClick={handleConfiguratorOpen}
+                 >
+                  <Icon>settings</Icon>
+                </IconButton>
+
+                  <IconButton
+                    size="small"
+                    color="inherit"
+                    sx={navbarIconButton}
+                    aria-controls="notification-menu"
+                    aria-haspopup="true"
+                    variant="contained"
+                    onClick={handleOpenMenu}
+                  >
+                  <Icon className={light ? "text-white" : "text-dark"}>notifications</Icon>
+                </IconButton>
+              <Link to="/profile" style={{ textDecoration: 'none' }}>
                   <IconButton size="small" sx={navbarIconButton}>
                     <Icon
                       sx={({ palette: { dark, white } }) => ({
@@ -214,36 +234,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   Logout
                 </SoftTypography>
 
-                <IconButton
-                size="small"
-                color="inherit"
-                sx={navbarMobileMenu}
-                onClick={handleMiniSidenav}
-              >
-                <Icon className={light ? "text-white" : "text-dark"}>
-                  {miniSidenav ? "menu_open" : "menu"}
-                </Icon>
-              </IconButton>
-              <IconButton
-                size="small"
-                color="inherit"
-                sx={navbarIconButton}
-                onClick={handleConfiguratorOpen}
-              >
-                <Icon>settings</Icon>
-              </IconButton>
 
-              <IconButton
-                size="small"
-                color="inherit"
-                sx={navbarIconButton}
-                aria-controls="notification-menu"
-                aria-haspopup="true"
-                variant="contained"
-                onClick={handleOpenMenu}
-              >
-              <Icon className={light ? "text-white" : "text-dark"}>notifications</Icon>
-              </IconButton>
               {renderMenu()}
 
 

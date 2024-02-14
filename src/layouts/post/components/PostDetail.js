@@ -13,6 +13,10 @@ import AddIcon from "@mui/icons-material/Add";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday"; // Import the calendar icon
 import CircularProgress from "@mui/material/CircularProgress"; // Thêm CircularProgress
 
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
@@ -62,7 +66,9 @@ function PostDetail() {
   const [post, setPost] = useState(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [imageOptionsAnchor, setImageOptionsAnchor] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
@@ -82,11 +88,6 @@ function PostDetail() {
 
   const handleContentChange = (event) => {
     setContent(event.target.value);
-  };
-
-  const handleImageChange = (event) => {
-    const selectedImage = event.target.files[0];
-    setImage(URL.createObjectURL(selectedImage));
   };
 
   const handleDateChange = (date) => {
@@ -118,6 +119,31 @@ function PostDetail() {
     
     );  
   }
+
+  
+  const handleImageChange = (event) => {
+    const selectedImage = event.target.files[0];
+    setImage(URL.createObjectURL(selectedImage));
+    setAnchorEl(null); // Đóng menu sau khi đã chọn hình ảnh
+  };
+
+  const handleImageOptionsClick = (event) => {
+    setImageOptionsAnchor(event.currentTarget);
+  };
+
+  const handleImageOptionClick = (selectedImage) => {
+    setImage(selectedImage);
+    setImageOptionsAnchor(null);
+  };
+
+  const handleAddImageClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleAddImageClose = () => {
+    setAnchorEl(null);
+  };
+
 
   return (
     <DashboardLayout>
@@ -173,24 +199,75 @@ function PostDetail() {
                 </Grid>
                 <Grid item xs={12}>
                   <Grid container spacing={2}>
-                    <Grid item xs={3}>
-                      <SoftTypography variant="body1" color="text" fontWeight="medium">Image</SoftTypography>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <div style={{ border: '1px solid #ccc', padding: '10px', height: '300px', overflowY: 'auto' }}>
-                        {image && <img src={image} alt="Selected Image" />}
-                      </div>
-                    </Grid>
-                    <Grid item xs={5}>
-                      <div>
-                        <IconButton
-                          color="primary"
-                          aria-label="Add Image"
-                          onClick={handleImageChange}
-                        >
-                          <AddIcon />
-                        </IconButton>
-                      </div>
+                      <Grid item xs={3}>
+                        <SoftTypography variant="body1" color="text" fontWeight="medium">Image</SoftTypography>
+                      </Grid>
+
+                      <Grid item xs={4}>
+                          <div style={{ border: '1px solid #ccc', padding: '10px', height: '300px', overflowY: 'auto' }}>
+                            {/* Khung bao quanh với danh sách tùy chọn */}
+                            {imageOptionsAnchor && (
+                              <Menu
+                                id="image-options-menu"
+                                anchorEl={imageOptionsAnchor}
+                                keepMounted
+                                open={Boolean(imageOptionsAnchor)}
+                                onClose={() => setImageOptionsAnchor(null)}
+                              >
+                                <MenuItem onClick={() => handleImageOptionClick('Image 1')}>Image 1</MenuItem>
+                                <MenuItem onClick={() => handleImageOptionClick('Image 2')}>Image 2</MenuItem>
+                                <MenuItem onClick={() => handleImageOptionClick('Image 3')}>Image 3</MenuItem>
+                                </Menu>
+                              )}
+                              {/* Hiển thị hình ảnh được chọn */}
+                              
+                              {image && <img src={image} alt="Selected Image" />}
+                          </div>
+                       </Grid>
+
+                      <Grid item xs={4}>
+                        <div>
+                          <IconButton
+                            color="primary"
+                            aria-label="Add Image"
+                            aria-controls="simple-menu"
+                            aria-haspopup="true"
+                            onClick={handleAddImageClick}
+                            style={{ color: '#02CBEC' }} // Thay đổi màu xanh lam cho nút Add Image
+
+                          >
+                            <AddIcon />
+                          </IconButton>
+                          <Menu
+                            id="simple-menu"
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={handleAddImageClose}
+                          >
+                            <input
+                              accept="image/*"
+                              id="raised-button-file"
+                              type="file"
+                              style={{ display: 'none' }}
+                              onChange={handleImageChange}
+                            />
+                            <label htmlFor="raised-button-file">
+                              <MenuItem component="span">Upload Image</MenuItem>
+                            </label>
+                          </Menu>
+                          <IconButton
+                            color="primary"
+                            aria-label="Image Options"
+                            aria-controls="image-options-menu"
+                            aria-haspopup="true"
+                            onClick={handleImageOptionsClick}
+                            style={{ color: '#02CBEC' }} // Thay đổi màu xanh lam cho nút Add Image
+
+                          >
+                            <ExpandMoreIcon />
+                          </IconButton>
+                        </div>
                     </Grid>
                   </Grid>
                 </Grid>
