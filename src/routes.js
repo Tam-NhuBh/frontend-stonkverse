@@ -13,6 +13,9 @@ import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import SignUp from "layouts/authentication/sign-up";
+import PostDetail from "layouts/post/components/PostDetail";  
+import AddPost from "layouts/post/components/AddPost";    
+
 
 const routes = [
 
@@ -55,6 +58,18 @@ const routes = [
     route: "/post",
     icon: <CreditCard size="12px" />,
     component: <Post />,
+    noCollapse: true,
+  },
+
+  {
+    route: "/postdetail/:postId",
+    component: <PostDetail />,
+    noCollapse: true,
+  },
+
+  {
+    route: "/addpost",
+    component: <AddPost />,
     noCollapse: true,
   },
 

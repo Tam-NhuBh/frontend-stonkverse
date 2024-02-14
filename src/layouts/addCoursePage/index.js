@@ -119,6 +119,10 @@ function AddCourse() {
     setAnchorEl(null);
   };
 
+  const handleGoBack = () => {
+    // Điều hướng người dùng đến trang trước đó
+    window.history.back();
+  };
 
    return (
     <DashboardLayout>
@@ -336,7 +340,7 @@ function AddCourse() {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <Button variant="contained" color="secondary" style={{ textTransform: 'none', color: 'white' }}>Back</Button>
+                  <Button variant="contained" color="secondary" style={{ textTransform: 'none', color: 'white' }} onClick={handleGoBack}>Back</Button>
                   <Button variant="contained" color="primary" style={{ textTransform: 'none', color: 'white' }} sx={{ ml: 2 }}>Save</Button>
                 </Grid>
               </Grid>
