@@ -112,7 +112,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
   return (
     <SidenavRoot {...rest} variant="permanent" ownerState={{ transparentSidenav, miniSidenav }}>
-      <SoftBox pt={3} pb={1} px={4} textAlign="center">
+      <SoftBox pt={3} pb={1} px={4} textAlign="center" sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <SoftBox
           display={{ xs: "block", xl: "none" }}
           position="absolute"
@@ -126,7 +126,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
             <Icon sx={{ fontWeight: "bold" }}>close</Icon>
           </SoftTypography>
         </SoftBox>
-        <SoftBox component={NavLink} to="/" display="flex" alignItems="center">
+        <SoftBox component={NavLink} to="/" display="flex" alignItems="center" sx={{ marginBottom: 2 }}>
           {brand && <SoftBox component="img" src={brand} alt="LOGO" width="2rem" />}
           <SoftBox
             width={!brandName && "100%"}

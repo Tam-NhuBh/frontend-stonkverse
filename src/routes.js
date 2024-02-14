@@ -13,6 +13,10 @@ import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import SignUp from "layouts/authentication/sign-up";
+import PostDetail from "layouts/post/components/PostDetail";  
+import AddPost from "layouts/post/components/AddPost";    
+import PostAddIcon from "@mui/icons-material/PostAdd";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 
 const routes = [
 
@@ -23,7 +27,7 @@ const routes = [
     name: "Dashboard",
     key: "dashboard",
     route: "/dashboard",
-    icon: <Shop size="12px" />,
+    icon: <Shop size="16px" />,
     component: <Dashboard />,
     noCollapse: true,
   },
@@ -33,7 +37,7 @@ const routes = [
     name: "Users",
     key: "users",
     route: "/users",
-    icon: <Office size="12px" />,
+    icon: <Office size="16px" />,
     component: <Users />,
     noCollapse: true,
   },
@@ -43,7 +47,7 @@ const routes = [
     name: "Course",
     key: "course",
     route: "/course",
-    icon: <CreditCard size="12px" />,
+    icon: <MenuBookIcon size="16px" />,
     component: <Course />,
     noCollapse: true,
   },
@@ -53,8 +57,20 @@ const routes = [
     name: "Post",
     key: "post",
     route: "/post",
-    icon: <CreditCard size="12px" />,
+    icon: <PostAddIcon size="16px" />,
     component: <Post />,
+    noCollapse: true,
+  },
+
+  {
+    route: "/postdetail/:postId",
+    component: <PostDetail />,
+    noCollapse: true,
+  },
+
+  {
+    route: "/addpost",
+    component: <AddPost />,
     noCollapse: true,
   },
 
@@ -69,28 +85,28 @@ const routes = [
     name: "Payment",
     key: "payment",
     route: "/payment",
-    icon: <CreditCard size="12px" />,
+    icon: <CreditCard size="16px" />,
     component: <Payment />,
     noCollapse: true,
   },
  {
     key: "profile",
     route: "/profile",
-    icon: <CustomerSupport size="12px" />,
+    icon: <CustomerSupport size="16px" />,
     component: <Profile />,
     noCollapse: true,
   },
   {
     key: "sign-in",
     route: "/authentication/sign-in",
-    icon: <SpaceShip size="12px" />,
+    icon: <SpaceShip size="16px" />,
     component: <SignIn />,
     noCollapse: true,
   },
   {
     key: "sign-up",
     route: "/authentication/sign-up",
-    icon: <SpaceShip size="12px" />,
+    icon: <SpaceShip size="16px" />,
     component: <SignUp />,
     noCollapse: true,
   },

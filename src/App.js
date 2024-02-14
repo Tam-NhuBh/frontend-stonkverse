@@ -110,7 +110,7 @@ export default function App() {
               <Sidenav
                 color={sidenavColor}
                 brand={brand}
-                brandName="Stock Prediction"
+                brandName="Admin system"
                 routes={routes}
                 onMouseEnter={handleOnMouseEnter}
                 onMouseLeave={handleOnMouseLeave}
