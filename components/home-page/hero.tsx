@@ -2,14 +2,11 @@ import { FC } from "react";
 import NextImage from "../next-image";
 import { BiSearch } from "react-icons/bi";
 import Link from "next/link";
-import { getBannerLayoutData } from "@/lib/fetch-data";
 // import SearchBar from "./search-bar";
 
-interface Props {}
+interface Props { }
 
 const Hero: FC<Props> = async (props): Promise<JSX.Element> => {
-  const layoutData = await getBannerLayoutData();
-
   return (
     <div className="container grid grid-cols-2 gap-10 mt-28 max-[1000px]:grid-cols-1">
       {/* <div className="w-[80%] max-w-[500px] aspect-square relative mx-auto">
@@ -19,14 +16,10 @@ const Hero: FC<Props> = async (props): Promise<JSX.Element> => {
 
       <div className="w-[90%] mx-auto flex flex-col justify-center">
         <h1 className="capitalize dark:text-dark_text text-tertiary text-4xl leading-[60px] font-semibold">
-          {layoutData.title.substring(0, 9)}
-          <span className="text-gradient">
-            {layoutData.title.substring(9, 34)}
-          </span>
-          {layoutData.title.substring(34)}
+          The Only Stock <span className="text-gradient">E-Learning Platform</span>, The Key To Unlocking Financial Success
         </h1>
         <p className="dark:text-[#edfff4] text-[#000000ac] text-medium mt-6">
-          {layoutData.subTitle}
+          We have 90K+ Online course &amp; 500K+ Online registered student. Find your desired Courses from theme.
         </p>
 
         {/* <SearchBar /> */}

@@ -9,7 +9,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import Heading from "@/components/heading";
 import { pageConstants } from "@/constants";
-
+import ChatBotClient from "@/components/layout/chatbot-client";
 interface Props {}
 // SEO
 // export const generateMetadata = () => {
@@ -33,6 +33,9 @@ const page: NextPage<Props> = async () => {
       <Header />
       <div className="min-h-screen">
         <Hero />
+       <div className="chatbot-container">
+        <ChatBotClient/>
+        </div>
         <Courses />
         <Features />
         {/* <Reviews /> */}
