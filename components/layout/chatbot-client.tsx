@@ -8,10 +8,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { addMessage } from '@/slice/chatbot-client.slice';
 import { chatbotApi } from '@/store/chatbot/chatbot-client-api';
+import { BiSend } from 'react-icons/bi';
+import { Span } from 'next/dist/trace';
 
 const ChatBotClient: React.FC = () => {
     const dispatch = useDispatch();
     const messages = useSelector((state: RootState) => state.chatbotClient.messages);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [showChatIcon, setShowChatIcon] = useState(true);
     const chatboxRef = useRef<HTMLUListElement>(null);
@@ -19,8 +22,10 @@ const ChatBotClient: React.FC = () => {
     const inputInitHeight = chatInputRef.current?.scrollHeight || 0;
 
     const generateResponse = async (userMessage: string) => {
-        const botResponse = await chatbotApi(userMessage); // Call your chatbotApi function
+        setIsLoading(true);
+        const botResponse = await chatbotApi(userMessage);
         dispatch(addMessage(botResponse));
+        setIsLoading(false);
     };
 
     const handleChat = () => {
@@ -66,13 +71,13 @@ const ChatBotClient: React.FC = () => {
                 {!showChatIcon ? <FaTimes className="material-symbols-outlined" /> : null}
             </button>
             <div className="chatbot">
-                <header>
-                    <h2>Chatbot</h2>
-                    <span className="close-btn material-symbols-outlined" onClick={handleToggleChatbot}>close</span>
+                <header >
+                    <h2 className='chat-title' >Chatbot</h2>
+                    <span className="close-btn material-symbols-outlined" onClick={handleToggleChatbot}>Close</span>
                 </header>
                 <ul className="chatbox" ref={chatboxRef}>
                     {messages.map((message, index) => (
-                        <li key={index} className={`chat ${index % 2 === 0 ? 'incoming' : 'outgoing'}`}> 
+                        <li key={index} className={`chat ${index % 2 === 0 ? 'incoming' : 'outgoing'}`}>
                             {index % 2 === 0 && (
                                 <MdOutlineSmartToy
                                     className='material-symbols-outlined icon'
@@ -83,7 +88,13 @@ const ChatBotClient: React.FC = () => {
                             <p>{message}</p>
                         </li>
                     ))}
+                    {isLoading && (
+                        <li className="loading-icon">
+                            <div className="loading-spinner"></div> {/* Biểu tượng loading */}
+                        </li>
+                    )}
                 </ul>
+
                 <div className="chat-input">
                     <textarea
                         ref={chatInputRef}
@@ -92,7 +103,7 @@ const ChatBotClient: React.FC = () => {
                         onChange={handleInputChange}
                         required
                     />
-                    <span id="send-btn" className="material-symbols-rounded" onClick={handleChat}>send</span>
+                    <span id="send-btn" className="material-symbols-rounded hover:text-blue-300 cursor-pointer" onClick={handleChat}>Send</span>
                 </div>
             </div>
         </div>
