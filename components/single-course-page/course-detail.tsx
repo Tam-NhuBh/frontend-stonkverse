@@ -43,9 +43,9 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   const [publishableKey, setPublishableKey] = useState("");
   const [stripePromise, setStripePromise] = useState<any>(null);
   const [clientSecret, setClientSecret] = useState("");
+  const [route, setRoute] = useState("");
 
   const [openModal, setOpenModal] = useState(false);
-
   const isPurchased = user?.courses?.find((course: { courseId: string }) => {
     return course.courseId === courseId;
   });
@@ -68,6 +68,10 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   );
 
   const orderHandler = () => {
+    if(!user){
+      setOpenModal(false);
+      return;
+    }
     setOpenModal(true);
   };
 
@@ -342,11 +346,10 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
 
             {!isPurchased && (
               <>
-                <p className="underline text-center mt-4 mb-2">Apply coupon</p>
                 <div className="flex items-center h-[45px] w-full">
                   <input
                     type="text"
-                    placeholder="Enter Coupon"
+                    placeholder="Apply Coupon"
                     className="flex-1 bg-[#f5f5f5] px-4 h-full py-3 rounded-l-[5px] outline-none text-tertiary"
                   />
                   <BtnWithIcon
@@ -362,9 +365,9 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
               </>
             )}
 
-            <p className="text-slate-500 dark:text-dark_text text-sm mt-6 mb-4 text-center">
-              30-Day Money-Back Guarantee
-            </p>
+            {/* <p className="text-slate-500 dark:text-dark_text text-sm mt-6 mb-4 text-center">
+              29-Day Money-Back Guarantee
+            </p> */}
           </div>
         </div>
       </div>

@@ -31,7 +31,7 @@ const BtnWithLoading: FC<Props> = ({
       <span className="flex items-center justify-center gap-x-1">
         {isLoading ? (
           <>
-            <ImSpinner className="animate-spin" size={18} /> Processing
+            <ImSpinner className="animate-spin" size={18} />  Loading...
           </>
         ) : (
           <>{content}</>

@@ -1,17 +1,17 @@
 import axios from "axios";
 import { cache } from "react";
 
-export const getBannerLayoutData = async () => {
-  try {
-    const { data } = await axios(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Banner`
-    );
+// export const getPostData = async () => {
+//   try {
+//     const { data } = await axios(
+//       `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Banner`
+//     );
 
-    return data.layout.banner;
-  } catch (error) {
-    console.log(error);
-  }
-};
+//     return data.layout.banner;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const getAllCoursesData = async () => {
   try {
