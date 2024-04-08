@@ -1,10 +1,7 @@
 "use client";
 
 import { formatShortDate } from "@/lib/format-data";
-import {
-  useGetAllUsersQuery,
-  useUpdateUserRoleMutation,
-} from "@/store/user/user-api";
+import { useGetAllUsersQuery, useUpdateUserRoleMutation, useDeleteUserMutation } from "@/store/user/user-api";
 import { Box, Button, Modal } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { FC, useEffect, useState } from "react";
@@ -22,64 +19,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import BtnWithLoading from "@/components/btn-with-loading";
 import toast from "react-hot-toast";
-
-const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", flex: 0.5 },
-  {
-    field: "name",
-    headerName: "Name",
-    flex: 1,
-  },
-  {
-    field: "email",
-    headerName: "Email",
-    flex: 0.5,
-  },
-  {
-    field: "role",
-    headerName: "Role",
-    flex: 0.5,
-  },
-  {
-    field: "created_at",
-    headerName: "Joined At",
-    flex: 0.5,
-  },
-  {
-    field: " ",
-    headerName: "Email",
-    flex: 0.25,
-    renderCell: (params: any) => {
-      return (
-        <>
-          <a href={`mailto:${params.row.email}`} className="text-center">
-            <AiOutlineMail
-              size={20}
-              className="dark:text-dark_text text-slate-700"
-            />
-          </a>
-        </>
-      );
-    },
-  },
-  {
-    field: "  ",
-    headerName: "Delete",
-    flex: 0.25,
-    renderCell: (params: any) => {
-      return (
-        <>
-          <Button>
-            <AiOutlineDelete
-              size={20}
-              className="dark:text-dark_text text-slate-700 mr-4"
-            />
-          </Button>
-        </>
-      );
-    },
-  },
-];
 
 interface Props {}
 
@@ -103,6 +42,18 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
     { refetchOnMountOrArgChange: true }
   );
   const [active, setActive] = useState(false);
+  const [deleteUser] = useDeleteUserMutation();
+
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      await deleteUser(userId);
+      toast.success("User deleted successfully!");
+      refetch(); // Refetch data after successful deletion
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("An error occurred while deleting user. Please try again later.");
+    }
+  };
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -157,11 +108,54 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
     }
   }, [isSuccess, updateUserError]);
 
+  // Define columns
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", flex: 0.5 },
+    { field: "name", headerName: "Name", flex: 1 },
+    { field: "email", headerName: "Email", flex: 0.5 },
+    { field: "role", headerName: "Role", flex: 0.5 },
+    { field: "created_at", headerName: "Joined At", flex: 0.5 },
+    {
+      field: " ",
+      headerName: "Email",
+      flex: 0.25,
+      renderCell: (params: any) => {
+        return (
+          <>
+            <a href={`mailto:${params.row.email}`} className="text-center">
+              <AiOutlineMail
+                size={20}
+                className="dark:text-dark_text text-slate-700"
+              />
+            </a>
+          </>
+        );
+      },
+    },
+    {
+      field: "  ",
+      headerName: "Delete",
+      flex: 0.25,
+      renderCell: (params: any) => {
+        return (
+          <>
+            <Button onClick={() => handleDeleteUser(params.row.id)}>
+              <AiOutlineDelete
+                size={20}
+                className="dark:text-dark_text text-slate-700 mr-4"
+              />
+            </Button>
+          </>
+        );
+      },
+    },
+  ];
+
   return (
     <>
       <div className="mt-[100px] w-[90%] mx-auto">
         <BtnWithIcon
-          content="Manage Team Member"
+          content="Assign permissions to users"
           icon={AiOutlinePlusCircle}
           iconSize={20}
           customClasses="!bg-[#475569] dark:!bg-[#3e4396] ml-auto"
@@ -178,7 +172,7 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
           aria-describedby="modal-modal-description"
         >
           <Box className="modal-content-wrapper">
-            <h4 className="form-title">Manage Team Member</h4>
+            <h4 className="form-title">Assign permissions to users</h4>
             <div className="mt-4">
               <form onSubmit={handleSubmit(onSubmit)} className="pb-6">
                 <FormInput
@@ -211,3 +205,4 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
 };
 
 export default AllAdmins;
+

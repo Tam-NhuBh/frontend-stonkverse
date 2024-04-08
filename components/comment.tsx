@@ -164,8 +164,8 @@ const Comment: FC<Props> = ({
                   <CommentReply
                     key={reply._id.toString()}
                     avatar={reply.user?.avatar?.url}
-                    name={reply.user.name}
-                    content={reply.answer}
+                    name={reply.user?.name}
+                    content={reply?.answer}
                     createdAt={reply?.createdAt}
                   />
                 ))
@@ -173,8 +173,8 @@ const Comment: FC<Props> = ({
                   <CommentReply
                     key={reviewReply._id.toString()}
                     avatar={reviewReply.user?.avatar?.url}
-                    name={reviewReply.user.name}
-                    content={reviewReply.answer}
+                    name={reviewReply.user?.name}
+                    content={reviewReply?.answer}
                     createdAt={reviewReply?.createdAt}
                   />
                 ))}

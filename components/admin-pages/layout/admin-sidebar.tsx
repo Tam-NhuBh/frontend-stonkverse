@@ -273,7 +273,7 @@ const AdminSidebar: FC<Props> = ({
             </Typography>
 
             <Item
-              title="Manage Team"
+              title="Assign Admin Role"
               to="/admin/team"
               icon={<PeopleOutline />}
               selected={selected}

@@ -106,7 +106,7 @@ const CourseContent: FC<Props> = ({
         title: "",
         description: "",
         videoLength: 0,
-        videoSection: `Untitled Section ${activeSection}`,
+        videoSection: `${activeSection}`,
         links: [{ title: "", url: "" }],
       };
       setCourseContentData([
@@ -129,7 +129,7 @@ const CourseContent: FC<Props> = ({
       courseContentData[courseContentData.length - 1].links[0].title === "" ||
       courseContentData[courseContentData.length - 1].links[0].url === ""
     ) {
-      toast.error("Section can not be empty!");
+      toast.error("Please fill in all information!");
     } else {
       setActive(active + 1);
       submitCourseHandler();
