@@ -31,7 +31,7 @@ const Courses: FC<Props> = async (props): Promise<JSX.Element> => {
         </h2>
 
         <div className="main-grid">
-          {courses.map((course) => (
+          {courses?.map((course) => (
             <CourseCard key={course._id.toString()} course={course} />
           ))}
         </div>

@@ -30,7 +30,7 @@ export default function FAQ({ faqs }: Props) {
           </p>
         </h2>
         <div className="shadow-md">
-          {faqs.map((faq, index) => (
+          {faqs?.map((faq, index) => (
             <AccordionWrapper
               key={faq._id.toString()}
               expanded={expanded === `panel${index}`}

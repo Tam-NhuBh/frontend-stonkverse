@@ -23,17 +23,17 @@ const CourseLectureList: FC<Props> = ({
   setActiveVideo,
 }): JSX.Element => {
   const rawSections = new Set<string>(
-    courseData.map((item) => item.videoSection)
+    courseData?.map((item) => item.videoSection)
   );
 
-  const hasOrderCourseData = courseData.map((course, index) => ({
+  const hasOrderCourseData = courseData?.map((course, index) => ({
     ...course,
     order: index,
   }));
 
   const uniqueSections: string[] = [...rawSections];
 
-  const videosBySection = uniqueSections.map((section) => ({
+  const videosBySection = uniqueSections?.map((section) => ({
     section,
     videos: hasOrderCourseData.filter(
       (video) => video.videoSection === section

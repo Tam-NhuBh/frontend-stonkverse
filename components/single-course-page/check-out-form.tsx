@@ -54,7 +54,7 @@ const CheckOutForm: FC<Props> = ({ courseDetail }): JSX.Element => {
       );
 
       if (orderData) {
-        toast.success("Purchased Course Sucessfully!");
+        toast.success("Sucessfully!");
         setLoadUser(true);
         router.push(`/course-access/${courseDetail._id}`);
       }

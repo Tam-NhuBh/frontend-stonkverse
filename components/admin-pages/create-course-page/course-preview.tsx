@@ -190,7 +190,7 @@ const CoursePreview: FC<Props> = ({
               <span className="font-bold text-slate-500">No</span>
             </div>
 
-            <div className="course-info-item">
+            {/* <div className="course-info-item">
               <span className="flex gap-1 items-center">
                 <BiBarChartAlt2 className="dark:text-secondary -mt-1" />
                 Category
@@ -198,7 +198,7 @@ const CoursePreview: FC<Props> = ({
               <span className="font-bold text-slate-500">
                 {courseData.category}
               </span>
-            </div>
+            </div> */}
 
             <div className="course-info-item">
               <span className="flex gap-1 items-center">

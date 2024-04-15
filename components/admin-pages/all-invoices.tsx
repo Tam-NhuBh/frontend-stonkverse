@@ -23,28 +23,35 @@ const AllInvoices: FC<Props> = ({ isDashboard }): JSX.Element => {
 
   const { data: fetchedOrders, isLoading: ordersLoading } =
     useGetAllOrdersQuery({});
-
   useEffect(() => {
     if (fetchedOrders) {
-      const temp = fetchedOrders.orders.map((item: any) => {
+      let temp: any[] = fetchedOrders.orders.map((item: any) => {
+
+        if (!item || !item.userId || !item.courseId) return null;
+
         const user = usersData?.users?.find(
           (user: any) => user._id === item.userId
         );
-
+          
         const course = coursesData?.courses.find(
           (course: any) => course._id === item.courseId
         );
+
+        if (!course) return null;
+
+        const price = course?.price ? "$" + course?.price : "No course purchased"; // Kiểm tra và trả về giá trị hoặc chuỗi thích hợp
 
         return {
           id: item._id,
           userName: user?.name,
           userEmail: user?.email,
           title: course?.name,
-          price: "$" + course?.price,
+          price: price,
           created_at: item.createdAt,
         };
       });
 
+      temp = temp.filter((item) => item != null)
       setOrdersData(temp);
     }
   }, [data, usersData, coursesData]);
@@ -149,9 +156,9 @@ const AllInvoices: FC<Props> = ({ isDashboard }): JSX.Element => {
             },
           }}
         >
-          <h3 className="text-lg uppercase font-semibold">
+          <h5 className="text-lg uppercase font-semibold">
             Recent Transactions
-          </h3>
+          </h5>
           <DataGrid
             checkboxSelection={isDashboard ? false : true}
             rows={ordersData}

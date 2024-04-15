@@ -41,7 +41,7 @@ const initialCourseContentData = [
     videoUrl: "",
     title: "",
     description: "",
-    videoSection: "Untitled Section",
+    videoSection: "",
     videoLength: 0,
     links: [{ title: "", url: "" }],
     suggestion: "",

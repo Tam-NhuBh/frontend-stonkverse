@@ -32,7 +32,7 @@ interface Props {
 const courseInfoSchema = Yup.object({
   name: Yup.string().required("Please enter course's name"),
   description: Yup.string().required("Please enter course's description"),
-  category: Yup.string().required("Please choose course's category"),
+  // category: Yup.string().required("Please choose course's category"),
   price: Yup.string().required("Please enter course's price"),
   estimatedPrice: Yup.string().required(
     "Please enter course's estimated price"
@@ -51,27 +51,27 @@ const CourseInfomation: FC<Props> = ({
   courseInfo,
 }): JSX.Element => {
   const [dragging, setDragging] = useState(false);
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
 
   const courseInfoForm = useForm<CourseInfoValues>({
     defaultValues: initialCourseInfo,
     resolver: yupResolver(courseInfoSchema),
   });
 
-  const getAllCategories = async () => {
-    const { data } = await axios(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Categories`
-    );
-    const fetchCategories = data?.layout.categories.map(
-      (item: { title: string }) => item.title
-    );
+  // const getAllCategories = async () => {
+  //   const { data } = await axios(
+  //     `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Categories`
+  //   );
+  //   const fetchCategories = data?.layout.categories.map(
+  //     (item: { title: string }) => item.title
+  //   );
 
-    setCategories(fetchCategories);
-  };
+  //   setCategories(fetchCategories);
+  // };
 
-  useEffect(() => {
-    getAllCategories();
-  }, []);
+  // useEffect(() => {
+  //   getAllCategories();
+  // }, []);
 
   const { register, handleSubmit, formState, setValue, watch } = courseInfoForm;
   const { errors } = formState;
@@ -128,7 +128,7 @@ const CourseInfomation: FC<Props> = ({
   useEffect(() => {
     setValue("name", courseInfo.name);
     setValue("description", courseInfo.description);
-    setValue("category", courseInfo.category);
+    // setValue("category", courseInfo.category);
     setValue("price", courseInfo.price);
     setValue("estimatedPrice", courseInfo.estimatedPrice);
     setValue("level", courseInfo.level);
@@ -141,7 +141,7 @@ const CourseInfomation: FC<Props> = ({
     if (initialCourseInfo) {
       setValue("name", initialCourseInfo.name);
       setValue("description", initialCourseInfo.description);
-      setValue("category", initialCourseInfo.category);
+      // setValue("category", initialCourseInfo.category);
       setValue("price", initialCourseInfo.price);
       setValue("estimatedPrice", initialCourseInfo.estimatedPrice);
       setValue("level", initialCourseInfo.level);
@@ -176,7 +176,7 @@ const CourseInfomation: FC<Props> = ({
           <FormInput
             type="number"
             id="price"
-            label="Course Price"
+            label="Dicounted Price"
             register={register("price")}
             errorMsg={errors.price?.message}
             placeholder="29"
@@ -185,7 +185,7 @@ const CourseInfomation: FC<Props> = ({
           <FormInput
             type="number"
             id="estimatedPrice"
-            label="Estimated Price (Optional)"
+            label="Price"
             register={register("estimatedPrice")}
             errorMsg={errors.estimatedPrice?.message}
             placeholder="79"
@@ -200,16 +200,16 @@ const CourseInfomation: FC<Props> = ({
             errorMsg={errors.tags?.message}
             placeholder="MERN,Next 13,Socket.io,..."
           />
-          <FormSelect
+          {/* <FormSelect
             id="category"
             label="Category"
             options={categories}
             errorMsg={errors.category?.message}
             register={register("category")}
-          />
-        </div>
+          /> */}
 
-        <div className="grid grid-cols-2 gap-4">
+
+          {/* <div className="grid grid-cols-2 gap-4"> */}
           <FormInput
             id="level"
             label="Course Level"
@@ -217,50 +217,50 @@ const CourseInfomation: FC<Props> = ({
             errorMsg={errors.level?.message}
             placeholder="Beginner/Intermediate/Expert"
           />
-
-          <FormInput
-            id="demoUrl"
-            label="Demo URL"
-            register={register("demoUrl")}
-            errorMsg={errors.demoUrl?.message}
-            placeholder="79"
-          />
-        </div>
-
-        <label htmlFor="thumbnail" className="form-input-label">
-          Course Thumbnail
-        </label>
-        <label
-          htmlFor="thumbnail"
-          className={`w-full min-h-[250px] relative dark:border-white p-3 rounded-[5px] cursor-pointer border flex flex-col justify-center ${
-            dragging ? "bg-blue-500" : "bg-transparent"
-          }`}
-          onDragOver={dragOverHandler}
-          onDragLeave={dragLeaveHandler}
-          onDrop={dropHandler}
-        >
-          {thumbnail ? (
-            <ContainNextImage
-              src={thumbnail}
-              alt="Thumbnail"
-              className="py-3"
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <FormInput
+              id="demoUrl"
+              label="Demo URL"
+              register={register("demoUrl")}
+              errorMsg={errors.demoUrl?.message}
+              placeholder="URL"
             />
-          ) : (
-            <span className="text-center">
-              <MdUpload size={40} className="mx-auto mb-2" />
-              Drag and drop your thumbnail here or click to browse
-            </span>
-          )}
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          id="thumbnail"
-          hidden
-          onChange={fileChangeHandler}
-        />
+          </div>
 
-        <BottomNavigator onlyNext customClasses="mt-4" />
+          <label htmlFor="thumbnail" className="form-input-label">
+            Course Thumbnail
+          </label>
+          <label
+            htmlFor="thumbnail"
+            className={`w-full min-h-[250px] relative dark:border-white p-3 rounded-[5px] cursor-pointer border flex flex-col justify-center ${dragging ? "bg-blue-500" : "bg-transparent"
+              }`}
+            onDragOver={dragOverHandler}
+            onDragLeave={dragLeaveHandler}
+            onDrop={dropHandler}
+          >
+            {thumbnail ? (
+              <ContainNextImage
+                src={thumbnail}
+                alt="Thumbnail"
+                className="py-3"
+              />
+            ) : (
+              <span className="text-center">
+                <MdUpload size={40} className="mx-auto mb-2" />
+                Drag and drop your thumbnail here or click to browse
+              </span>
+            )}
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            id="thumbnail"
+            hidden
+            onChange={fileChangeHandler}
+          />
+
+          <BottomNavigator onlyNext customClasses="mt-4" />
       </form>
     </div>
   );

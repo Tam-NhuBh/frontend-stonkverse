@@ -102,7 +102,7 @@ const DashboardWidgets: FC<Props> = ({ open }): JSX.Element => {
       <div className="grid grid-cols-[70%,30%] gap-4">
         <UserAnalytics isDashboard />
 
-        <div>
+        {/* <div>
           <div className="dark:bg-[#111C43] rounded-sm shadow-md border dark:border-none">
             <div className="flex items-center p-5 justify-between">
               <div className="">
@@ -148,10 +148,10 @@ const DashboardWidgets: FC<Props> = ({ open }): JSX.Element => {
               </div>
             </div>
           </div>
-        </div>
-
-        <OrdersAnalytics isDashboard />
+        </div> */}
         <AllInvoices isDashboard />
+        <OrdersAnalytics isDashboard />
+
       </div>
     </div>
   );

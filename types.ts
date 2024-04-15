@@ -91,3 +91,10 @@ export interface ICourse {
   ratings?: number;
   purchased?: number;
 }
+// breadcumbs
+// Define the BreadCrumb type
+export interface IBreadCrumb {
+  name: string;
+  url: string;
+  // Add more properties if needed
+}

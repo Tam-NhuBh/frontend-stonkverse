@@ -318,13 +318,13 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
               </span>
             </div>
 
-            <div className="course-info-item">
+            {/* <div className="course-info-item">
               <span className="flex gap-1 items-center">
                 <MdOutlineSource className="text-secondary -mt-1" />
                 Resource
               </span>
               <span className="font-bold text-slate-500">1 Downloadable</span>
-            </div>
+            </div> */}
 
             <div className="course-info-item">
               <span className="flex gap-1 items-center">

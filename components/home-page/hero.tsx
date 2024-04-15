@@ -16,7 +16,7 @@ const Hero: FC<Props> = async (props): Promise<JSX.Element> => {
 
       <div className="w-[90%] mx-auto flex flex-col justify-center">
         <h1 className="capitalize dark:text-dark_text text-tertiary text-4xl leading-[60px] font-semibold">
-          The Only Stock <span className="text-gradient">E-Learning Platform</span>, The Key To Unlocking Financial Success
+          The Only <span className="text-gradient"> Stock E-Learning Platform</span>, The Key To Unlocking Financial Success
         </h1>
         <p className="dark:text-[#edfff4] text-[#000000ac] text-medium mt-6">
           We have 90K+ Online course &amp; 500K+ Online registered student. Find your desired Courses from theme.
