@@ -483,3 +483,51 @@ html {
   z-index: 1000; /* Giá trị cao để đảm bảo nó luôn nằm trên cùng */
 }
 
+/* breadcrumbs css*/
+
+/* .breadcrumbs-section {
+  @apply bg-[#f7f9fa] dark:bg-transparent pt-4 pb-4 mt-12;
+  text-transform: capitalize;
+}
+
+@layer components {
+  .breadcrumbs-section li:not(:last-child)::after {
+    content: '>';
+    padding: 0 8px;
+    color: #4d88c4;
+  }
+} */
+/* Tailwind CSS applied to the breadcrumb section */
+/* More specific selector */
+
+
+@layer components {
+  .breadcrumbs-section {
+    @apply flex flex-nowrap overflow-x-auto dark:bg-transparent pt-4 pb-4 mt-14;
+    display: flex;
+    position: relative;
+    text-transform: capitalize;
+    padding: 2px 15px;  
+  }
+  .breadcrumbs-section li {
+    @apply inline-block whitespace-nowrap py-2; 
+  }
+  .breadcrumbs-section li:not(:last-child)::after {
+    content: '>';
+    @apply mx-2 ;
+  }
+  
+  .parent-selector { 
+    overflow: visible;
+  }
+}
+
+.breadcrumbs-container {
+  background-color: #f8f9fa; 
+}
+
+.breadcrumbs-content {
+  width: 87%; /* Giá trị cố định */
+  margin: 0 auto; /* Căn giữa container */}
+
+

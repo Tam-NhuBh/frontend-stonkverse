@@ -17,8 +17,9 @@ import MobileSidebar from "./mobile-sidebar";
 import Logo from "./logo";
 import { useMount } from "@/hooks/useMount";
 import { useLoadUserQuery } from "@/store/api-slice";
+import BreadCrumbsComp from "./breadcrumbs";
 
-interface Props {}
+interface Props { }
 
 const Header: FC<Props> = (): JSX.Element | null => {
   const [active, setActive] = useState(false);
@@ -84,13 +85,13 @@ const Header: FC<Props> = (): JSX.Element | null => {
   return (
     <div className="w-full relative">
       <div
-        className={`${
-          active
-            ? "dark:bg-opacity-50 dark-bg dark:border-[#ffffff1c] shadow-xl"
-            : "dark:border-[#ffffff1c] dark:shadow"
-        } z-[80] fixed top-0 left-0 right-0 bg-white dark:bg-transparent transition duration-500 border-b`}
+        className={`${active
+          ? "dark:bg-opacity-50 dark-bg dark:border-[#ffffff1c] shadow-xl"
+          : "dark:border-[#ffffff1c] dark:shadow"
+          } z-[80] fixed top-0 left-0 right-0 bg-white dark:bg-transparent transition duration-500 border-b`}
       >
         <div className="container flex items-center justify-between">
+
           <Logo />
 
           <div className="flex items-center">
@@ -120,38 +121,46 @@ const Header: FC<Props> = (): JSX.Element | null => {
         />
       </div>
 
-      {openModal && (
-        <>
-          {route === "login" && (
-            <CustomModal
-              openModal={openModal}
-              setOpenModal={setOpenModal}
-              setRoute={setRoute}
-              Component={Login}
-              refetch={refetch}
-            />
-          )}
+      <div className="breadcrumbs-container">
+        <div className="breadcrumbs-content">
+          <BreadCrumbsComp />
+        </div>
+      </div>
 
-          {route === "signup" && (
-            <CustomModal
-              openModal={openModal}
-              setOpenModal={setOpenModal}
-              setRoute={setRoute}
-              Component={Signup}
-            />
-          )}
+      {
+        openModal && (
+          <>
+            {route === "login" && (
+              <CustomModal
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+                setRoute={setRoute}
+                Component={Login}
+                refetch={refetch}
+              />
+            )}
 
-          {route === "verification" && (
-            <CustomModal
-              openModal={openModal}
-              setOpenModal={setOpenModal}
-              setRoute={setRoute}
-              Component={Verification}
-            />
-          )}
-        </>
-      )}
-    </div>
+            {route === "signup" && (
+              <CustomModal
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+                setRoute={setRoute}
+                Component={Signup}
+              />
+            )}
+
+            {route === "verification" && (
+              <CustomModal
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+                setRoute={setRoute}
+                Component={Verification}
+              />
+            )}
+          </>
+        )
+      }
+    </div >
   );
 };
 

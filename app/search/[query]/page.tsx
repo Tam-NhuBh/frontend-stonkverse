@@ -41,7 +41,7 @@ const SearchResultPage: NextPage<Props> = ({ params }) => {
         <div className="container mt-28 mb-14">
           <h2 className="section-title">
             <p className="font-semibold text-tertiary dark:text-dark_text text-center mb-6 text-lg">
-              We found{" "}
+             
               <span className="text-gradient font-bold">
                 {courses?.length ? courses.length : 0} Courses
               </span>{" "}
