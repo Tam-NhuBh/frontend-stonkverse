@@ -340,7 +340,7 @@ html {
 
 /* Admin page */
 .admin-nav-title {
-  @apply !font-josefin !text-lg text-tertiary dark:text-[#ffffffc1] capitalize !font-normal border-b border-slate-600;
+  @apply !font-arial !text-lg text-tertiary dark:text-[#ffffffc1] capitalize !font-normal font-bold border-b border-slate-400;
 }
 
 /* Course page */
@@ -386,7 +386,7 @@ html {
 }
 
 .css-ahj2mt-MuiTypography-root {
-  @apply !font-josefin;
+  @apply !font-arial;
 }
 
 .css-1fx8m19 {
@@ -523,11 +523,17 @@ html {
 }
 
 .breadcrumbs-container {
-  background-color: #f8f9fa; 
+  display: flex; 
+  justify-content: center;
+  align-items: center; 
+  @apply bg-[#f7f9fa] dark:bg-transparent;
 }
 
 .breadcrumbs-content {
-  width: 87%; /* Giá trị cố định */
-  margin: 0 auto; /* Căn giữa container */}
+  margin: auto auto; 
+  width: 85%; 
+  max-width: 1500px;
+  min-width: 300px; 
+}
 
 

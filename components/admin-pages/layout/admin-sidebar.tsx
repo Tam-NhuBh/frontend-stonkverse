@@ -44,7 +44,7 @@ const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected }) => {
       onClick={() => setSelected(title)}
       icon={icon}
     >
-      <Typography className="!text-[15px] !font-josefin">{title}</Typography>
+      <Typography className="!text-[15px] !font-arial">{title}</Typography>
       <Link href={to} />
     </MenuItem>
   );
@@ -95,7 +95,7 @@ const AdminSidebar: FC<Props> = ({
           color: theme === "dark" ? "#7777ff !important" : "#3e4396 !important",
         },
         "& .pro-inner-item": {
-          padding: "5px 35px 5px 20px !important",
+          padding: "7px 37px 7px 22px !important",
           opacity: 1,
         },
         "& .pro-menu-item": {
@@ -111,7 +111,7 @@ const AdminSidebar: FC<Props> = ({
           top: 0,
           left: 0,
           height: "100vh",
-          width: isCollapsed ? "0%" : "16%",
+          width: isCollapsed ? "0%" : "15%",
         }}
       >
         <Menu iconShape="square">
@@ -126,9 +126,9 @@ const AdminSidebar: FC<Props> = ({
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <h5 className="text-[25px] dark:text-dark_text text-tertiary !font-josefin">
+                <div className="text-[20px] dark:text-dark_text text-tertiary font-bold !font-arial">
                   Stock E-Learning
-                </h5>
+                </div>
 
                 <IconButton
                   onClick={() => setIsCollapsed(!isCollapsed)}
@@ -151,14 +151,14 @@ const AdminSidebar: FC<Props> = ({
               <Box textAlign="center">
                 <Typography
                   variant="h4"
-                  className="!text-lg text-tertiary dark:text-[#ffffffc1] !font-josefin"
+                  className="!text-lg text-tertiary dark:text-[#ffffffc1] !font-arial"
                   sx={{ m: "10px 0 0 0" }}
                 >
                   {user?.name}
                 </Typography>
                 <Typography
                   variant="h6"
-                  className="!text-base text-tertiary dark:text-[#ffffffc1] capitalize !font-josefin flex items-center justify-center gap-1"
+                  className="!text-base text-tertiary dark:text-[#ffffffc1] capitalize !font-arial flex items-center justify-center gap-1"
                   sx={{ m: "10px 0 0 0" }}
                 >
                   <AdminPanelSettings /> {user?.role}
@@ -169,7 +169,7 @@ const AdminSidebar: FC<Props> = ({
 
           <Box>
             <Typography
-              variant="h5"
+              variant='h6'
               className="admin-nav-title"
               sx={{ m: "15px 20px 5px 25px" }}
             >
@@ -193,7 +193,7 @@ const AdminSidebar: FC<Props> = ({
             />
 
             <Typography
-              variant="h5"
+              variant='h6'
               className="admin-nav-title"
               sx={{ m: "15px 20px 5px 25px" }}
             >
@@ -209,7 +209,7 @@ const AdminSidebar: FC<Props> = ({
             />
 
             <Typography
-              variant="h5"
+              variant='h6'
               className="admin-nav-title"
               sx={{ m: "15px 20px 5px 25px" }}
             >
@@ -233,7 +233,7 @@ const AdminSidebar: FC<Props> = ({
             />
 
             <Typography
-              variant="h5"
+              variant='h6'
               className="admin-nav-title"
               sx={{ m: "15px 20px 5px 25px" }}
             >
@@ -265,7 +265,7 @@ const AdminSidebar: FC<Props> = ({
             /> */}
 
             <Typography
-              variant="h5"
+              variant='h6'
               className="admin-nav-title"
               sx={{ m: "15px 20px 5px 25px" }}
             >
