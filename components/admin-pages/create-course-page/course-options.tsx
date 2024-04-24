@@ -8,6 +8,7 @@ interface Props {
 
 const options = [
   "Course Information",
+  "Course Curriculumn",
   "Course Options",
   "Course Content",
   "Course Preview",
@@ -17,7 +18,7 @@ const CourseOptions: FC<Props> = ({ active, setActive }): JSX.Element => {
   return (
     <div>
       {options.map((option, index) => (
-        <div className="w-full flex py-5 items-center" key={index}>
+        <div className="w-full flex mt-8 items-center" key={index}>
           <div
             className={`w-[35px] h-[35px] rounded-full grid place-items-center ${
               active + 1 > index ? "bg-[#3e4396]" : "bg-[#384766]"

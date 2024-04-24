@@ -92,8 +92,7 @@ html {
 .primary-btn {
   background-image: linear-gradient(90deg, #4d88c4 2.34%, #0da5b5 100.78%);
   transition: background-image 0.5s ease-in;
-  @apply relative py-3 px-4 rounded-sm
-    text-dark_text font-bold;
+  @apply relative py-3 px-4 rounded-sm text-dark_text font-bold;
 }
 
 .primary-btn:hover::before {
@@ -108,7 +107,6 @@ html {
   background-image: linear-gradient(315deg, #098b99, #057fa8);
   @apply absolute content-[''] w-full h-full transition-opacity duration-500 ease-[ease-out] z-[2] opacity-0 left-0 top-0 rounded-[5px];
 }
-
 /* Form */
 .form-title {
   @apply text-[25px] text-slate-700 dark:text-dark_text font-medium text-center py-2;
@@ -340,7 +338,7 @@ html {
 
 /* Admin page */
 .admin-nav-title {
-  @apply !font-arial !text-lg text-tertiary dark:text-[#ffffffc1] capitalize !font-normal font-bold border-b border-slate-400;
+  @apply !font-poppins !text-lg text-tertiary dark:text-[#ffffffc1] capitalize !font-normal font-bold border-b border-slate-400;
 }
 
 /* Course page */
@@ -386,7 +384,7 @@ html {
 }
 
 .css-ahj2mt-MuiTypography-root {
-  @apply !font-arial;
+  @apply !font-poppins;
 }
 
 .css-1fx8m19 {

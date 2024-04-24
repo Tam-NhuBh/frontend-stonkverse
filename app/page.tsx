@@ -33,7 +33,6 @@ const page: NextPage<Props> = async () => {
         title="Stock E-Learning"
       />
       <Header />
-      {/* <BreadCrumbsComp /> */}
       <div className="min-h-screen">
         <Hero />
         <div className="chatbot-container">

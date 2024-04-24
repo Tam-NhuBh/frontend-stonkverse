@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        arial: ["var(--font-arial)"],
+        poppins: ["var(--font-poppins)"],
       },
       colors: {
         secondary: "#0da5b5",

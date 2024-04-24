@@ -153,7 +153,7 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
 
   return (
     <>
-      <div className="mt-[100px] w-[90%] mx-auto">
+      <div className="mt-8 w-[90%] mx-auto">
         <BtnWithIcon
           content="Assign permissions to users"
           icon={AiOutlinePlusCircle}

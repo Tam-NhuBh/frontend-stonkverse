@@ -22,7 +22,7 @@ const page: FC<Props> = async (props): Promise<JSX.Element> => {
       />
       <div className="min-h-screen">
         <Header />
-        <div className="container mt-28 mb-14">
+        <div className="container mt-8 mb-14">
           <div>
             {/* <h2 className="section-title">
               <p className="font-semibold text-tertiary dark:text-dark_text text-center mb-6 text-lg">

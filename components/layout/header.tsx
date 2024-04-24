@@ -121,8 +121,6 @@ const Header: FC<Props> = (): JSX.Element | null => {
         />
       </div>
 
-
-
       {
         openModal && (
           <>

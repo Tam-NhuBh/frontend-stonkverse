@@ -152,14 +152,14 @@ const CourseInfomation: FC<Props> = ({
   }, [initialCourseInfo]);
 
   return (
-    <div className="w-[80%] mx-auto mt-24 mb-12">
+    <div className="w-[80%] mx-auto mt-8 mb-12">
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           id="name"
           label="Course Name"
           register={register("name")}
           errorMsg={errors.name?.message}
-          placeholder="MERN stack LMS platform with Next13"
+          placeholder="Enter course's name"
         />
 
         <FormInput
@@ -169,7 +169,7 @@ const CourseInfomation: FC<Props> = ({
           errorMsg={errors.description?.message}
           textarea
           rows={10}
-          placeholder="Write something amazing"
+          placeholder="Write something"
         />
 
         <div className="grid grid-cols-2 gap-4">
@@ -198,7 +198,7 @@ const CourseInfomation: FC<Props> = ({
             label="Course Tags"
             register={register("tags")}
             errorMsg={errors.tags?.message}
-            placeholder="MERN,Next 13,Socket.io,..."
+            placeholder="Stock, Marketing..."
           />
           {/* <FormSelect
             id="category"

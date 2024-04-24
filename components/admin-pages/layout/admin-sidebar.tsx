@@ -44,7 +44,7 @@ const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected }) => {
       onClick={() => setSelected(title)}
       icon={icon}
     >
-      <Typography className="!text-[15px] !font-arial">{title}</Typography>
+      <Typography className="!text-[15px] !font-poppins">{title}</Typography>
       <Link href={to} />
     </MenuItem>
   );
@@ -126,7 +126,7 @@ const AdminSidebar: FC<Props> = ({
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <div className="text-[20px] dark:text-dark_text text-tertiary font-bold !font-arial">
+                <div className="text-[20px] dark:text-dark_text text-tertiary font-bold !font-poppins">
                   Stock E-Learning
                 </div>
 
@@ -151,14 +151,14 @@ const AdminSidebar: FC<Props> = ({
               <Box textAlign="center">
                 <Typography
                   variant="h4"
-                  className="!text-lg text-tertiary dark:text-[#ffffffc1] !font-arial"
+                  className="!text-lg text-tertiary dark:text-[#ffffffc1] !font-poppins"
                   sx={{ m: "10px 0 0 0" }}
                 >
                   {user?.name}
                 </Typography>
                 <Typography
                   variant="h6"
-                  className="!text-base text-tertiary dark:text-[#ffffffc1] capitalize !font-arial flex items-center justify-center gap-1"
+                  className="!text-base text-tertiary dark:text-[#ffffffc1] capitalize !font-poppins flex items-center justify-center gap-1"
                   sx={{ m: "10px 0 0 0" }}
                 >
                   <AdminPanelSettings /> {user?.role}

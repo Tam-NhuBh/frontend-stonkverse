@@ -8,7 +8,7 @@ interface Props { }
 
 const Hero: FC<Props> = async (props): Promise<JSX.Element> => {
   return (
-    <div className="container grid grid-cols-2 gap-10 mt-28 max-[1000px]:grid-cols-1">
+    <div className="container grid grid-cols-2 gap-10 mt-8 max-[1000px]:grid-cols-1">
       {/* <div className="w-[80%] max-w-[500px] aspect-square relative mx-auto">
         <NextImage src={layoutData.image.url} alt="Hero banner" priority />
         <div className="hero-animation w-full h-full absolute -z-10 rounded-full transition"></div>

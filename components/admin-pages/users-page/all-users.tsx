@@ -133,7 +133,7 @@ const AllUsers: FC<Props> = (props): JSX.Element => {
   }, [isSuccess, deleteUserError]);
 
   return (
-    <div className="mt-[100px] w-[90%] mx-auto ">
+    <div className="mt-8 w-[90%] mx-auto ">
       <DataTable rows={rows} columns={columns} isLoading={isLoading} />;
       {deleteModal && (
         <Modal

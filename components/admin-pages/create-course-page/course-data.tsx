@@ -137,7 +137,7 @@ const CourseData: FC<Props> = ({
 
   return (
     <form
-      className="w-[80%] mx-auto mt-24 my-12"
+      className="w-[80%] mx-auto mt-8 my-12"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Benefits */}

@@ -35,7 +35,7 @@ const CoursesAnalytics: FC<Props> = (props): JSX.Element => {
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <div className="min-h-screen mt-[100px]">
+        <div className="min-h-screen mt-8">
           <h1 className="text-center font-bold text-2xl mb-4">
             COURSES ANALYTICS
           </h1>

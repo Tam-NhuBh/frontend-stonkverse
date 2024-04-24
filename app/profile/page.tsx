@@ -24,7 +24,7 @@ const ProfilePage: NextPage<Props> = () => {
      />
       <Header />
       <div className="min-h-screen">
-        <div className="mt-28 container">
+        <div className="mt-8 container">
           <Profile />
         </div>
       </div>

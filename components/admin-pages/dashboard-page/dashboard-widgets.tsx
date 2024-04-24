@@ -98,7 +98,7 @@ const DashboardWidgets: FC<Props> = ({ open }): JSX.Element => {
   }, [isLoading, ordersLoading, data, ordersData]);
 
   return (
-    <div className="w-[90%] mx-auto mt-[100px] mb-12">
+    <div className="w-[90%] mx-auto mt-8 mb-12">
       <div className="grid grid-cols-[70%,30%] gap-4">
         <UserAnalytics isDashboard />
 

@@ -34,13 +34,15 @@ const SearchResultPage: NextPage<Props> = ({ params }) => {
   return (
     <>
       <Heading
-        title={`Resutls for ${query}`}
+        // title={`Resutls for ${query}`}
+        title={`Resutls for searching`}
+
       />
       <div className="min-h-screen">
         <Header />
-        <div className="container mt-28 mb-14">
+        <div className="container mt-8 mb-14">
           <h2 className="section-title">
-            <p className="font-semibold text-tertiary dark:text-dark_text text-center mb-6 text-lg">
+            <p className="font-semibold text-tertiary dark:text-dark_text text-left mb-6 text-lg">
              
               <span className="text-gradient font-bold">
                 {courses?.length ? courses.length : 0} Courses

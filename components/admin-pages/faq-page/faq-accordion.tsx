@@ -77,14 +77,19 @@ export default function FAQAccordion({
               id={`panel${{ index }}d-header`}
               className="relative"
             >
-              <div className="relative w-full flex items-center">
+              <div className="relative w-full flex justify-center items-center">
                 <input
                   type="text"
-                  className="w-full bg-transparent outline-none"
+                  className="w-full bg-transparent outline-none px-2"
                   {...register(`questions.${index}.question`)}
                 />
               </div>
-
+              <BtnWithIcon
+                customClasses="absolute -right-20 -top-[3px] !bg-red-important"
+                content="x"
+                iconSize={18}
+                onClick={() => remove(index)}
+              />
             </AccordionSummary>
             <AccordionDetails>
               <textarea
