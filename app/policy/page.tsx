@@ -9,7 +9,7 @@ const page: NextPage<Props> = () => {
   return (
     <>
       <Header />
-      <div className="container mt-28 mb-14">
+      <div className="container mt-8 mb-14">
         <PolicyAccordion />
       </div>
       <Footer />

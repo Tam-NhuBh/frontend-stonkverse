@@ -103,7 +103,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   const formattedReviews = [...courseDetail.reviews].reverse();
 
   return (
-    <div className="container my-28">
+    <div className="container my-8">
       <div className="w-full flex gap-16 max-[845px]:flex-col-reverse">
         <div className="w-[60%] max-[845px]:w-full">
           <h1 className="text-gradient text-2xl font-bold">

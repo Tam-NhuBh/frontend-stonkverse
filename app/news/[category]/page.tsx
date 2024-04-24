@@ -24,7 +24,7 @@ const page: NextPage<Props> = async ({ params }) => {
       />
       <div className="min-h-screen">
         <Header />
-        <div className="container mt-28 mb-14">
+        <div className="container mt-8 mb-14">
           <div>
             <h2 className="section-title">
               <p>

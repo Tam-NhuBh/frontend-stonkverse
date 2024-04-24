@@ -138,7 +138,7 @@ const CourseContent: FC<Props> = ({
 
   return (
     <>
-      <div className="w-[80%] mx-auto mt-24 pb-6 border shadow-md dark:border-slate-700">
+      <div className="w-[80%] mx-auto mt-8 pb-6 border shadow-md dark:border-slate-700">
         <form onSubmit={handleSubmit}>
           {courseContentData?.map((item: any, index) => {
             const showSectionInput =
@@ -152,7 +152,8 @@ const CourseContent: FC<Props> = ({
                     <div className="relative">
                       <input
                         type="text"
-                        className={`w-full cursor-pointer outline-slate-900 bg-slate-600 text-dark_text text-2xl py-3 pl-6`}
+                        readOnly 
+                        className={`w-full cursor-pointer outline-slate-900 bg-gradient-to-r from-[#098b99] to-[#057fa8] text-dark_text text-2xl py-3 pl-6`}
                         onChange={(e) => {
                           const updatedData = [...courseContentData];
                           updatedData[index].videoSection = e.target.value;

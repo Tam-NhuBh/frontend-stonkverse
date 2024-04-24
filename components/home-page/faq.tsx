@@ -7,6 +7,7 @@ import {
   AccordionSummary,
   AccordionWrapper,
 } from "../accordion-materials";
+import Heading from "../heading";
 
 interface Props {
   faqs: IFaq[];
@@ -19,7 +20,11 @@ export default function FAQ({ faqs }: Props) {
       setExpanded(newExpanded ? panel : false);
     };
   return (
-    <section className="my-14">
+    <>
+      <Heading
+        title="All FAQs"
+      />
+
       <div className="container ">
         <h2 className="section-title">
           <p>
@@ -53,6 +58,6 @@ export default function FAQ({ faqs }: Props) {
           ))}
         </div>
       </div>
-    </section>
+    </>
   );
 }

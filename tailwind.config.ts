@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        josefin: ["var(--font-josefin)"],
+        poppins: ["var(--font-poppins)"],
       },
       colors: {
         secondary: "#0da5b5",

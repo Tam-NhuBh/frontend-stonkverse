@@ -126,7 +126,7 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
   }, [isSuccess, deleteCourseError]);
 
   return (
-    <div className="mt-[100px] w-[90%] mx-auto">
+    <div className="mt-8 w-[90%] mx-auto">
       <DataTable rows={rows} columns={columns} isLoading={isLoading} />
 
       {deleteModal && (

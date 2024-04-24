@@ -121,12 +121,6 @@ const Header: FC<Props> = (): JSX.Element | null => {
         />
       </div>
 
-      <div className="breadcrumbs-container">
-        <div className="breadcrumbs-content">
-          <BreadCrumbsComp />
-        </div>
-      </div>
-
       {
         openModal && (
           <>
@@ -160,7 +154,13 @@ const Header: FC<Props> = (): JSX.Element | null => {
           </>
         )
       }
+      <div className="breadcrumbs-container">
+        <div className="breadcrumbs-content">
+          <BreadCrumbsComp />
+        </div>
+      </div>
     </div >
+
   );
 };
 

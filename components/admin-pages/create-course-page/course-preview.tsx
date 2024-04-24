@@ -54,7 +54,7 @@ const CoursePreview: FC<Props> = ({
   );
 
   return (
-    <div className="w-[85%] mx-auto py-5 my-12">
+    <div className="w-[85%] mx-auto mt-8 my-12">
       <div className="w-full flex gap-8">
         <div className="w-[60%]">
           <h1 className="text-tertiary dark:text-dark_text text-2xl font-bold">

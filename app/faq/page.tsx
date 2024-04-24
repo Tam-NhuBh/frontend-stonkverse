@@ -22,7 +22,7 @@ const page: NextPage<Props> = async () => {
   return (
     <>
       <Header />
-      <div className="container mt-28 mb-14">
+      <div className="container mt-8 mb-14">
         <FAQ faqs={faqs} />
       </div>
       <Footer />

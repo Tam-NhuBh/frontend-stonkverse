@@ -52,7 +52,7 @@ const FAQPage: NextPage<Props> = () => {
 
   return (
     <AdminProtectedPage>
-      <div className="w-[75%] mt-24 ml-8 mr-auto">
+      <div className="w-[75%] mt-8 ml-8 mr-auto">
         <FAQAccordion
           fields={fields}
           register={register}
