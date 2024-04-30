@@ -80,6 +80,10 @@ export interface ICourse {
     public_id: string;
     url: string;
   };
+  // curriculum: {
+  //   public_id: string;
+  //   url: string;
+  // };
   tags: string;
   level: string;
   demoUrl: string;

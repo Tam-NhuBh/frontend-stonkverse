@@ -116,6 +116,10 @@ html {
   @apply text-sm text-slate-600 dark:text-dark_text font-bold;
 }
 
+.form-input-pdf {
+  @apply text-sm text-slate-600 dark:text-dark_text font-bold;
+}
+
 .form-link {
   @apply dark:text-secondary text-tertiary font-bold ml-2 cursor-pointer;
 }

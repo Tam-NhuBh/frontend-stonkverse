@@ -249,7 +249,7 @@ const CoursePreview: FC<Props> = ({
               <input
                 type="text"
                 placeholder="Enter Coupon"
-                className="bg-[#f5f5f5] px-4 h-full py-3 rounded-l-[5px] outline-none text-tertiary"
+                className="flex-1 bg-[#f5f5f5] px-4 h-full py-3 rounded-l-[5px] outline-none text-tertiary"
               />
               <BtnWithIcon
                 content="Apply"

@@ -8,7 +8,7 @@ interface Props {
 
 const options = [
   "Course Information",
-  "Course Curriculumn",
+  // "Course Curriculumn",
   "Course Options",
   "Course Content",
   "Course Preview",
