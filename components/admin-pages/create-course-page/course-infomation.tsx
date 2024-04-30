@@ -20,6 +20,7 @@ import * as Yup from "yup";
 import BottomNavigator from "./bottom-navigator";
 import FormSelect from "@/components/form-select";
 import axios from "axios";
+import ContainNextPDF from "@/components/contain-next-pdf";
 
 interface Props {
   active: number;
@@ -41,6 +42,7 @@ const courseInfoSchema = Yup.object({
   level: Yup.string().required("Please enter course's level"),
   demoUrl: Yup.string().required("Please enter course's demo video url"),
   thumbnail: Yup.string().required("Please upload course thumbnail image"),
+  // curriculum: Yup.string().required("Please upload curriculum pdf file of course"),
 });
 
 const CourseInfomation: FC<Props> = ({
@@ -77,6 +79,8 @@ const CourseInfomation: FC<Props> = ({
   const { errors } = formState;
 
   const thumbnail = watch("thumbnail");
+  // const curriculum = watch("curriculum");
+
 
   const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -93,6 +97,27 @@ const CourseInfomation: FC<Props> = ({
     }
   };
 
+  // const fileChangeHandlerPDF = (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) {
+  //     const file = e.target.files[0];
+  //     if (file) {
+  //       const reader = new FileReader();
+  //       reader.onload = () => {
+  //         if (reader.readyState === 2) {
+  //           // Create a new Blob object using the
+  //           // result of the FileReader and specify the MIME type of the data.
+  //           var blob = new Blob([new Uint8Array(reader.result as ArrayBuffer)], { type: file.type });
+  //           // Create a URL for the blob object
+  //           var url = URL.createObjectURL(blob);
+  
+  //           setValue("curriculum", url);
+  //         }
+  //       };
+  //       reader.readAsArrayBuffer(file);
+  //     }
+  //   }
+  // };
+  
   const onSubmit = (data: CourseInfoValues) => {
     setActive(active + 1);
     setCourseInfo(data);
@@ -125,6 +150,33 @@ const CourseInfomation: FC<Props> = ({
     }
   };
 
+  const dragOverHandlerPDF = (e: DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    setDragging(true);
+  };
+
+  const dragLeaveHandlerPDF = (e: DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    setDragging(false);
+  };
+
+  // const dropHandlerPDF = (e: DragEvent<HTMLLabelElement>) => {
+  //   e.preventDefault();
+  //   setDragging(false);
+
+  //   const file = e.dataTransfer.files?.[0];
+
+  //   if (file) {
+  //     const reader = new FileReader();
+
+  //     reader.onload = () => {
+  //       setValue("curriculum", reader.result as string);
+  //     };
+
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
   useEffect(() => {
     setValue("name", courseInfo.name);
     setValue("description", courseInfo.description);
@@ -135,6 +187,8 @@ const CourseInfomation: FC<Props> = ({
     setValue("tags", courseInfo.tags);
     setValue("demoUrl", courseInfo.demoUrl);
     setValue("thumbnail", courseInfo.thumbnail);
+    // setValue("curriculum", courseInfo.curriculum);
+
   }, [active]);
 
   useEffect(() => {
@@ -148,6 +202,8 @@ const CourseInfomation: FC<Props> = ({
       setValue("tags", initialCourseInfo.tags);
       setValue("demoUrl", initialCourseInfo.demoUrl);
       setValue("thumbnail", initialCourseInfo?.thumbnail?.url);
+      // setValue("curriculum", initialCourseInfo?.curriculum?.url);
+
     }
   }, [initialCourseInfo]);
 
@@ -217,50 +273,80 @@ const CourseInfomation: FC<Props> = ({
             errorMsg={errors.level?.message}
             placeholder="Beginner/Intermediate/Expert"
           />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <FormInput
-              id="demoUrl"
-              label="Demo URL"
-              register={register("demoUrl")}
-              errorMsg={errors.demoUrl?.message}
-              placeholder="URL"
-            />
-          </div>
-
-          <label htmlFor="thumbnail" className="form-input-label">
-            Course Thumbnail
-          </label>
-          <label
-            htmlFor="thumbnail"
-            className={`w-full min-h-[250px] relative dark:border-white p-3 rounded-[5px] cursor-pointer border flex flex-col justify-center ${dragging ? "bg-blue-500" : "bg-transparent"
-              }`}
-            onDragOver={dragOverHandler}
-            onDragLeave={dragLeaveHandler}
-            onDrop={dropHandler}
-          >
-            {thumbnail ? (
-              <ContainNextImage
-                src={thumbnail}
-                alt="Thumbnail"
-                className="py-3"
-              />
-            ) : (
-              <span className="text-center">
-                <MdUpload size={40} className="mx-auto mb-2" />
-                Drag and drop your thumbnail here or click to browse
-              </span>
-            )}
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            id="thumbnail"
-            hidden
-            onChange={fileChangeHandler}
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <FormInput
+            id="demoUrl"
+            label="Demo URL"
+            register={register("demoUrl")}
+            errorMsg={errors.demoUrl?.message}
+            placeholder="URL"
           />
+        </div>
 
-          <BottomNavigator onlyNext customClasses="mt-4" />
+        <label htmlFor="thumbnail" className="form-input-label">
+          Course Thumbnail
+        </label>
+        <label
+          htmlFor="thumbnail"
+          className={`w-full min-h-[350px] relative dark:border-white p-3 rounded-[5px] cursor-pointer border flex flex-col justify-center ${dragging ? "bg-blue-500" : "bg-transparent"
+            }`}
+          onDragOver={dragOverHandler}
+          onDragLeave={dragLeaveHandler}
+          onDrop={dropHandler}
+        >
+          {thumbnail ? (
+            <ContainNextImage
+              src={thumbnail}
+              alt="Thumbnail"
+              className="py-3"
+            />
+          ) : (
+            <span className="text-center">
+              <MdUpload size={40} className="mx-auto mb-2" />
+              Drag and drop your thumbnail here or click to browse
+            </span>
+          )}
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          id="thumbnail"
+          hidden
+          onChange={fileChangeHandler}
+        />
+
+        {/* <label htmlFor="curriculum" className="form-input-pdf">
+          Course Curriculum
+        </label>
+        <label
+          htmlFor="curriculum"
+          className={`w-full min-h-[550px] relative dark:border-white p-3 rounded-[5px] cursor-pointer border flex flex-col justify-center ${dragging ? "bg-blue-500" : "bg-transparent"}`}
+          onDragOver={dragOverHandlerPDF}
+          onDragLeave={dragLeaveHandlerPDF}
+          onDrop={dropHandlerPDF}
+        >
+          {curriculum ? (
+            <ContainNextPDF
+              src={curriculum}
+              title="Curriculum"
+              className="py-3"
+            />
+          ) : (
+            <span className="text-center">
+              <MdUpload size={40} className="mx-auto mb-2" />
+              Drag and drop your curriculum here or click to browse
+            </span>
+          )}
+        </label>
+        <input type="file"
+          accept="application/pdf"
+          id="curriculum"
+          hidden
+          onChange={fileChangeHandlerPDF}
+        /> */}
+
+        <BottomNavigator onlyNext customClasses="mt-4" />
       </form>
     </div>
   );

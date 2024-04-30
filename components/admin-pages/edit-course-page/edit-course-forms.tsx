@@ -13,7 +13,6 @@ import CourseData from "../create-course-page/course-data";
 import CoursePreview from "../create-course-page/course-preview";
 import CourseOptions from "../create-course-page/course-options";
 import CourseContent from "../create-course-page/course-content";
-import CourseCurriculumn from "../create-course-page/course-curriculumn";
 
 interface Props {}
 
@@ -23,10 +22,12 @@ export type CourseInfoValues = {
   price: string;
   estimatedPrice: string;
   tags: string;
-  category: string;
+  // category: string;
   level: string;
   demoUrl: string;
   thumbnail: string;
+  // curriculum: string;
+
 };
 
 export const initialCourseInfo = {
@@ -36,33 +37,11 @@ export const initialCourseInfo = {
   estimatedPrice: "",
   tags: "",
   level: "",
-  category: "",
+  // category: "",
   demoUrl: "",
   thumbnail: "",
-};
+  // curriculum: "",
 
-export type CourseCurriValues = {
-  name: string;
-  description: string;
-  category: string;
-  price: string;
-  estimatedPrice: string;
-  tags: string;
-  level: string;
-  demoUrl: string;
-  thumbnail: string;
-};
-
-export const initialCourseCurri = {
-  name: "",
-  description: "",
-  category: "",
-  price: "",
-  estimatedPrice: "",
-  tags: "",
-  level: "",
-  demoUrl: "",
-  thumbnail: "",
 };
 
 const initialCourseContentData = [
@@ -102,7 +81,6 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
   const [active, setActive] = useState(0);
 
   const [courseInfo, setCourseInfo] = useState(initialCourseInfo);
-  const [courseCurri, setCourseCurri] = useState(initialCourseCurri);
 
   const [benefits, setBenefits] = useState([{ title: "" }]);
   const [prerequisites, setPrerequisites] = useState([{ title: "" }]);
@@ -117,7 +95,6 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
   const submitHandler = async () => {
     const data = {
       ...courseInfo,
-      ...courseCurri,
 
       totalVideos: courseContentData.length,
       benefits,
@@ -173,16 +150,16 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
           />
         )}
         
-        {active === 1 && (
+        {/* {active === 1 && (
           <CourseCurriculumn
             active={active}
             setActive={setActive}
             courseCurri={courseCurri}
             setCourseCurri={setCourseCurri}
           />
-        )}
+        )} */}
 
-        {active === 2 && (
+        {active === 1 && (
           <CourseData
             active={active}
             setActive={setActive}
@@ -200,7 +177,7 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
 
         
 
-        {active === 3 && (
+        {active === 2 && (
           <CourseContent
             active={active}
             setActive={setActive}
@@ -210,7 +187,7 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
           />
         )}
 
-        {active === 4 && (
+        {active === 3 && (
           <CoursePreview
             active={active}
             setActive={setActive}

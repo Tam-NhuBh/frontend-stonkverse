@@ -9,57 +9,58 @@ import CoursePreview from "./course-preview";
 import { useCreateCourseMutation } from "@/store/course/course-api";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
-import CourseCurriculumn from "./course-curriculumn";
 
 interface Props { }
 
 export type CourseInfoValues = {
   name: string;
   description: string;
-  category: string;
+  // category: string;
   price: string;
   estimatedPrice: string;
   tags: string;
   level: string;
   demoUrl: string;
   thumbnail: string;
+  // curriculum: string
 };
 
 export const initialCourseInfo = {
   name: "",
   description: "",
-  category: "",
+  // category: "",
   price: "",
   estimatedPrice: "",
   tags: "",
   level: "",
   demoUrl: "",
   thumbnail: "",
+  // curriculum: ""
 };
 
-export type CourseCurriValues = {
-  name: string;
-  description: string;
-  category: string;
-  price: string;
-  estimatedPrice: string;
-  tags: string;
-  level: string;
-  demoUrl: string;
-  thumbnail: string;
-};
+// export type CourseCurriValues = {
+//   name: string;
+//   description: string;
+//   category: string;
+//   price: string;
+//   estimatedPrice: string;
+//   tags: string;
+//   level: string;
+//   demoUrl: string;
+//   thumbnail: string;
+// };
 
-export const initialCourseCurri = {
-  name: "",
-  description: "",
-  category: "",
-  price: "",
-  estimatedPrice: "",
-  tags: "",
-  level: "",
-  demoUrl: "",
-  thumbnail: "",
-};
+// export const initialCourseCurri = {
+//   name: "",
+//   description: "",
+//   category: "",
+//   price: "",
+//   estimatedPrice: "",
+//   tags: "",
+//   level: "",
+//   demoUrl: "",
+//   thumbnail: "",
+// };
 
 const initialCourseContentData = [
   {
@@ -90,7 +91,6 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
   const [active, setActive] = useState(0);
 
   const [courseInfo, setCourseInfo] = useState(initialCourseInfo);
-  const [courseCurri, setCourseCurri] = useState(initialCourseCurri);
 
   const [benefits, setBenefits] = useState([{ title: "" }]);
   const [prerequisites, setPrerequisites] = useState([{ title: "" }]);
@@ -105,7 +105,6 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
   const submitHandler = async () => {
     const data = {
       ...courseInfo,
-      ...courseCurri,
       totalVideos: courseContentData.length,
       benefits,
       prerequisites,
@@ -152,16 +151,16 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
           />
         )}
 
-        {active === 1 && (
+        {/* {active === 1 && (
           <CourseCurriculumn
             active={active}
             setActive={setActive}
-            courseCurri={courseCurri}
-            setCourseCurri={setCourseCurri}
+            courseInfo={courseInfo}
+            setCourseInfo={setCourseInfo}
           />
-        )}
-
-        {active === 2 && (
+        )} */}
+        
+        {active === 1 && (
           <CourseData
             active={active}
             setActive={setActive}
@@ -174,7 +173,7 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
           />
         )}
 
-        {active === 3 && (
+        {active === 2 && (
           <CourseContent
             active={active}
             setActive={setActive}
@@ -184,7 +183,7 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
           />
         )}
 
-        {active === 4 && (
+        {active === 3 && (
           <CoursePreview
             active={active}
             setActive={setActive}

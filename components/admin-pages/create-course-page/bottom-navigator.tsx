@@ -20,7 +20,7 @@ const BottomNavigator: FC<Props> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`flex justify-between mt-12 ${customClasses} ${
+      className={`flex justify-between mt-5 ${customClasses} ${
         onlyNext && "!justify-end"
       }`}
     >

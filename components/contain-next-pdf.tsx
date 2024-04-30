@@ -1,49 +1,31 @@
-import React, { useState, useEffect } from 'react';
+"use client";
 
-interface UploadPdfProps extends React.HTMLProps<HTMLDivElement> {
-  onUpload: (file: File) => void;
+import { FC, useState } from "react";
+
+interface Props {
+  src: string;
+  title: string; // Use 'title' instead of 'alt'
+  className?: string;
 }
 
-const UploadPdf: React.FC<UploadPdfProps> = ({ onUpload, ...divProps }) => {
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
+const common = "duration-700 ease-in-out";
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files ? event.target.files[0] : null;
-    if (file && file.type === 'application/pdf') {
-      setPdfFile(file);
-      onUpload(file);
-    } else {
-      alert('Please select a PDF file.');
-      setPdfFile(null);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (pdfFile) {
-        URL.revokeObjectURL(URL.createObjectURL(pdfFile));
-      }
-    };
-  }, [pdfFile]);
+const ContainNextImage: FC<Props> = ({
+  src,
+  title, // Use 'title' instead of 'alt'
+  className,
+}): JSX.Element => {
+  const [isLoading, setLoading] = useState(true);
 
   return (
-    <div {...divProps}>
-      <input
-        type="file"
-        accept="application/pdf"
-        onChange={handleFileChange}
-        style={{ display: 'block', margin: '20px 0' }}
-      />
-      {pdfFile && (
-        <iframe
-          src={URL.createObjectURL(pdfFile)}
-          style={{ width: '100%', height: '500px' }}
-          frameBorder="0"
-          title="PDF Preview"
-        ></iframe>
-      )}
-    </div>
+    <iframe
+      src={src}
+      title={title} 
+      style={{width: '100%', height: '100%'}}
+      className={`${className} ${common} ${isLoading ? "opacity-50" : "opacity-100"}`}
+      onLoad={() => setLoading(false)}
+    />
   );
 };
 
-export default UploadPdf;
+export default ContainNextImage;
