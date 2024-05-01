@@ -4,6 +4,7 @@ import Header from "@/components/layout/header";
 import { getAllFAQs } from "@/lib/fetch-data";
 import { NextPage } from "next";
 import { IFaq } from "../admin/faq/page";
+import Heading from "@/components/heading";
 
 export const generateMetadata = () => {
   return {
@@ -21,6 +22,9 @@ const page: NextPage<Props> = async () => {
 
   return (
     <>
+      <Heading
+        title="All FAQs"
+      />
       <Header />
       <div className="container mt-8 mb-14">
         <FAQ faqs={faqs} />
