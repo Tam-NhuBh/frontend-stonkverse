@@ -1,6 +1,4 @@
 import React from "react";
-import Link from "next/link";
-import { IBreadCrumb } from "@/types"; // Importing IBreadCrumb from the correct path
 import Breadcrumbs from "@marketsystems/nextjs13-appdir-breadcrumbs";
 
 const BreadCrumbsComp = () => {

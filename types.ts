@@ -96,9 +96,12 @@ export interface ICourse {
   purchased?: number;
 }
 // breadcumbs
-// Define the BreadCrumb type
-export interface IBreadCrumb {
-  name: string;
-  url: string;
-  // Add more properties if needed
+
+export interface CrumbItem {
+  path: string;
+  label: string;
+}
+
+export interface BreadcrumbsProps {
+  items: CrumbItem[];
 }

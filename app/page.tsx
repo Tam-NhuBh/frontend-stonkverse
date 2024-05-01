@@ -10,8 +10,7 @@ import Footer from "@/components/layout/footer";
 import Heading from "@/components/heading";
 import { pageConstants } from "@/constants";
 import ChatBotClient from "@/components/layout/chatbot-client";
-import { IBreadCrumb } from "@/types"; // Importing IBreadCrumb from the correct path
-import BreadCrumbsComp from "@/components/layout/breadcrumbs"
+
 
 interface Props { }
 // SEO
