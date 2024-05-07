@@ -10,17 +10,18 @@ import {
   useState,
 } from "react";
 
-import { CourseInfoValues } from "./create-course-form";
 import FormInput from "@/components/form-input";
 import { MdUpload } from "react-icons/md";
-import ContainNextImage from "@/components/contain-next-image";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import BottomNavigator from "./bottom-navigator";
 import FormSelect from "@/components/form-select";
 import axios from "axios";
-import ContainNextPDF from "@/components/contain-next-pdf";
+import { CourseInfoValues } from "./create-course-form";
+import ContainNextImage from "@/components/contain-next-image";
+import toast from "react-hot-toast";
+
 
 interface Props {
   active: number;
@@ -42,7 +43,7 @@ const courseInfoSchema = Yup.object({
   level: Yup.string().required("Please enter course's level"),
   demoUrl: Yup.string().required("Please enter course's demo video url"),
   thumbnail: Yup.string().required("Please upload course thumbnail image"),
-  // curriculum: Yup.string().required("Please upload curriculum pdf file of course"),
+  curriculum: Yup.string().required("Please upload curriculum pdf file of course"),
 });
 
 const CourseInfomation: FC<Props> = ({
@@ -53,6 +54,8 @@ const CourseInfomation: FC<Props> = ({
   courseInfo,
 }): JSX.Element => {
   const [dragging, setDragging] = useState(false);
+  const [draggingPDF, setDraggingPDF] = useState(false);
+
   // const [categories, setCategories] = useState([]);
 
   const courseInfoForm = useForm<CourseInfoValues>({
@@ -79,7 +82,7 @@ const CourseInfomation: FC<Props> = ({
   const { errors } = formState;
 
   const thumbnail = watch("thumbnail");
-  // const curriculum = watch("curriculum");
+  const curriculum = watch("curriculum");
 
 
   const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -97,30 +100,38 @@ const CourseInfomation: FC<Props> = ({
     }
   };
 
-  // const fileChangeHandlerPDF = (e: ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) {
-  //     const file = e.target.files[0];
-  //     if (file) {
-  //       const reader = new FileReader();
-  //       reader.onload = () => {
-  //         if (reader.readyState === 2) {
-  //           // Create a new Blob object using the
-  //           // result of the FileReader and specify the MIME type of the data.
-  //           var blob = new Blob([new Uint8Array(reader.result as ArrayBuffer)], { type: file.type });
-  //           // Create a URL for the blob object
-  //           var url = URL.createObjectURL(blob);
-  
-  //           setValue("curriculum", url);
-  //         }
-  //       };
-  //       reader.readAsArrayBuffer(file);
-  //     }
-  //   }
-  // };
-  
-  const onSubmit = (data: CourseInfoValues) => {
+  async function blobUrlToBase64(blobUrl: string): Promise<string> {
+    const blob = await fetch(blobUrl).then(res => res.blob());
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function base64ToBlobUrl(base64Data: string, mimeType: string): Promise<string> {
+    const byteCharacters = atob(base64Data.split(',')[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: mimeType });
+    return URL.createObjectURL(blob);
+  }
+
+  const onSubmit = async (data: CourseInfoValues) => {
     setActive(active + 1);
+    console.log(data);
+    
+    const file = await blobUrlToBase64(data.curriculum);
+
+    // Cập nhật trường curriculum trong data từ Blob URL thành đối tượng File
+    data.curriculum = file;
     setCourseInfo(data);
+
   };
 
   const dragOverHandler = (e: DragEvent<HTMLLabelElement>) => {
@@ -150,32 +161,69 @@ const CourseInfomation: FC<Props> = ({
     }
   };
 
+  useEffect(() => {
+    async function convertAndSetCurriculum() {
+      if (courseInfo.curriculum && typeof courseInfo.curriculum === 'string') {
+        //check base64 
+        if (courseInfo.curriculum.startsWith('data:')) {
+          const blobUrl = await base64ToBlobUrl(courseInfo.curriculum, 'application/pdf');
+          setValue("curriculum", blobUrl);
+        }
+      }
+    }
+  
+    convertAndSetCurriculum();
+  }, [courseInfo.curriculum, setValue]);
+  
+  //giải phóng blobUrl
+  // useEffect(() => {
+  //   return () => {
+  //     if (curriculum && curriculum.startsWith('blob:')) {
+  //       URL.revokeObjectURL(curriculum);
+  //     }
+  //   };
+  // }, [curriculum]);
+
+  const handleUploadPDF = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      if (file && file.type === "application/pdf") {
+        // Tạo Blob URL từ file PDF
+        const pdfUrl = URL.createObjectURL(file);
+        setValue("curriculum", pdfUrl);
+        console.log(pdfUrl)
+      } else {
+        toast.error("Only PDF files are allowed for the course curriculum.");
+      }
+    }
+  };
+
   const dragOverHandlerPDF = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
-    setDragging(true);
+    setDraggingPDF(true);
   };
 
   const dragLeaveHandlerPDF = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
-    setDragging(false);
+    setDraggingPDF(false);
   };
 
-  // const dropHandlerPDF = (e: DragEvent<HTMLLabelElement>) => {
-  //   e.preventDefault();
-  //   setDragging(false);
+  const dropHandlerPDF = (e: React.DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    setDraggingPDF(false);
 
-  //   const file = e.dataTransfer.files?.[0];
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      if (file.type === "application/pdf") {
+        // Tạo Blob URL từ file PDF
+        const pdfUrl = URL.createObjectURL(file);
+        setValue("curriculum", pdfUrl);
+      } else {
+        toast.error("Only PDF files are allowed for the course curriculum.");
+      }
+    }
+  };
 
-  //   if (file) {
-  //     const reader = new FileReader();
-
-  //     reader.onload = () => {
-  //       setValue("curriculum", reader.result as string);
-  //     };
-
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
 
   useEffect(() => {
     setValue("name", courseInfo.name);
@@ -187,7 +235,7 @@ const CourseInfomation: FC<Props> = ({
     setValue("tags", courseInfo.tags);
     setValue("demoUrl", courseInfo.demoUrl);
     setValue("thumbnail", courseInfo.thumbnail);
-    // setValue("curriculum", courseInfo.curriculum);
+    setValue("curriculum", courseInfo.curriculum);
 
   }, [active]);
 
@@ -202,7 +250,7 @@ const CourseInfomation: FC<Props> = ({
       setValue("tags", initialCourseInfo.tags);
       setValue("demoUrl", initialCourseInfo.demoUrl);
       setValue("thumbnail", initialCourseInfo?.thumbnail?.url);
-      // setValue("curriculum", initialCourseInfo?.curriculum?.url);
+      setValue("curriculum", initialCourseInfo?.curriculum?.url);
 
     }
   }, [initialCourseInfo]);
@@ -316,35 +364,40 @@ const CourseInfomation: FC<Props> = ({
           onChange={fileChangeHandler}
         />
 
-        {/* <label htmlFor="curriculum" className="form-input-pdf">
+        <label htmlFor="curriculum" className="form-input-label">
           Course Curriculum
         </label>
         <label
           htmlFor="curriculum"
-          className={`w-full min-h-[550px] relative dark:border-white p-3 rounded-[5px] cursor-pointer border flex flex-col justify-center ${dragging ? "bg-blue-500" : "bg-transparent"}`}
+          className={`w-full min-h-[550px] relative dark:border-white p-3 rounded-[5px] cursor-pointer border flex flex-col justify-center ${draggingPDF ? "bg-blue-500" : "bg-transparent"}`}
           onDragOver={dragOverHandlerPDF}
           onDragLeave={dragLeaveHandlerPDF}
           onDrop={dropHandlerPDF}
         >
           {curriculum ? (
-            <ContainNextPDF
-              src={curriculum}
-              title="Curriculum"
-              className="py-3"
-            />
+            <object
+            data={curriculum}
+            type="application/pdf"
+            width="100%"
+            height="500px"
+            style={{ marginTop: '20px'}}
+          >
+          </object>         
           ) : (
             <span className="text-center">
               <MdUpload size={40} className="mx-auto mb-2" />
-              Drag and drop your curriculum here or click to browse
+              Drag and drop PDF file here or click to browse
             </span>
           )}
         </label>
-        <input type="file"
-          accept="application/pdf"
+
+        <input
+          type="file"
           id="curriculum"
+          accept="application/pdf"
           hidden
-          onChange={fileChangeHandlerPDF}
-        /> */}
+          onChange={(e) => handleUploadPDF(e)}
+        />
 
         <BottomNavigator onlyNext customClasses="mt-4" />
       </form>

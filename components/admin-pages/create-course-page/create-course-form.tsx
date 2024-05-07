@@ -22,7 +22,7 @@ export type CourseInfoValues = {
   level: string;
   demoUrl: string;
   thumbnail: string;
-  // curriculum: string
+  curriculum: string
 };
 
 export const initialCourseInfo = {
@@ -35,7 +35,7 @@ export const initialCourseInfo = {
   level: "",
   demoUrl: "",
   thumbnail: "",
-  // curriculum: ""
+  curriculum: ""
 };
 
 // export type CourseCurriValues = {
