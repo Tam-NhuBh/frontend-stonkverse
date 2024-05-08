@@ -175,10 +175,10 @@ const CourseInfomation: FC<Props> = ({
     convertAndSetCurriculum();
   }, [courseInfo.curriculum, setValue]);
   
-  //giải phóng blobUrl
+  // // giải phóng blobUrl
   // useEffect(() => {
   //   return () => {
-  //     if (curriculum && curriculum.startsWith('blob:')) {
+  //     if (curriculum?.startsWith('blob:')) {
   //       URL.revokeObjectURL(curriculum);
   //     }
   //   };
