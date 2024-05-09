@@ -26,7 +26,7 @@ export type CourseInfoValues = {
   level: string;
   demoUrl: string;
   thumbnail: string;
-  // curriculum: string;
+  curriculum: string;
 
 };
 
@@ -40,7 +40,7 @@ export const initialCourseInfo = {
   // category: "",
   demoUrl: "",
   thumbnail: "",
-  // curriculum: "",
+  curriculum: "",
 
 };
 

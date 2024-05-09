@@ -68,7 +68,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   );
 
   const orderHandler = () => {
-    if(!user){
+    if (!user) {
       setOpenModal(false);
       return;
     }
@@ -162,6 +162,18 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
               )
             )}
           </ul>
+
+          <div className="mt-14">
+            {courseDetail.curriculum && typeof courseDetail.curriculum.url === 'string' && (
+              <iframe
+                src={courseDetail.curriculum.url}
+                style={{
+                  height: '600px', // Đặt chiều cao mong muốn
+                  width: '100%' // Đặt chiều rộng mong muốn
+                }}
+              ></iframe>
+            )}
+          </div>
 
           <div className="mt-14">
             <CourseContentTabs
