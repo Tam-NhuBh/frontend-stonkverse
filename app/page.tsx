@@ -40,7 +40,9 @@ const page: NextPage<Props> = async () => {
         <Courses />
         <Features />
         {/* <Reviews /> */}
-        <FAQ faqs={faqs} />
+        <div className="even-section mt-9">
+          <FAQ faqs={faqs} />
+        </div>
       </div>
       <Footer />
     </>

@@ -14,7 +14,7 @@ interface Props {
 
 const CourseCard: FC<Props> = ({ course }): JSX.Element => {
   return (
-    <div className="rounded-[5px] shadow-md border dark:border-none dark:bg-slate-500 bg-white dark:bg-opacity-20 custom-hover cursor-pointer">
+    <div className="rounded-[5px] shadow-md dark:border-none dark:bg-slate-500 bg-white dark:bg-opacity-20 custom-hover cursor-pointer">
       <Link
         href={`/course/${course._id}`}
         className="block relative w-full aspect-video"
@@ -22,7 +22,7 @@ const CourseCard: FC<Props> = ({ course }): JSX.Element => {
         <NextImage
           src={course.thumbnail.url}
           alt={course.name}
-          className="rounded-t-[5px]"
+          className="rounded-t-[2px]"
         />
       </Link>
 

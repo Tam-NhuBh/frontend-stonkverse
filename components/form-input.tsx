@@ -51,8 +51,18 @@ const FormInput: FC<Props> = ({
         placeholder={placeholder}
         disabled={disabled}
         value={value}
+        min="0"
         readOnly={readOnly}
         onChange={onChange}
+        onKeyPress={(event: { key: string; preventDefault: () => void; }) => {
+          // Nếu type là number, chỉ cho phép nhập số
+          if (type === 'number' && !/[0-9]/.test(event.key)) {
+            event.preventDefault();
+          }
+          // if ((type === 'name' || type === 'description') && !/[a-zA-Z\s]/.test(event.key)) {
+          //   event.preventDefault();
+          // }
+        }}
       />
       {errorMsg && (
         <p className="text-xs text-red-700 mt-1 flex items-center gap-[2px]">

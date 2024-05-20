@@ -35,7 +35,6 @@ const page: FC<Props> = async (props): Promise<JSX.Element> => {
 
             </h2> */}
 
-            {/* <CategoryTag categories={categories} allCourses /> */}
 
             <div className="mt-10 main-grid">
               {courses?.map((course) => (
