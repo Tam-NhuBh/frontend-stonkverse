@@ -20,4 +20,5 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+![Screenshot_22-5-2024_12200_localhost](https://github.com/namnothere/frontend-stonkverse/assets/94100591/4dc3a461-1f55-4cd0-ae09-4052a4e492a4)
 
