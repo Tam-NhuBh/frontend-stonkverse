@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction } from "react";
 import { AccordionWrapper } from "../accordion-materials";
 import { AccordionDetails, AccordionSummary } from "@mui/material";
 import { formatVideoLength } from "@/lib/format-data";
-import { MdOutlineOndemandVideo } from "react-icons/md";
+import { MdOutlineOndemandVideo, MdQuiz } from "react-icons/md"; // Import quiz icon
 import { BiSolidChevronDown } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { ICourseData } from "@/types";
@@ -13,6 +13,7 @@ interface Props {
   setIconHover?: Dispatch<SetStateAction<boolean>>;
   activeVideo: number;
   setActiveVideo: Dispatch<SetStateAction<number>>;
+  setActiveContentType: Dispatch<SetStateAction<string>>; // Add this line
 }
 
 const CourseLectureList: FC<Props> = ({
@@ -21,6 +22,7 @@ const CourseLectureList: FC<Props> = ({
   setIconHover,
   activeVideo,
   setActiveVideo,
+  setActiveContentType, // Add this line
 }): JSX.Element => {
   const rawSections = new Set<string>(
     courseData?.map((item) => item.videoSection)
@@ -53,7 +55,6 @@ const CourseLectureList: FC<Props> = ({
           }}
         />
       </div>
-      <div className="flex items-center gap-2 text-[15px] mb-2"></div>
       <div className="lecture-list-accordion">
         {videosBySection.map((section, index) => (
           <AccordionWrapper
@@ -62,6 +63,7 @@ const CourseLectureList: FC<Props> = ({
             id={`panel${index + 1}a-header`}
           >
             <AccordionSummary
+              expandIcon={<BiSolidChevronDown className="mt-1" />}
               aria-controls={`panel${{ index }}d-content`}
               id={`panel${{ index }}d-header`}
             >
@@ -70,7 +72,6 @@ const CourseLectureList: FC<Props> = ({
                   <span className="font-semibold">
                     Section {index + 1} : {section.section}
                   </span>
-                  <BiSolidChevronDown className="mt-1" />
                 </div>
                 <span className="text-xs text-tertiary dark:text-dark_text">
                   {section.videos.length} Lectures |{" "}
@@ -79,26 +80,56 @@ const CourseLectureList: FC<Props> = ({
                       (acc, cur) => acc + cur.videoLength,
                       0
                     )
-                  )}{" "}
+                  )}
                 </span>
               </div>
             </AccordionSummary>
             <AccordionDetails>
               {section.videos.map((video, videoIndex: number) => (
-                <div
-                  key={videoIndex}
-                  className={`cursor-pointer py-2 px-4 hover:bg-slate-200 dark:hover:bg-slate-900 transition ${
-                    video.order === activeVideo
-                      ? "bg-slate-200 dark:bg-slate-900"
-                      : "bg-white dark:bg-slate-600"
-                  }`}
-                  onClick={() => setActiveVideo(video.order)}
-                >
-                  <p>{video.title}</p>
-                  <span className="text-xs flex items-center gap-1 mt-2">
-                    <MdOutlineOndemandVideo className="-mt-[2px]" />
-                    {formatVideoLength(video.videoLength)}
-                  </span>
+                <div key={videoIndex}>
+                  <div
+                    className={`cursor-pointer py-2 px-4 hover:bg-slate-200 dark:hover:bg-slate-900 transition flex items-center gap-2 ${
+                      video.order === activeVideo
+                        ? "bg-slate-200 dark:bg-slate-900"
+                        : "bg-white dark:bg-slate-600"
+                    }`}
+                    onClick={() => {
+                      setActiveVideo(video.order);
+                      setActiveContentType("video"); // Set content type to video
+                    }}
+                  >
+                    <div>
+                      <p>
+                        <span className="font-semibold">
+                          {video.title}
+                        </span>
+                      </p>
+                      <span className="text-xs flex items-center gap-1 mt-2">
+                      <MdOutlineOndemandVideo className="-mt-[2px]" />
+
+                        {formatVideoLength(video.videoLength)}
+                      </span>
+                    </div>
+                  </div>
+                  {video.quiz && video.quiz.length > 0 && (
+                    <div className="mt-2">
+                      {video.quiz.map((quiz, quizIndex) => (
+                        <div
+                          key={quizIndex}
+                          className="cursor-pointer py-2 px-6 hover:bg-slate-200 dark:hover:bg-slate-900 transition flex items-center gap-2 bg-white dark:bg-slate-600"
+                          onClick={() => {
+                            setActiveVideo(video.order);
+                            setActiveContentType("quiz"); // Set content type to quiz
+                          }}
+                        >
+                          <MdQuiz className="-mt-[2px]" />
+                          <p>
+                            <span className="font-semibold">Quiz:</span> {quiz.title}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </AccordionDetails>

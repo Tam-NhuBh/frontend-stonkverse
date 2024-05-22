@@ -59,8 +59,8 @@ export interface ILink {
 export interface IAnswerQuiz{
   _id: Types.ObjectId;
   user: IUser;
-  answer: [String];
-  score: Number;
+  answer: string[];
+  score: number;
   createdAt: Date;
 }
 //main
@@ -69,9 +69,9 @@ export interface IQuestionQuiz {
   user: IUser;
   title?: string;
   answers: IAnswerQuiz[];
-  correctAnswer: [String],
-  mockAnswer:[String],
-  maxScore:  Number,
+  correctAnswer: string[],
+  mockAnswer: string[],
+  maxScore:  number,
   createdAt: Date;
 }
 
