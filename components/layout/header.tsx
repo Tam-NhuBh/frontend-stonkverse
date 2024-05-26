@@ -89,6 +89,7 @@ const Header: FC<Props> = (): JSX.Element | null => {
           ? "dark:bg-opacity-50 dark-bg dark:border-[#ffffff1c] shadow-xl"
           : "dark:border-[#ffffff1c] dark:shadow"
           } z-[80] fixed top-0 left-0 right-0 bg-white dark:bg-transparent transition duration-500 border-b`}
+      
       >
         <div className="container flex items-center justify-between">
 

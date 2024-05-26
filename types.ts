@@ -56,6 +56,25 @@ export interface ILink {
   url: string;
 }
 
+export interface IAnswerQuiz{
+  _id: Types.ObjectId;
+  user: IUser;
+  answer: string[];
+  score: number;
+  createdAt: Date;
+}
+//main
+export interface IQuestionQuiz {
+  _id: Types.ObjectId;
+  user: IUser;
+  title?: string;
+  answers: IAnswerQuiz[];
+  correctAnswer: string[],
+  mockAnswer: string[],
+  maxScore:  number,
+  createdAt: Date;
+}
+
 export interface ICourseData {
   _id: Types.ObjectId;
   title: string;
@@ -68,6 +87,7 @@ export interface ICourseData {
   links: ILink[];
   suggestion: string;
   questions: IQuestion[];
+  quiz: IQuestionQuiz[];
 }
 
 export interface ICourse {

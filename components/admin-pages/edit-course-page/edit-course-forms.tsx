@@ -53,6 +53,8 @@ const initialCourseContentData = [
     videoLength: 0,
     links: [{ title: "", url: "" }],
     suggestion: "",
+    quiz: [{title: "", correctAnswer: [""], mockAnswer: [""]}]
+
   },
 ];
 
@@ -67,6 +69,12 @@ export type CourseContentDataType = {
     url: string;
   }[];
   suggestion: string;
+  quiz: {
+    title: string,
+    correctAnswer: string[],
+    mockAnswer: string[],
+  }[];
+
 }[];
 
 const EditCourseForms: FC<Props> = (props): JSX.Element => {

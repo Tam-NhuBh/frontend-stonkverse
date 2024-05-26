@@ -38,30 +38,6 @@ export const initialCourseInfo = {
   curriculum: ""
 };
 
-// export type CourseCurriValues = {
-//   name: string;
-//   description: string;
-//   category: string;
-//   price: string;
-//   estimatedPrice: string;
-//   tags: string;
-//   level: string;
-//   demoUrl: string;
-//   thumbnail: string;
-// };
-
-// export const initialCourseCurri = {
-//   name: "",
-//   description: "",
-//   category: "",
-//   price: "",
-//   estimatedPrice: "",
-//   tags: "",
-//   level: "",
-//   demoUrl: "",
-//   thumbnail: "",
-// };
-
 const initialCourseContentData = [
   {
     videoUrl: "",
@@ -71,6 +47,7 @@ const initialCourseContentData = [
     videoLength: 0,
     links: [{ title: "", url: "" }],
     suggestion: "",
+    quiz: [{title: "", correctAnswer: [""], mockAnswer: [""]}]
   },
 ];
 
@@ -85,6 +62,11 @@ export type CourseContentDataType = {
     url: string;
   }[];
   suggestion: string;
+  quiz: {
+    title: string,
+    correctAnswer: string[],
+    mockAnswer: string[],
+  }[];
 }[];
 
 const CreateCourseForm: FC<Props> = (props): JSX.Element => {

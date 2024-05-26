@@ -4,7 +4,8 @@ import CourseLectureList from "./course-lecture-list";
 import CourseLectureNavigator from "./course-lecture-navigator";
 import { BiSolidArrowToLeft } from "react-icons/bi";
 import LectureTabContent from "./lecture-tab-content";
-import { ICourseData } from "@/types";
+import { ICourseData, IQuestionQuiz } from "@/types";
+import CourseQuiz from "../course-quiz";
 
 interface Props {
   courseId: string;
@@ -23,29 +24,46 @@ const CourseContentMedia: FC<Props> = ({
 }): JSX.Element => {
   const [openSidebar, setOpenSidebar] = useState(true);
   const [iconHover, setIconHover] = useState(false);
+  const [activeContentType, setActiveContentType] = useState("video");
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activeVideo]);
+  
+  const filteredQuestions = (courseData?.[activeVideo]?.quiz ?? [])
+  .filter((question: IQuestionQuiz) => question.title !== undefined)
+  .map((question: IQuestionQuiz) => ({
+    title: question.title as string,
+    mockAnswer: question.mockAnswer,
+    correctAnswer: question.correctAnswer ?? [],
+    maxScore: question.maxScore,
+    
+  }));
 
   return (
-    <div className="mt-[62px]">
+    <div className="mt-[1px]">
       <div
-        className={`${
-          openSidebar ? "w-[75%]" : "w-full"
-        } transition-width max-[1100px]:w-full`}
+        className={`${openSidebar ? "w-[75%]" : "w-full"
+          } transition-width max-[1100px]:w-full`}
       >
-        <CoursePlayer
-          title={courseData?.[activeVideo]?.title}
-          videoUrl={courseData?.[activeVideo]?.videoUrl}
-        />
-      </div>
+        {activeContentType === "video" ? (
 
+          <CoursePlayer
+            title={courseData?.[activeVideo]?.title}
+            videoUrl={courseData?.[activeVideo]?.videoUrl}
+          />
+
+        ) : (
+          <div className="p-4">
+          <CourseQuiz questions={filteredQuestions} />
+        </div>
+        )}
+
+      </div>
       <div className="container">
         <div
-          className={`${
-            openSidebar ? "w-[75%]" : "w-full"
-          } transition-width max-[1100px]:w-full`}
+          className={`${openSidebar ? "w-[75%]" : "w-full"
+            } transition-width max-[1100px]:w-full`}
         >
           <CourseLectureNavigator
             onlyNext={activeVideo === 0}
@@ -79,11 +97,10 @@ const CourseContentMedia: FC<Props> = ({
       </div>
 
       <div
-        className={`w-[25%] fixed top-[62px] right-0 h-full z-50 bg-white dark:bg-slate-900 border-l dark:border-slate-700 transition ${
-          openSidebar
-            ? "translate-x-0 opacity-100"
-            : "translate-x-full opacity-0"
-        } max-[1100px]:hidden`}
+        className={`w-[25%] fixed top-[62px] right-0 h-full z-50 bg-white dark:bg-slate-900 border-l dark:border-slate-700 transition ${openSidebar
+          ? "translate-x-0 opacity-100"
+          : "translate-x-full opacity-0"
+          } max-[1100px]:hidden`}
       >
         <CourseLectureList
           courseData={courseData}
@@ -91,6 +108,7 @@ const CourseContentMedia: FC<Props> = ({
           setIconHover={setIconHover}
           activeVideo={activeVideo}
           setActiveVideo={setActiveVideo}
+          setActiveContentType={setActiveContentType}
         />
       </div>
 

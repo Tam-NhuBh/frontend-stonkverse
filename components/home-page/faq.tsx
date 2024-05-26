@@ -19,7 +19,7 @@ export default function FAQ({ faqs }: Props) {
       setExpanded(newExpanded ? panel : false);
     };
   return (
-    <section className="even-section mt-9">
+    // <section className="even-section mt-9">
 
       <div className="container ">
         <h2 className="section-title">
@@ -54,6 +54,6 @@ export default function FAQ({ faqs }: Props) {
           ))}
         </div>
       </div>
-    </section>
+    // </section>
   );
 }

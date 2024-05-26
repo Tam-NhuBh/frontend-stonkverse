@@ -32,6 +32,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import Link from "next/link";
 import NoContentYet from "../no-content-yet";
 import { ICourseData, IReview } from "@/types";
+import { useRouter } from 'next/navigation'
 
 interface Props {
   courseDetail: IFetchedCourse;
@@ -44,6 +45,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   const [stripePromise, setStripePromise] = useState<any>(null);
   const [clientSecret, setClientSecret] = useState("");
   const [route, setRoute] = useState("");
+  const router = useRouter()
 
   const [openModal, setOpenModal] = useState(false);
   const isPurchased = user?.courses?.find((course: { courseId: string }) => {
@@ -78,6 +80,10 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   const fetchStripeKey = async () => {
     const stripePublishableKey = await getStripePublishableKey();
     setPublishableKey(stripePublishableKey);
+  };
+
+  const handleCourseAccess = () => {
+    router.push(`/course-access/${courseDetail._id}`);
   };
 
   const createIntent = async (amount: number) => {
@@ -238,15 +244,15 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                   You purchased this course on{" "}
                   {formatShortDate(isPurchased.createdDate)}
                 </p>
-                <Link
-                  href={`/course-access/${courseDetail._id}`}
+                <button
+                  onClick={handleCourseAccess}
                   className="primary-btn !w-full !my-4 !block"
                 >
                   <span className="flex items-center justify-center gap-1">
                     Go to course
                     <BiLogIn size={22} className="-mt-[2px]" />
                   </span>
-                </Link>
+                </button>
               </div>
             ) : (
               <div className="flex items-center">

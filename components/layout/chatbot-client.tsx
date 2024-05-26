@@ -73,7 +73,7 @@ const ChatBotClient: React.FC = () => {
             <div className="chatbot">
                 <header >
                     <h2 className='chat-title' >Chatbot</h2>
-                    <span className="close-btn material-symbols-outlined" onClick={handleToggleChatbot}>Close</span>
+                    <span className="close-btn material-symbols-outlined bold" onClick={handleToggleChatbot}>X</span>
                 </header>
                 <ul className="chatbox" ref={chatboxRef}>
                     {messages.map((message, index) => (
@@ -103,7 +103,22 @@ const ChatBotClient: React.FC = () => {
                         onChange={handleInputChange}
                         required
                     />
-                    <span id="send-btn" className="material-symbols-rounded hover:text-blue-300 cursor-pointer" onClick={handleChat}>Send</span>
+                    <span id="send-btn" className="material-symbols-rounded hover:text-blue-300 cursor-pointer " onClick={handleChat}>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                            />
+                        </svg>
+                    </span>
                 </div>
             </div>
         </div>

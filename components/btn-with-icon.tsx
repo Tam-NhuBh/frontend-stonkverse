@@ -14,6 +14,7 @@ interface Props {
   to?: string;
   external?: boolean;
   iconCustomClasses?: string;
+  disabled?: boolean;
 }
 
 const BtnWithIcon: FC<Props> = ({
@@ -28,6 +29,7 @@ const BtnWithIcon: FC<Props> = ({
   to,
   external,
   iconCustomClasses,
+  disabled,
 }): JSX.Element => {
   let Component = "button" as any;
   if (!onClick && href) {
@@ -49,6 +51,7 @@ const BtnWithIcon: FC<Props> = ({
       onClick={onClick}
       className={`primary-btn ${customClasses}`}
       type={type}
+      disabled={disabled}
       {...externalLinkAttr}
     >
       <span className="flex items-center justify-center gap-x-1">

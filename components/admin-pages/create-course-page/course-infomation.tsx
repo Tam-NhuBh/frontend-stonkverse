@@ -40,11 +40,13 @@ const courseInfoSchema = Yup.object({
     "Please enter course's estimated price"
   ),
   tags: Yup.string().required("Please enter course's tags"),
-  level: Yup.string().required("Please enter course's level"),
+  level: Yup.string().required("Please choose course's level"),
   demoUrl: Yup.string().required("Please enter course's demo video url"),
   thumbnail: Yup.string().required("Please upload course thumbnail image"),
   curriculum: Yup.string().required("Please upload curriculum pdf file of course"),
 });
+
+const level = ["Beginner", "Intermediate", "Expert"];
 
 const CourseInfomation: FC<Props> = ({
   active,
@@ -223,7 +225,20 @@ const CourseInfomation: FC<Props> = ({
       }
     }
   };
-
+  useEffect(() => {
+    if (initialCourseInfo && initialCourseInfo.thumbnail) {
+      const thumbnailUrl = initialCourseInfo.thumbnail.url;
+      
+      if (thumbnailUrl) {
+        const updateThumbnail = async () => {
+          const thumbnailBlobUrl = await blobUrlToBase64(thumbnailUrl);
+          setValue("thumbnail", thumbnailBlobUrl);
+        };
+        
+        updateThumbnail();
+      }
+    }
+  }, [initialCourseInfo]);
 
   useEffect(() => {
     setValue("name", courseInfo.name);
@@ -284,6 +299,7 @@ const CourseInfomation: FC<Props> = ({
             register={register("price")}
             errorMsg={errors.price?.message}
             placeholder="29"
+      
           />
 
           <FormInput
@@ -293,6 +309,7 @@ const CourseInfomation: FC<Props> = ({
             register={register("estimatedPrice")}
             errorMsg={errors.estimatedPrice?.message}
             placeholder="79"
+
           />
         </div>
 
@@ -314,13 +331,12 @@ const CourseInfomation: FC<Props> = ({
 
 
           {/* <div className="grid grid-cols-2 gap-4"> */}
-          <FormInput
-            id="level"
+           <FormSelect
+            options={level}
+            id={"level"} 
             label="Course Level"
             register={register("level")}
-            errorMsg={errors.level?.message}
-            placeholder="Beginner/Intermediate/Expert"
-          />
+            errorMsg={errors.level?.message}          />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <FormInput
@@ -397,8 +413,7 @@ const CourseInfomation: FC<Props> = ({
           accept="application/pdf"
           hidden
           onChange={(e) => handleUploadPDF(e)}
-        />
-
+        /> 
         <BottomNavigator onlyNext customClasses="mt-4" />
       </form>
     </div>
