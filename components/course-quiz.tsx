@@ -17,7 +17,20 @@ interface Props {
   questions: QuizQuestion[];
 }
 
-const fetcher = (url: string) => axios.get(url).then(res => res.data);
+const axiosConfig = {
+  baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
+  timeout: 10000, // 10 giây, bạn có thể điều chỉnh giá trị này
+};
+
+const fetcher = async (url: string) => {
+  try {
+    const res = await axios.get(url, axiosConfig);
+    return res.data;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw error;
+  }
+};
 
 const CourseQuiz: FC<Props> = ({ questions }): JSX.Element => {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string[] }>({});
@@ -63,7 +76,7 @@ const CourseQuiz: FC<Props> = ({ questions }): JSX.Element => {
     }));
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/answer-quiz`, submissionData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/add-answer-quiz`, submissionData);
       const { totalScore, detailedScores } = response.data;
 
       newScore = totalScore;
