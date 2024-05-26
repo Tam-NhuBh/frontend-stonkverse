@@ -46,6 +46,14 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    // submitQuiz: builder.mutation({
+    //   query: (data) => ({
+    //     url: "add-answer-quiz",
+    //     method: "POST",
+    //     body: { data },
+    //     credentials: "include" as const,
+    //   }),
+    // }),
   }),
 });
 
@@ -56,4 +64,5 @@ export const {
   useGetSingleCourseQuery,
   useEditCourseMutation,
   useGetCourseContentQuery,
+  // useSubmitQuizMutation,
 } = courseApi;

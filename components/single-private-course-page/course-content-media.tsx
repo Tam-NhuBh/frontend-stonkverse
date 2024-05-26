@@ -37,10 +37,11 @@ const CourseContentMedia: FC<Props> = ({
     mockAnswer: question.mockAnswer,
     correctAnswer: question.correctAnswer ?? [],
     maxScore: question.maxScore,
+    
   }));
 
   return (
-    <div className="mt-[62px]">
+    <div className="mt-[1px]">
       <div
         className={`${openSidebar ? "w-[75%]" : "w-full"
           } transition-width max-[1100px]:w-full`}

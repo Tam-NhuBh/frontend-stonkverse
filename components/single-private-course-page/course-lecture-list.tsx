@@ -116,7 +116,7 @@ const CourseLectureList: FC<Props> = ({
                       {video.quiz.map((quiz, quizIndex) => (
                         <div
                           key={quizIndex}
-                          className="cursor-pointer py-2 px-6 hover:bg-slate-200 dark:hover:bg-slate-900 transition flex items-center gap-2 bg-white dark:bg-slate-600"
+                          className="cursor-pointer py-2 px-6 hover:bg-slate-200 dark:hover:bg-slate-900 transition flex items-center gap-2 bg-white dark:bg-slate-500"
                           onClick={() => {
                             setActiveVideo(video.order);
                             setActiveContentType("quiz"); // Set content type to quiz
