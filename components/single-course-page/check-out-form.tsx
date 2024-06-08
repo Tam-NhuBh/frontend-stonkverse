@@ -25,7 +25,7 @@ const CheckOutForm: FC<Props> = ({ courseDetail }): JSX.Element => {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loadUser, setLoadUser] = useState(false);
-  const { } = useLoadUserQuery({ skip: loadUser ? false : true });
+  const {} = useLoadUserQuery({ skip: loadUser ? false : true });
   const user = useUserInfo();
 
   const router = useRouter();
@@ -33,43 +33,31 @@ const CheckOutForm: FC<Props> = ({ courseDetail }): JSX.Element => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!stripe || !elements) {
-      setMessage("Stripe has not been properly initialized");
-      setIsLoading(false);
-
       return;
     }
 
     setIsLoading(true);
-    try 
-    {
-      const { error, paymentIntent } = await stripe.confirmPayment({
-        elements,
-        redirect: "if_required",
-      });
 
-      if (error) {
-        setIsLoading(false);
-        setMessage(error.message as string);
-      } else if (paymentIntent && paymentIntent.status === "succeeded") {
-        setIsLoading(false);
-        const orderData = await createOrder(
-          courseDetail._id.toString(),
-          paymentIntent
-        );
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      redirect: "if_required",
+    });
 
-        if (orderData) {
-          toast.success("Sucessfully!");
-          setLoadUser(true);
-          router.push(`/course-access/${courseDetail._id}`);
-        }
-      }
-    } catch (error: any) {
-      if (error.type === 'StripeCardError') {
-        setMessage(error.message);
-      } else {
-        setMessage('An unexpected error occurred. Please try again.');
-      }
+    if (error) {
       setIsLoading(false);
+      setMessage(error.message as string);
+    } else if (paymentIntent && paymentIntent.status === "succeeded") {
+      setIsLoading(false);
+      const orderData = await createOrder(
+        courseDetail._id.toString(),
+        paymentIntent
+      );
+
+      if (orderData) {
+        toast.success("Purchased Course Sucessfully!");
+        setLoadUser(true);
+        router.push(`/course-access/${courseDetail._id}`);
+      }
     }
   };
 

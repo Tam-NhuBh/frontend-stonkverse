@@ -22,8 +22,7 @@ const CourseCard: FC<Props> = ({ course }): JSX.Element => {
         <NextImage
           src={course.thumbnail.url}
           alt={course.name}
-          className="rounded-t-[2px]"
-        />
+          className="rounded-t-[2px]" />
       </Link>
 
       <div className="p-4 dark:text-dark_text text-tertiary">
@@ -38,8 +37,7 @@ const CourseCard: FC<Props> = ({ course }): JSX.Element => {
             defaultValue={course.ratings || 0}
             readOnly
             size="small"
-            customClasses="mt-1"
-          />
+            customClasses="mt-1" />
 
           <span className="flex text-sm items-center gap-1 font-normal text-tertiary dark:text-dark_text">
             <MdOutlinePeopleAlt className="-mt-[2px]" size={16} />/

@@ -1,9 +1,7 @@
-import { FC, useState, useEffect } from "react";
-import useSWR from "swr";
-import axios from "axios";
-import BtnWithIcon from "./btn-with-icon";
-import { FcCursor } from "react-icons/fc";
+import React, { FC, useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import BtnWithIcon from "./btn-with-icon";
+import { addAnswerQuiz } from "@/lib/mutation-data";
 
 interface QuizQuestion {
   id: string;
@@ -14,101 +12,157 @@ interface QuizQuestion {
 }
 
 interface Props {
+  courseId: string;
+  contentId: string;
   questions: QuizQuestion[];
+  onClose: () => void;
 }
 
-const axiosConfig = {
-  baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
-  timeout: 10000, // 10 giây, bạn có thể điều chỉnh giá trị này
-};
-
-const fetcher = async (url: string) => {
-  try {
-    const res = await axios.get(url, axiosConfig);
-    return res.data;
-  } catch (error) {
-    console.error("Fetch error:", error);
-    throw error;
-  }
-};
-
-const CourseQuiz: FC<Props> = ({ questions }): JSX.Element => {
-  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string[] }>({});
+const CourseQuiz: FC<Props> = ({ courseId, contentId, questions }) => {
+  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: string]: string[] }>({});
   const [score, setScore] = useState<number | null>(null);
-  const [questionScores, setQuestionScores] = useState<{ [key: number]: number }>({});
+  const [questionScores, setQuestionScores] = useState<{ [key: string]: number }>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
-  const { data, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/add-answer-quiz`, // Adjust to your API endpoint
-    fetcher
-  );
+  const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+  const [isResubmitEnabled, setIsResubmitEnabled] = useState<boolean>(false);
+  const [canEnableResubmit, setCanEnableResubmit] = useState<boolean>(false);
+  const [resubmitTimeout, setResubmitTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
 
   useEffect(() => {
-    if (error) {
-      toast.error("Failed to fetch quiz questions.");
-    }
-  }, [error]);
+    const savedAnswers = localStorage.getItem(`quizAnswers_${courseId}_${contentId}`);
+    const savedScore = localStorage.getItem(`quizScore_${courseId}_${contentId}`);
+    const savedQuestionScores = localStorage.getItem(`questionScores_${courseId}_${contentId}`);
+    const savedHasSubmitted = localStorage.getItem(`hasSubmitted_${courseId}_${contentId}`);
 
-  const handleAnswerChange = (questionIndex: number, answer: string, isChecked: boolean) => {
+    if (isFirstLoad) {
+      setIsFirstLoad(false);
+    } else {
+      setSelectedAnswers(savedAnswers ? JSON.parse(savedAnswers) : {});
+      setScore(savedScore ? JSON.parse(savedScore) : null);
+      setQuestionScores(savedQuestionScores ? JSON.parse(savedQuestionScores) : {});
+      setHasSubmitted(savedHasSubmitted ? JSON.parse(savedHasSubmitted) : false);
+    }
+  }, [courseId, contentId, setSelectedAnswers, setScore, setQuestionScores, setHasSubmitted, isFirstLoad]);
+
+  useEffect(() => {
+    if (!isFirstLoad) {
+      localStorage.setItem(`quizAnswers_${courseId}_${contentId}`, JSON.stringify(selectedAnswers));
+    }
+  }, [selectedAnswers, courseId, contentId]);
+
+  useEffect(() => {
+    if (!isFirstLoad) {
+      localStorage.setItem(`quizScore_${courseId}_${contentId}`, JSON.stringify(score));
+    }
+  }, [score, courseId, contentId]);
+
+  useEffect(() => {
+    if (!isFirstLoad) {
+      localStorage.setItem(`questionScores_${courseId}_${contentId}`, JSON.stringify(questionScores));
+    }
+  }, [questionScores, courseId, contentId]);
+
+  useEffect(() => {
+    if (!isFirstLoad) {
+      localStorage.setItem(`hasSubmitted_${courseId}_${contentId}`, JSON.stringify(hasSubmitted));
+    }
+  }, [hasSubmitted, courseId, contentId]);
+
+  useEffect(() => {
+    if (!isFirstLoad) {
+      if (hasSubmitted) {
+        const timeout = setTimeout(() => setCanEnableResubmit(true), 40000);
+        setResubmitTimeout(timeout);
+      } else {
+        setCanEnableResubmit(false);
+        setIsResubmitEnabled(false);
+        if (resubmitTimeout) clearTimeout(resubmitTimeout);
+      }
+    }
+  }, [hasSubmitted]);
+
+  const handleAnswerChange = (questionId: string, correctAnswerLength: number, answer: string, isChecked: boolean) => {
+    if (hasSubmitted && !isResubmitEnabled) return;
     setSelectedAnswers((prevAnswers) => {
       const newAnswers = { ...prevAnswers };
       if (isChecked) {
-        if (newAnswers[questionIndex]) {
-          newAnswers[questionIndex].push(answer);
-        } else {
-          newAnswers[questionIndex] = [answer];
-        }
+        if (newAnswers[questionId]?.includes(answer)) return newAnswers;
+        newAnswers[questionId] = correctAnswerLength === 1 ? [answer] : [...(newAnswers[questionId] || []), answer];
       } else {
-        newAnswers[questionIndex] = newAnswers[questionIndex].filter((ans) => ans !== answer);
+        newAnswers[questionId] = newAnswers[questionId]?.filter((ans) => ans !== answer) || [];
       }
       return newAnswers;
     });
   };
 
   const handleSubmit = async () => {
+    if (hasSubmitted && isResubmitEnabled) {
+      handleResubmit();
+      return;
+    }
+    const isAllQuestionsAnswered = questions.every(question => selectedAnswers[question.id]?.length > 0);
+    if (!isAllQuestionsAnswered) {
+      toast.error("Please answer all questions before submitting");
+      return;
+    }
     setIsSubmitting(true);
-    let newScore = 0;
-    let newQuestionScores: { [key: number]: number } = {};
-
-    const submissionData = questions.map((question, index) => ({
-      questionId: question.id,
-      answer: selectedAnswers[index] || []
-    }));
-
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/add-answer-quiz`, submissionData);
-      const { totalScore, detailedScores } = response.data;
-
-      newScore = totalScore;
-      newQuestionScores = detailedScores;
-
+      const submissionData = questions.map((question) => ({
+        questionId: question.id,
+        answer: selectedAnswers[question.id] || []
+      }));
+      const response = await addAnswerQuiz(courseId, contentId, submissionData);
+      if (response) {
+        const { totalScore, detailedScores } = response;
+        setScore(totalScore);
+        setQuestionScores(detailedScores);
+        toast.success("Quiz answers submitted successfully!");
+        setHasSubmitted(true);
+        const timeout = setTimeout(() => setCanEnableResubmit(true), 40000);
+        setResubmitTimeout(timeout);
+      }
     } catch (error) {
-      console.error("Failed to submit quiz answers:", error);
       toast.error("An error occurred while submitting your answers. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
-
-    setScore(newScore);
-    setQuestionScores(newQuestionScores);
   };
 
-  if (error) return <div>An error occurred while fetching data.</div>;
-  if (!data) return <div>Loading...</div>;
+  const handleEnableResubmit = () => {
+    setIsResubmitEnabled(true);
+  };
+
+  const handleCancelResubmit = () => {
+    setIsResubmitEnabled(false);
+  };
+
+  const handleResubmit = () => {
+    setHasSubmitted(false);
+    setIsResubmitEnabled(false);
+    setCanEnableResubmit(false);
+    setScore(null);
+    setQuestionScores({});
+    setSelectedAnswers({});
+    localStorage.removeItem(`quizAnswers_${courseId}_${contentId}`);
+    localStorage.removeItem(`quizScore_${courseId}_${contentId}`);
+    localStorage.removeItem(`questionScores_${courseId}_${contentId}`);
+    localStorage.removeItem(`hasSubmitted_${courseId}_${contentId}`);
+  };
 
   return (
-    <div className="p-6 bg-white dark:bg-slate-900 border-l dark:border-slate-700 border rounded-lg shadow-md">
+    <div className="p-6 bg-white dark:bg-slate-900 dark:border-slate-700 ">
       <h2 className="text-3xl font-semibold mb-4">Quiz</h2>
       <div className="grid gap-4 mb-5">
-        {data.map((question: QuizQuestion, index: number) => {
+        {questions.map((question, index) => {
           const tickType = question.correctAnswer.length > 1 ? 'checkbox' : 'radio';
           return (
-            <div key={index} className="bg-gray-100 dark:bg-slate-700 p-4 rounded-lg">
+            <div key={question.id} className="bg-gray-100 dark:bg-slate-700 p-4 rounded-lg">
               <p className="text-lg font-semibold mb-2">
                 Question {index + 1}: {question.title}
                 {score !== null && (
                   <span className="ml-2 text-sm text-red-500 dark:text-red-400">
-                    ({questionScores[index]}/{question.maxScore} points)
+                    ({questionScores?.[question.id] || 0}/{question.maxScore} points)
                   </span>
                 )}
               </p>
@@ -119,7 +173,9 @@ const CourseQuiz: FC<Props> = ({ questions }): JSX.Element => {
                     name={`question-${index}`}
                     className={`mr-2 ${tickType === 'radio' ? 'rounded-full' : 'rounded-md'}`}
                     value={answer}
-                    onChange={(e) => handleAnswerChange(index, answer, e.target.checked)}
+                    onChange={(e) => handleAnswerChange(question.id, question.correctAnswer.length, answer, e.target.checked)}
+                    checked={selectedAnswers[question.id]?.includes(answer) || false}
+                    disabled={hasSubmitted && !isResubmitEnabled}
                   />
                   {answer}
                 </label>
@@ -128,16 +184,24 @@ const CourseQuiz: FC<Props> = ({ questions }): JSX.Element => {
           );
         })}
       </div>
-
-      <BtnWithIcon
-        content="SUBMIT"
-        type="submit"
-        onClick={handleSubmit}
-        iconBehind={FcCursor}
-        iconSize={25}
-        iconCustomClasses="-mt-1"
-        disabled={isSubmitting}
-      />
+      <div className="flex space-x-4">
+        <BtnWithIcon
+          content={hasSubmitted && isResubmitEnabled ? "RESUBMIT" : hasSubmitted ? "ENABLE RESUBMIT" : "SUBMIT"}
+          type="submit"
+          onClick={hasSubmitted && !isResubmitEnabled ? handleEnableResubmit : handleSubmit}
+          iconSize={25}
+          iconCustomClasses="-mt-1"
+          disabled={isSubmitting || (hasSubmitted && !canEnableResubmit && !isResubmitEnabled)}
+        />
+        {hasSubmitted && isResubmitEnabled && (
+          <BtnWithIcon
+            content="CANCEL"
+            type="button"
+            iconSize={25}
+            onClick={handleCancelResubmit}
+          />
+        )}
+      </div>
       {score !== null && (
         <div className="mt-4 text-2xl font-semibold">
           Your total score: {score}/{questions.reduce((acc, question) => acc + question.maxScore, 0)}

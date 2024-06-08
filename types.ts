@@ -115,13 +115,3 @@ export interface ICourse {
   ratings?: number;
   purchased?: number;
 }
-// breadcumbs
-
-export interface CrumbItem {
-  path: string;
-  label: string;
-}
-
-export interface BreadcrumbsProps {
-  items: CrumbItem[];
-}

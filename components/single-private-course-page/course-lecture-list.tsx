@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction } from "react";
 import { AccordionWrapper } from "../accordion-materials";
 import { AccordionDetails, AccordionSummary } from "@mui/material";
 import { formatVideoLength } from "@/lib/format-data";
-import { MdOutlineOndemandVideo, MdQuiz } from "react-icons/md"; // Import quiz icon
+import { MdOutlineOndemandVideo, MdQuiz } from "react-icons/md";
 import { BiSolidChevronDown } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { ICourseData } from "@/types";
@@ -13,7 +13,7 @@ interface Props {
   setIconHover?: Dispatch<SetStateAction<boolean>>;
   activeVideo: number;
   setActiveVideo: Dispatch<SetStateAction<number>>;
-  setActiveContentType: Dispatch<SetStateAction<string>>; // Add this line
+  setActiveContentType: Dispatch<SetStateAction<string>>;
 }
 
 const CourseLectureList: FC<Props> = ({
@@ -22,7 +22,7 @@ const CourseLectureList: FC<Props> = ({
   setIconHover,
   activeVideo,
   setActiveVideo,
-  setActiveContentType, // Add this line
+  setActiveContentType,
 }): JSX.Element => {
   const rawSections = new Set<string>(
     courseData?.map((item) => item.videoSection)
@@ -41,6 +41,7 @@ const CourseLectureList: FC<Props> = ({
       (video) => video.videoSection === section
     ),
   }));
+  
 
   return (
     <div className="overflow-y-scroll max-h-[calc(100%-62px)] no-scrollbar">
@@ -88,14 +89,13 @@ const CourseLectureList: FC<Props> = ({
               {section.videos.map((video, videoIndex: number) => (
                 <div key={videoIndex}>
                   <div
-                    className={`cursor-pointer py-2 px-4 hover:bg-slate-200 dark:hover:bg-slate-900 transition flex items-center gap-2 ${
-                      video.order === activeVideo
+                    className={`cursor-pointer py-2 px-4 hover:bg-slate-200 dark:hover:bg-slate-900 transition flex items-center justify-between gap-2 ${video.order === activeVideo
                         ? "bg-slate-200 dark:bg-slate-900"
                         : "bg-white dark:bg-slate-600"
-                    }`}
+                      }`}
                     onClick={() => {
                       setActiveVideo(video.order);
-                      setActiveContentType("video"); // Set content type to video
+                      setActiveContentType("video");
                     }}
                   >
                     <div>
@@ -105,31 +105,19 @@ const CourseLectureList: FC<Props> = ({
                         </span>
                       </p>
                       <span className="text-xs flex items-center gap-1 mt-2">
-                      <MdOutlineOndemandVideo className="-mt-[2px]" />
-
+                        <MdOutlineOndemandVideo className="-mt-[2px]" />
                         {formatVideoLength(video.videoLength)}
                       </span>
                     </div>
+                    {video.quiz && video.quiz.length > 0 && (
+                      <div className="flex items-center gap-1">
+                        <MdQuiz className="text-blue-500" />
+                        <span className="text-xs text-blue-500">
+                          {video.quiz.length}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  {video.quiz && video.quiz.length > 0 && (
-                    <div className="mt-2">
-                      {video.quiz.map((quiz, quizIndex) => (
-                        <div
-                          key={quizIndex}
-                          className="cursor-pointer py-2 px-6 hover:bg-slate-200 dark:hover:bg-slate-900 transition flex items-center gap-2 bg-white dark:bg-slate-500"
-                          onClick={() => {
-                            setActiveVideo(video.order);
-                            setActiveContentType("quiz"); // Set content type to quiz
-                          }}
-                        >
-                          <MdQuiz className="-mt-[2px]" />
-                          <p>
-                            <span className="font-semibold">Quiz:</span> {quiz.title}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
             </AccordionDetails>

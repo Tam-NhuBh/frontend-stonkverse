@@ -53,7 +53,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   });
 
   let discountPercentage = 0;
-  if (courseDetail.estimatedPrice) {
+  if (courseDetail?.estimatedPrice) {
     discountPercentage =
       ((courseDetail.estimatedPrice - courseDetail.price) /
         courseDetail.estimatedPrice) *
@@ -62,7 +62,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
 
   const discountPercentagePrice = discountPercentage.toFixed(0) || 0;
 
-  const courseLength: number = courseDetail.courseData.reduce(
+  const courseLength: number = courseDetail?.courseData.reduce(
     (acc: number, cur: ICourseData) => {
       return acc + cur.videoLength;
     },
@@ -219,6 +219,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                   content={review.comment}
                   rating={review.rating}
                   createdAt={review.createdAt}
+                  showReplyButton={false}
                 />
               ))}
             </div>
@@ -231,6 +232,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
           <CoursePlayer
             videoUrl={courseDetail.demoUrl}
             title={courseDetail.name}
+            onVideoEnd={() => {}}
           />
 
           <div className="mt-2 p-4 gap-2 relative">
