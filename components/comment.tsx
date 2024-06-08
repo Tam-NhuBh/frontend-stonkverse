@@ -38,6 +38,7 @@ interface Props {
   reviewReplies?: IReviewReply[];
   setReviews?: Dispatch<SetStateAction<IReview[]>>;
   activeTitle?: string;
+  showReplyButton?: boolean
 }
 
 const Comment: FC<Props> = ({
@@ -57,6 +58,7 @@ const Comment: FC<Props> = ({
   reviewReplies,
   setReviews,
   activeTitle,
+  showReplyButton = true
 }): JSX.Element => {
   const isAdmin = useIsAdmin();
   const [openReplies, setOpenReplies] = useState(false);
@@ -146,7 +148,7 @@ const Comment: FC<Props> = ({
         {content}
       </div>
 
-      {(isQuestion || isAdmin) && (
+      {(isQuestion || isAdmin) && showReplyButton &&(
         <div className="flex items-center gap-4 mt-4 text-tertiary dark:text-secondary">
           <BtnWithIcon
             content={openReplies ? "Hide replies?" : "Reply this?"}
@@ -167,6 +169,7 @@ const Comment: FC<Props> = ({
                     name={reply.user?.name}
                     content={reply?.answer}
                     createdAt={reply?.createdAt}
+
                   />
                 ))
               : reviewReplies?.map((reviewReply) => (
@@ -176,6 +179,7 @@ const Comment: FC<Props> = ({
                     name={reviewReply.user?.name}
                     content={reviewReply?.answer}
                     createdAt={reviewReply?.createdAt}
+
                   />
                 ))}
           </div>
@@ -201,13 +205,13 @@ const Comment: FC<Props> = ({
         </div>
       )}
 
-      <div className="absolute top-6 right-0 cursor-pointer group">
+      {/* <div className="absolute top-6 right-0 cursor-pointer group">
         <BsThreeDotsVertical />
 
         <div className="absolute top-6 -left-8 shadow-lg border py-2 px-3 z-10 hidden group-hover:block dark:bg-slate-800 bg-white before:absolute before:-top-2 before:-left-0 before:bg-transparent before:w-full before:h-[15px] :before:bg-transparent">
           <span className="text-sm">Report</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -118,12 +118,16 @@ const CourseContent: FC<Props> = ({
       item.videoUrl === "" ||
       item.length === 0 ||
       item.links[0].title === "" ||
-      item.links[0].url === "" ||
-      item.quiz[0].title === "" ||
-      item.quiz[0].correctAnswer.length === 0 ||
-      item.quiz[0].mockAnswer.length === 0
+      item.links[0].url === ""
     ) {
-      toast.error("Please fill all the fields first");
+      toast.error("Please fill all the fields");
+    } else if (
+      item.quiz.length > 0 &&
+      (item.quiz[0].title === "" ||
+        item.quiz[0].correctAnswer.length === 0 ||
+        item.quiz[0].mockAnswer.length === 0)
+    ) {
+      toast.error("Please fill in all quiz fields or remove the quiz");
     } else {
       let newVideoSection = "";
 
@@ -143,7 +147,7 @@ const CourseContent: FC<Props> = ({
         videoSection: newVideoSection,
         videoLength: 0,
         links: [{ title: "", url: "" }],
-        quiz: [{ title: "", correctAnswer: [""], mockAnswer: [""] }]
+        quiz: []
 
       };
 
@@ -161,12 +165,16 @@ const CourseContent: FC<Props> = ({
       courseContentData[courseContentData.length - 1].videoUrl === "" ||
       courseContentData[courseContentData.length - 1].videoLength === 0 ||
       courseContentData[courseContentData.length - 1].links[0].title === "" ||
-      courseContentData[courseContentData.length - 1].links[0].url === "" ||
-      courseContentData[courseContentData.length - 1].quiz[0].title === "" ||
-      courseContentData[courseContentData.length - 1].quiz[0].correctAnswer.length === 0 ||
-      courseContentData[courseContentData.length - 1].quiz[0].mockAnswer.length === 0
-      ) {
+      courseContentData[courseContentData.length - 1].links[0].url === ""
+    ) {
       toast.error("Please fill all the fields first!");
+    } else if (
+      courseContentData[courseContentData.length - 1].quiz.length > 0 &&
+      (courseContentData[courseContentData.length - 1].quiz[0].title === "" ||
+        courseContentData[courseContentData.length - 1].quiz[0].correctAnswer.length === 0 ||
+        courseContentData[courseContentData.length - 1].quiz[0].mockAnswer.length === 0)
+    ) {
+      toast.error("Please fill in all quiz fields or remove the quiz");
     } else {
       setActiveSection(activeSection + 1);
       const newContent = {
@@ -176,7 +184,7 @@ const CourseContent: FC<Props> = ({
         videoLength: 0,
         videoSection: `${activeSection}`,
         links: [{ title: "", url: "" }],
-        quiz: [{ title: "", correctAnswer: [""], mockAnswer: [""] }]
+        quiz: []
 
       };
       setCourseContentData([
@@ -197,11 +205,16 @@ const CourseContent: FC<Props> = ({
       courseContentData[courseContentData.length - 1].videoUrl === "" ||
       courseContentData[courseContentData.length - 1].videoLength === 0 ||
       courseContentData[courseContentData.length - 1].links[0].title === "" ||
-      courseContentData[courseContentData.length - 1].links[0].url === "" ||
-      courseContentData[courseContentData.length - 1].quiz[0].title === "" ||
-      courseContentData[courseContentData.length - 1].quiz[0].correctAnswer.length === 0 ||
-      courseContentData[courseContentData.length - 1].quiz[0].mockAnswer.length === 0) {
-      toast.error("Please fill in all information!");
+      courseContentData[courseContentData.length - 1].links[0].url === ""
+    ) {
+      toast.error("Please fill in all information");
+    } else if (
+      courseContentData[courseContentData.length - 1].quiz.length > 0 &&
+      (courseContentData[courseContentData.length - 1].quiz[0].title === "" ||
+        courseContentData[courseContentData.length - 1].quiz[0].correctAnswer.length === 0 ||
+        courseContentData[courseContentData.length - 1].quiz[0].mockAnswer.length === 0)
+    ) {
+      toast.error("Please fill in all quiz fields or remove the quiz");
     } else {
       setActive(active + 1);
       submitCourseHandler();
@@ -394,11 +407,6 @@ const CourseContent: FC<Props> = ({
                           <BsLink45Deg className="-mt-[3px]" size={18} />
                         </p>
                       </div>
- 
-
-                      <p className="my-4 w-full text-left text-lg font-semibold text-tertiary dark:text-dark_text">
-                        Quiz Questions
-                      </p>
 
                       {item.quiz.map((quizs: any, quizIndex: number) => (
                         <div key={quizIndex} className="px-4 mb-4">
@@ -465,19 +473,19 @@ const CourseContent: FC<Props> = ({
                         />
                       </div>
 
-                      
+
                     </div>
 
-                     
+
                     {index === courseContentData.length - 1 && (
-                        <BtnWithIcon
-                          customClasses="mx-auto text-dark_text !bg-slate-700 w-fit !rounded-sm !mt-6"
-                          onClick={() => newContentHandler(item)}
-                          icon={AiOutlinePlusCircle}
-                          iconSize={20}
-                          content="Add New Video"
-                        />
-                      )}
+                      <BtnWithIcon
+                        customClasses="mx-auto text-dark_text !bg-slate-700 w-fit !rounded-sm !mt-6"
+                        onClick={() => newContentHandler(item)}
+                        icon={AiOutlinePlusCircle}
+                        iconSize={20}
+                        content="Add New Video"
+                      />
+                    )}
                   </>
                 )}
               </div>

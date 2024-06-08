@@ -107,7 +107,31 @@ export const addReviewReply = async (
   try {
     const { data } = await axios.put(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/add-reply`,
-      { answer, courseId, reviewId },
+      { courseId, answer,  reviewId },
+      {
+        withCredentials: true,
+      }
+    );
+
+    return data;
+  } catch (error: any) {
+    toast.error(error.response.data.message);
+    console.log(error.response.data.message);
+  }
+};
+
+export const addAnswerQuiz = async (
+  courseId: string,
+  contentId: string,
+  answers: {
+    questionId: string,
+    answer: string[],
+  }[],
+) => {
+  try {
+    const { data } = await axios.put(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/add-answer-quiz`,
+      { courseId, answers, contentId},
       {
         withCredentials: true,
       }

@@ -13,6 +13,7 @@ interface Props {
   refetch: any;
   activeVideo: number;
   setActiveVideo: Dispatch<SetStateAction<number>>;
+  setActiveContentType: Dispatch<SetStateAction<string>>; 
 }
 
 const panelItemClasses =
@@ -27,6 +28,7 @@ const LectureTabContent: FC<Props> = ({
   courseData,
   activeVideo,
   setActiveVideo,
+  setActiveContentType
 }): JSX.Element => {
   const [active, setActive] = useState(0);
   const notComputer = useMediaQuery("(max-width:1100px)");
@@ -91,7 +93,8 @@ const LectureTabContent: FC<Props> = ({
           <CourseLectureList
             courseData={courseData}
             activeVideo={activeVideo}
-            setActiveVideo={setActiveVideo}
+            setActiveVideo={setActiveVideo} 
+            setActiveContentType={setActiveContentType}            
           />
         )}
 
