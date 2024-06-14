@@ -110,18 +110,7 @@ header h2 {
   margin: 20px 0;
   justify-content: flex-end;
 }
-/* .chatbox .incoming span {
-  width: 32px;
-  height: 32px;
-  color: #fff;
-  cursor: default;
-  text-align: center;
-  line-height: 32px;
-  align-self: flex-end;
-  background: linear-gradient(90deg, #4d88c4 2.34%, #0da5b5 100.78%);
-  border-radius: 4px;
-  margin: 0 10px 7px 0;
-} */
+
 .chatbox .chat p {
   white-space: pre-wrap;
   padding: 12px 16px;
@@ -131,9 +120,7 @@ header h2 {
   font-size: 0.97rem;
   background: linear-gradient(90deg, #4d88c4 2.34%, #0da5b5 100.78%);
 }
-.chatbox .incoming p {
-  border-radius: 1px 10px 10px 0;
-}
+
 .chatbox .chat p.error {
   color: #721c24;
   background: #f8d7da;
@@ -148,9 +135,7 @@ header h2 {
   position: absolute;
   bottom: 0;
   width: 100%;
-  background: #fff !important;
   padding: 3px 20px;
-  border-top: 1px solid #ddd;
 }
 .chat-input textarea {
   height: 55px;
@@ -198,23 +183,6 @@ header h2 {
   .chatbot header span {
     display: block;
   }
-}
-:root {
-  --chatbox-bg-color: #fff; /* Màu nền mặc định cho chế độ sáng */
-  --textarea-bg-color: #fff; /* Màu nền mặc định cho textarea chế độ sáng */
-  --text-color: #000; /* Màu chữ mặc định cho chế độ sáng */
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --chatbox-bg-color: #121212; /* Màu nền cho chế độ tối */
-    --textarea-bg-color: #121212; /* Màu nền cho textarea chế độ tối */
-    --text-color: #fff; /* Màu chữ cho chế độ tối */
-  }
-}
-.chatbot .chatbox {
-  background-color: var(--chatbox-bg-color);
-  color: var(--text-color);
 }
 
 .chatbot .chat-input textarea {

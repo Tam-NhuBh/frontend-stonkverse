@@ -232,7 +232,6 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
           <CoursePlayer
             videoUrl={courseDetail.demoUrl}
             title={courseDetail.name}
-            onVideoEnd={() => {}}
           />
 
           <div className="mt-2 p-4 gap-2 relative">

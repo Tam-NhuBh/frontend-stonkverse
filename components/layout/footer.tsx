@@ -102,7 +102,7 @@ const Footer: FC<Props> = (): JSX.Element => {
         </div>
       </div>
 
-      <div className="border-t dark:border-slate-700 py-1">
+      <div className="border-t dark:border-slate-700 py-1 fixed bottom-0 left-0 right-0 bg-white dark:bg-opacity-50 dark-bg ">
         <div className="container text-[#999999] text-xs flex items-center justify-between">
           <span className=" my-2 text-center">
             Stock Index

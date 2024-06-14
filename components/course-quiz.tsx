@@ -16,9 +16,10 @@ interface Props {
   contentId: string;
   questions: QuizQuestion[];
   onClose: () => void;
+  onQuizSubmit: () => void; 
 }
 
-const CourseQuiz: FC<Props> = ({ courseId, contentId, questions }) => {
+const CourseQuiz: FC<Props> = ({ courseId, contentId, questions, onClose, onQuizSubmit }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: string]: string[] }>({});
   const [score, setScore] = useState<number | null>(null);
   const [questionScores, setQuestionScores] = useState<{ [key: string]: number }>({});
@@ -119,6 +120,7 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions }) => {
         setQuestionScores(detailedScores);
         toast.success("Quiz answers submitted successfully!");
         setHasSubmitted(true);
+        onQuizSubmit(); 
         const timeout = setTimeout(() => setCanEnableResubmit(true), 40000);
         setResubmitTimeout(timeout);
       }
@@ -151,7 +153,7 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions }) => {
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-slate-900 dark:border-slate-700 ">
+    <div className="p-6 bg-white dark:bg-slate-900 dark:border-slate-100 ">
       <h2 className="text-3xl font-semibold mb-4">Quiz</h2>
       <div className="grid gap-4 mb-5">
         {questions.map((question, index) => {

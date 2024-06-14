@@ -8,14 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { addMessage } from '@/slice/chatbot-client.slice';
 import { chatbotApi } from '@/store/chatbot/chatbot-client-api';
-import { BiSend } from 'react-icons/bi';
-import { Span } from 'next/dist/trace';
+import { AiOutlineSend } from "react-icons/ai";
+
 
 const ChatBotClient: React.FC = () => {
     const dispatch = useDispatch();
     const messages = useSelector((state: RootState) => state.chatbotClient.messages);
     const [isLoading, setIsLoading] = useState(false);
-
+    
     const [showChatIcon, setShowChatIcon] = useState(true);
     const chatboxRef = useRef<HTMLUListElement>(null);
     const chatInputRef = useRef<HTMLTextAreaElement>(null);
@@ -32,27 +32,22 @@ const ChatBotClient: React.FC = () => {
         const userMessage = chatInputRef.current?.value.trim();
         if (!userMessage) return;
 
-        dispatch(addMessage(userMessage)); // Add user message to Redux store
-
-        // Clear the input textarea and set its height to default
+        dispatch(addMessage(userMessage));
         if (chatInputRef.current) {
             chatInputRef.current.value = "";
             chatInputRef.current.style.height = `${inputInitHeight}px`;
         }
 
-        // Append the user's message to the chatbox
         if (chatboxRef.current) {
             chatboxRef.current.scrollTo(0, chatboxRef.current.scrollHeight);
         }
 
         setTimeout(() => {
-            // Display "Thinking..." message while waiting for the response
             generateResponse(userMessage);
         }, 600);
     };
 
     const handleInputChange = () => {
-        // Adjust the height of the input textarea based on its content
         if (chatInputRef.current) {
             chatInputRef.current.style.height = `${inputInitHeight}px`;
             chatInputRef.current.style.height = `${chatInputRef.current.scrollHeight}px`;
@@ -67,20 +62,22 @@ const ChatBotClient: React.FC = () => {
     return (
         <div>
             <button className="chatbot-toggler" onClick={handleToggleChatbot}>
-                {showChatIcon ? <FaComment className="material-symbols-rounded" /> : null}
-                {!showChatIcon ? <FaTimes className="material-symbols-outlined" /> : null}
+                {!showChatIcon ? <FaComment className="material-symbols-rounded" /> : null}
+                {showChatIcon ? <FaTimes className="material-symbols-outlined" /> : null}
             </button>
             <div className="chatbot">
                 <header >
-                    <h2 className='chat-title' >Chatbot</h2>
-                    <span className="close-btn material-symbols-outlined bold" onClick={handleToggleChatbot}>X</span>
+                    <h2 className="text-2xl font-bold">CHATBOT</h2>
+                    <span className="close-btn" onClick={handleToggleChatbot}>
+                        <FaTimes className="icon" />
+                    </span>
                 </header>
-                <ul className="chatbox" ref={chatboxRef}>
+                <ul className="chatbox bg-white dark:bg-opacity-50 dark-bg" ref={chatboxRef}>
                     {messages.map((message, index) => (
                         <li key={index} className={`chat ${index % 2 === 0 ? 'incoming' : 'outgoing'}`}>
                             {index % 2 === 0 && (
                                 <MdOutlineSmartToy
-                                    className='material-symbols-outlined icon'
+                                    className='material-symbols-outlined icon text-black dark:text-white'
                                     size={40}
                                     style={{ marginRight: '3px', marginTop: 'auto', marginBottom: '10px' }}
                                 />
@@ -90,34 +87,21 @@ const ChatBotClient: React.FC = () => {
                     ))}
                     {isLoading && (
                         <li className="loading-icon">
-                            <div className="loading-spinner"></div> {/* Biểu tượng loading */}
+                            <div className="loading-spinner"></div>
                         </li>
                     )}
                 </ul>
 
-                <div className="chat-input">
-                    <textarea
+                <div className="chat-input dark:bg-opacity-50 dark-bg border-t dark:border-slate-600">
+                    <textarea 
                         ref={chatInputRef}
                         placeholder="Enter a message..."
                         spellCheck={false}
                         onChange={handleInputChange}
                         required
                     />
-                    <span id="send-btn" className="material-symbols-rounded hover:text-blue-300 cursor-pointer " onClick={handleChat}>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 5l7 7-7 7"
-                            />
-                        </svg>
+                    <span id="send-btn" className="material-symbols-rounded hover:text-blue-300 cursor-pointer" onClick={handleChat}>
+                        <AiOutlineSend  className="icon"/>
                     </span>
                 </div>
             </div>

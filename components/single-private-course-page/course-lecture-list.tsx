@@ -41,7 +41,6 @@ const CourseLectureList: FC<Props> = ({
       (video) => video.videoSection === section
     ),
   }));
-  
 
   return (
     <div className="overflow-y-scroll max-h-[calc(100%-62px)] no-scrollbar">
