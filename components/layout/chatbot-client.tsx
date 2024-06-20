@@ -62,12 +62,12 @@ const ChatBotClient: React.FC = () => {
     return (
         <div>
             <button className="chatbot-toggler" onClick={handleToggleChatbot}>
-                {!showChatIcon ? <FaComment className="material-symbols-rounded" /> : null}
-                {showChatIcon ? <FaTimes className="material-symbols-outlined" /> : null}
+                {showChatIcon ? <FaComment className="material-symbols-rounded" /> : null}
+                {!showChatIcon ? <FaTimes className="material-symbols-outlined" /> : null}
             </button>
             <div className="chatbot">
                 <header >
-                    <h2 className="text-2xl font-bold">CHATBOT</h2>
+                    <h2 className="text-xl font-bold">CHATBOT</h2>
                     <span className="close-btn" onClick={handleToggleChatbot}>
                         <FaTimes className="icon" />
                     </span>

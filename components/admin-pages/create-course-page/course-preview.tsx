@@ -105,6 +105,8 @@ const CoursePreview: FC<Props> = ({
               prerequisites={courseData.prerequisites as { title: string }[]}
               forWho={courseData.forWho as { title: string }[]}
               description={courseData.description as string}
+              curr={courseData.curriculum.url as string}
+
             />
           </div>
 
@@ -145,7 +147,6 @@ const CoursePreview: FC<Props> = ({
           <CoursePlayer
             videoUrl={courseData?.demoUrl}
             title={courseData?.title}
-            onVideoEnd={() => {}}
           />
 
           <div className="mt-2 p-4 gap-2 relative">

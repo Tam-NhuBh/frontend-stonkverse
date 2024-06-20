@@ -7,6 +7,7 @@ import {
   AccordionSummary,
   AccordionWrapper,
 } from "../accordion-materials";
+import ChatBotClient from "../layout/chatbot-client";
 
 interface Props {
   faqs: IFaq[];
@@ -30,6 +31,9 @@ export default function FAQ({ faqs }: Props) {
             </span>
           </p>
         </h2>
+        <div className="chatbot-container">
+<ChatBotClient />
+</div>
         <div className="shadow-md">
           {faqs?.map((faq, index) => (
             <AccordionWrapper
@@ -51,6 +55,8 @@ export default function FAQ({ faqs }: Props) {
               </AccordionDetails>
 
             </AccordionWrapper>
+
+
           ))}
         </div>
       </div>

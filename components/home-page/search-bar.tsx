@@ -97,7 +97,7 @@ const SearchBar = () => {
               </li>
             ))
           ) : (
-            <li className="p-2 text-gray-500">No results found.</li>
+            <li className="p-2 text-gray-500">No results found</li>
           )}
         </ul>
       ) : (<></>)}

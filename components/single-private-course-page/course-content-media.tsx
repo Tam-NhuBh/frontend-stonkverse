@@ -24,13 +24,15 @@ const CourseContentMedia: FC<Props> = ({
 }): JSX.Element => {
   const [showQuizModal, setShowQuizModal] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [quizCompleted, setQuizCompleted] = useState<boolean[]>(Array(courseData.length).fill(false));
+  const [quizCompleted, setQuizCompleted] = useState<boolean[]>(Array(courseData?.length).fill(false));
   const [openSidebar, setOpenSidebar] = useState(true);
   const [iconHover, setIconHover] = useState(false);
   const [activeContentType, setActiveContentType] = useState("video");
   const [currentVideoHasQuiz, setCurrentVideoHasQuiz] = useState(false);
   const [nextVideoTriggered, setNextVideoTriggered] = useState(false);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
+  const [quizId, setQuizId] = useState<string>("");
+  const [currentQuizId, setCurrentQuizId] = useState<string>("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -58,8 +60,12 @@ const CourseContentMedia: FC<Props> = ({
 
   const handleNextVideo = () => {
     if (currentVideoHasQuiz && !quizCompleted[activeVideo]) {
-      setShowQuizModal(true);
-      setNextVideoTriggered(true);
+      const quizId = courseData?.[activeVideo]?.quiz[0]?._id.toString(); 
+      if (quizId) {
+        setCurrentQuizId(quizId); 
+        setShowQuizModal(true);
+        setNextVideoTriggered(true);
+      }
     } else {
       setActiveVideo((prevIndex) => Math.min(prevIndex + 1, courseData.length - 1));
     }
@@ -150,8 +156,9 @@ const CourseContentMedia: FC<Props> = ({
               contentId={courseData?.[activeVideo]?._id.toString()}
               questions={filteredQuestions}
               onClose={handleCloseQuizModal}
-              onQuizSubmit={handleQuizSubmit}
-            />
+              onQuizSubmit={handleQuizSubmit} 
+              quizId={currentQuizId}      
+              />
           </div>
         </div>
       )}

@@ -481,27 +481,9 @@ html {
 .chatbot-container {
   position: fixed;
   right: 20px;
-  bottom: 20px;
+  bottom: 70px;
   z-index: 1000; /* Giá trị cao để đảm bảo nó luôn nằm trên cùng */
 }
-
-/* breadcrumbs css*/
-
-/* .breadcrumbs-section {
-  @apply bg-[#f7f9fa] dark:bg-transparent pt-4 pb-4 mt-12;
-  text-transform: capitalize;
-}
-
-@layer components {
-  .breadcrumbs-section li:not(:last-child)::after {
-    content: '>';
-    padding: 0 8px;
-    color: #4d88c4;
-  }
-} */
-/* Tailwind CSS applied to the breadcrumb section */
-/* More specific selector */
-
 
 @layer components {
   .breadcrumbs-section {

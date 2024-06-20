@@ -9,6 +9,7 @@ import { FC } from "react";
 // import { ICategory } from "@/components/home-page/categories";
 import { IFetchedCourse } from "@/components/home-page/courses";
 import SearchBar from "@/components/home-page/search-bar";
+import ChatBotClient from "@/components/layout/chatbot-client";
 
 interface Props { }
 
@@ -25,11 +26,14 @@ const page: FC<Props> = async (props): Promise<JSX.Element> => {
         <Header />
         <div className="container mt-8 mb-14">
           <div>
-            <SearchBar/>
+            <SearchBar />
             <div className="mt-10 main-grid">
               {courses?.map((course) => (
                 <CourseCard key={course._id.toString()} course={course} />
               ))}
+              <div className="chatbot-container">
+                <ChatBotClient />
+              </div>
             </div>
           </div>
         </div>

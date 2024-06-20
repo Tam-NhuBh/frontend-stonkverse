@@ -4,6 +4,7 @@ interface Props {
   prerequisites: { title: string }[];
   forWho: { title: string }[];
   description: string;
+  curr: string; 
 }
 
 const panelItemClasses =
@@ -16,8 +17,17 @@ const CourseContentTabs: FC<Props> = ({
   prerequisites,
   description,
   forWho,
+  curr,
 }): JSX.Element => {
   const [active, setActive] = useState(0);
+
+  const isValidUrl = (urlString: string) => {
+    try {
+      return Boolean(new URL(urlString));
+    } catch (e) {
+      return false;
+    }
+  };
 
   return (
     <>
@@ -49,7 +59,27 @@ const CourseContentTabs: FC<Props> = ({
       </div>
 
       <div className="py-6 text-slate-500 dark:text-dark_text">
-        {active === 0 && <div>{description}</div>}
+        {active === 0 && (
+          <>
+            <div>{description}</div>
+            {isValidUrl(curr) ? (
+              <div className="mt-14">
+                <iframe
+                  src={curr}
+                  className="rounded-lg shadow-lg border border-gray-200 bg-blue"
+                  style={{
+                    height: "700px",
+                    width: "100%",
+     
+                  }}
+
+                ></iframe>
+              </div>
+            ) : (
+              <div>{curr}</div>
+            )}
+          </>
+        )}
 
         {active === 1 && (
           <ul className="list-disc ml-4 space-y-2">
