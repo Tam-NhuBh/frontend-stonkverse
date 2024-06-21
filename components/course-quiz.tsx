@@ -103,7 +103,7 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions, quizId, onClose
         toast.success("Quiz answers submitted successfully!");
         setHasSubmitted(true);
         onQuizSubmit(); 
-        const timeout = setTimeout(() => setCanEnableResubmit(true), 40000);
+        const timeout = setTimeout(() => setCanEnableResubmit(true), 4000);
         setResubmitTimeout(timeout);
       }
     } catch (error) {

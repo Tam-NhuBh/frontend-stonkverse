@@ -7,6 +7,8 @@ import { BiSolidChevronsLeft } from "react-icons/bi";
 import LectureTabContent from "./lecture-tab-content";
 import { ICourseData, IQuestionQuiz } from "@/types";
 import toast from "react-hot-toast";
+import { getAnswersQuiz } from "@/lib/fetch-data";
+
 interface Props {
   courseId: string;
   courseData: ICourseData[];
@@ -23,7 +25,6 @@ const CourseContentMedia: FC<Props> = ({
   refetch,
 }): JSX.Element => {
   const [showQuizModal, setShowQuizModal] = useState(false);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState<boolean[]>(Array(courseData?.length).fill(false));
   const [openSidebar, setOpenSidebar] = useState(true);
   const [iconHover, setIconHover] = useState(false);
@@ -31,8 +32,8 @@ const CourseContentMedia: FC<Props> = ({
   const [currentVideoHasQuiz, setCurrentVideoHasQuiz] = useState(false);
   const [nextVideoTriggered, setNextVideoTriggered] = useState(false);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizId, setQuizId] = useState<string>("");
   const [currentQuizId, setCurrentQuizId] = useState<string>("");
+  const [isFirstLoading, setIsFirstLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -42,7 +43,27 @@ const CourseContentMedia: FC<Props> = ({
     setCurrentVideoHasQuiz(courseData[activeVideo]?.quiz?.length > 0);
   }, [activeVideo, courseData]);
 
+  useEffect(() => {
+    if (!isFirstLoading) {
+      const fetchQuizCompletionStatus = async () => {
+        try {
+          const answers = await getAnswersQuiz(courseData?.[activeVideo]?._id.toString());
+          if (answers && answers.answers && answers.answers[courseData?.[activeVideo]?._id.toString()]) {
+            setQuizCompleted((prevCompleted) => {
+              const newCompleted = [...prevCompleted];
+              newCompleted[activeVideo] = true;
+              return newCompleted;
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching quiz answers:", error);
+          toast.error("An error occurred while fetching quiz answers");
+        }
+      };
 
+      fetchQuizCompletionStatus();
+    }
+  }, [activeVideo, courseData]);
 
   const filteredQuestions = (courseData?.[activeVideo]?.quiz ?? [])
     .filter((question: IQuestionQuiz) => question.title !== undefined)
@@ -54,15 +75,11 @@ const CourseContentMedia: FC<Props> = ({
       maxScore: question.maxScore,
     }));
 
-  const handleCloseQuizModal = () => {
-    setShowQuizModal(false);
-  };
-
-  const handleNextVideo = () => {
+  const handleNextVideo = async () => {
     if (currentVideoHasQuiz && !quizCompleted[activeVideo]) {
-      const quizId = courseData?.[activeVideo]?.quiz[0]?._id.toString(); 
+      const quizId = courseData?.[activeVideo]?.quiz[0]?._id.toString();
       if (quizId) {
-        setCurrentQuizId(quizId); 
+        setCurrentQuizId(quizId);
         setShowQuizModal(true);
         setNextVideoTriggered(true);
       }
@@ -96,14 +113,12 @@ const CourseContentMedia: FC<Props> = ({
       if (quizCompleted[videoIndex] || videoIndex === activeVideo) {
         setActiveVideo(videoIndex);
       } else {
-        toast.error("Please complete the current quiz before moving to another video.");
+        toast.error("Please complete the current quiz before moving to another video");
       }
     } else {
       setActiveVideo(videoIndex);
     }
   };
-
-
 
   return (
     <div className="mt-[1px]">
@@ -139,31 +154,29 @@ const CourseContentMedia: FC<Props> = ({
                 setActiveContentType={setActiveContentType}
               />
             </div>
-            
           </div>
-          
         </>
       )}
 
       {showQuizModal && currentVideoHasQuiz && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="relative bg-white p-1 rounded-lg w-full max-w-2xl">
-            <button className="absolute top-2 right-2" onClick={handleCloseQuizModal}>
+            <button className="absolute top-2 right-2" onClick={() => setShowQuizModal(false)}>
               Close
             </button>
             <CourseQuiz
               courseId={courseId}
               contentId={courseData?.[activeVideo]?._id.toString()}
               questions={filteredQuestions}
-              onClose={handleCloseQuizModal}
-              onQuizSubmit={handleQuizSubmit} 
-              quizId={currentQuizId}      
-              />
+              onClose={() => setShowQuizModal(false)}
+              onQuizSubmit={handleQuizSubmit}
+              quizId={currentQuizId}
+            />
           </div>
         </div>
       )}
 
-      {!showQuizModal && !showConfirmationModal && (
+      {!showQuizModal && (
         <div className={`w-[25%] fixed top-[62px] right-0 h-full z-50 bg-white dark:bg-slate-900 border-l dark:border-slate-700 transition ${openSidebar ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"} max-[1100px]:hidden`}>
           <CourseLectureList
             courseData={courseData}
@@ -176,7 +189,7 @@ const CourseContentMedia: FC<Props> = ({
         </div>
       )}
 
-      {!openSidebar && !showQuizModal && !showConfirmationModal && (
+      {!openSidebar && (
         <div className="fixed right-0 top-[30%] bg-slate-900 z-[60] text-white cursor-pointer py-1.5 rounded-l-full pl-1 pr-2 flex items-center space-x-2 max-[1100px]:hidden"
           onClick={() => setOpenSidebar(true)}
           onMouseEnter={() => setIconHover(true)}
