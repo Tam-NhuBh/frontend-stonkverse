@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction } from "react";
 import { AccordionWrapper } from "../accordion-materials";
 import { AccordionDetails, AccordionSummary } from "@mui/material";
 import { formatVideoLength } from "@/lib/format-data";
-import { MdOutlineOndemandVideo, MdQuiz } from "react-icons/md";
+import { MdOutlineOndemandVideo, MdQuiz, MdCheckCircle } from "react-icons/md";
 import { BiSolidChevronDown } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { ICourseData } from "@/types";
@@ -14,6 +14,7 @@ interface Props {
   activeVideo: number;
   setActiveVideo: Dispatch<SetStateAction<number>>;
   setActiveContentType: Dispatch<SetStateAction<string>>;
+  quizCompleted: boolean[];
 }
 
 const CourseLectureList: FC<Props> = ({
@@ -23,6 +24,7 @@ const CourseLectureList: FC<Props> = ({
   activeVideo,
   setActiveVideo,
   setActiveContentType,
+  quizCompleted,
 }): JSX.Element => {
   const rawSections = new Set<string>(
     courseData?.map((item) => item.videoSection)
@@ -41,7 +43,6 @@ const CourseLectureList: FC<Props> = ({
       (video) => video.videoSection === section
     ),
   }));
-  
 
   return (
     <div className="overflow-y-scroll max-h-[calc(100%-62px)] no-scrollbar">
@@ -99,10 +100,13 @@ const CourseLectureList: FC<Props> = ({
                     }}
                   >
                     <div>
-                      <p>
+                      <p className="flex items-center">
                         <span className="font-semibold">
                           {video.title}
                         </span>
+                        {(quizCompleted[video.order] || !video.quiz || video.quiz.length === 0) && (
+                          <MdCheckCircle className="text-green-500 ml-2" />
+                        )}
                       </p>
                       <span className="text-xs flex items-center gap-1 mt-2">
                         <MdOutlineOndemandVideo className="-mt-[2px]" />
@@ -111,7 +115,7 @@ const CourseLectureList: FC<Props> = ({
                     </div>
                     {video.quiz && video.quiz.length > 0 && (
                       <div className="flex items-center gap-1">
-                        <MdQuiz className="text-blue-500" />
+                        <MdQuiz className={`text-blue-500`} />
                         <span className="text-xs text-blue-500">
                           {video.quiz.length}
                         </span>

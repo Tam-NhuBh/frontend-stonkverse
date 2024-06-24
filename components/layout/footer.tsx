@@ -1,23 +1,54 @@
+"use client"
 import {
   footerCol1,
   footerCol2,
   footerCol3,
- footerCol4,
+  footerCol4,
 } from "@/data/footer-items";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import MailForm from "./mail-form";
 import NextImage from "../next-image";
+import axios from "axios";
 
-interface Props {}
+interface Props { }
 
 const Footer: FC<Props> = (): JSX.Element => {
+  const [stockData, setStockData] = useState({
+    symbol: "",
+    openPrice: 0,
+    closePrice: 0,
+    changePercent: 0,
+  });
+
+  // useEffect(() => {
+  //   const fetchStockData = async () => {
+  //     try {
+  //       const response = await axios.get("https://stock-service-iota.vercel.app/historical_data/filter", {
+  //         params: { symbol: "VCB" }, // Lọc theo symbol VCB
+  //       });
+  //       const data = response.data[0]; // Giả sử chỉ quan tâm kết quả đầu tiên
+  //       if (data) {
+  //         const changePercent = ((data.close_price - data.open_price) / data.open_price) * 100;
+  //         setStockData({
+  //           symbol: data.symbol,
+  //           openPrice: data.open_price,
+  //           closePrice: data.close_price,
+  //           changePercent,
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to fetch stock data", error);
+  //     }
+  //   };
+  //   fetchStockData();
+  // }, []);
+
   return (
     <footer className="bg-[#fbfafa] dark:bg-opacity-50 dark-bg border-t dark:border-slate-600">
       <div className="container flex flex-wrap gap-1 py-10 max-[1017px]:gap-3">
-        {/* Column1 */}
+
         <div className="w-1/3 pr-3 max-[1017px]:w-[50%] max-[717px]:w-full">
-          {/* General info */}
           <p className="footer-title">Stock E-Learning Online Courses Platform</p>
           <ul>
             {footerCol1.map((item, index) => (
@@ -30,7 +61,6 @@ const Footer: FC<Props> = (): JSX.Element => {
             ))}
           </ul>
 
-          {/* Social */}
           <p className="footer-title mt-12 max-[717px]:mt-6">Contact Us</p>
           <ul>
             {footerCol4.map((item, index) => (
@@ -71,7 +101,6 @@ const Footer: FC<Props> = (): JSX.Element => {
           </div>
         </div>
 
-        {/* Column2 */}
         {/* <div className="w-[18%] px-3 max-[717px]:w-[45%] max-[717px]:px-0">
           <p className="footer-title">Categories</p>
           <ul>
@@ -83,7 +112,7 @@ const Footer: FC<Props> = (): JSX.Element => {
           </ul>
         </div> */}
 
-        {/* Column3 */}
+
         <div className="w-[20%] px-3 max-[1017px]:w-[25%] max-[717px]:w-[45%] max-[717px]:px-0">
           <p className="footer-title">Policies</p>
           <ul>
@@ -95,17 +124,20 @@ const Footer: FC<Props> = (): JSX.Element => {
           </ul>
         </div>
 
-        {/* Column 4 */}
         <div className="flex-1">
           <p className="footer-title">Support</p>
           <MailForm />
         </div>
       </div>
 
-      <div className="border-t dark:border-slate-700 py-1">
+      <div className="border-t dark:border-slate-700 py-1 fixed bottom-0 left-0 right-0 bg-white dark:bg-opacity-50 dark-bg ">
         <div className="container text-[#999999] text-xs flex items-center justify-between">
           <span className=" my-2 text-center">
-            Stock Index
+            <div className="stock-info">
+              <span>{stockData.symbol}</span>{" "}
+              <span>{stockData.closePrice.toLocaleString()} </span>
+              <span>{stockData.changePercent.toFixed(2)}%</span>
+            </div>
           </span>
 
         </div>

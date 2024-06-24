@@ -6,8 +6,10 @@ import Header from "@/components/layout/header";
 // import { getAllCategories, getAllCoursesData } from "@/lib/fetch-data";
 import { getAllCoursesData } from "@/lib/fetch-data";
 import { FC } from "react";
-import { ICategory } from "@/components/home-page/categories";
+// import { ICategory } from "@/components/home-page/categories";
 import { IFetchedCourse } from "@/components/home-page/courses";
+import SearchBar from "@/components/home-page/search-bar";
+import ChatBotClient from "@/components/layout/chatbot-client";
 
 interface Props { }
 
@@ -24,22 +26,14 @@ const page: FC<Props> = async (props): Promise<JSX.Element> => {
         <Header />
         <div className="container mt-8 mb-14">
           <div>
-            {/* <h2 className="section-title">
-              <p className="font-semibold text-tertiary dark:text-dark_text text-center mb-6 text-lg">
-                We found{" "}
-                <span className="text-gradient font-bold">
-                  {courses.length} Courses
-                </span>{" "}
-                available for you
-              </p>
-
-            </h2> */}
-
-
+            <SearchBar />
             <div className="mt-10 main-grid">
               {courses?.map((course) => (
                 <CourseCard key={course._id.toString()} course={course} />
               ))}
+              <div className="chatbot-container">
+                <ChatBotClient />
+              </div>
             </div>
           </div>
         </div>

@@ -2,7 +2,6 @@
 
 import { FC, useEffect, useState } from "react";
 import {
-  useCreateCourseMutation,
   useEditCourseMutation,
   useGetSingleCourseQuery,
 } from "@/store/course/course-api";
@@ -22,12 +21,10 @@ export type CourseInfoValues = {
   price: string;
   estimatedPrice: string;
   tags: string;
-  // category: string;
   level: string;
   demoUrl: string;
   thumbnail: string;
   curriculum: string;
-
 };
 
 export const initialCourseInfo = {
@@ -37,11 +34,9 @@ export const initialCourseInfo = {
   estimatedPrice: "",
   tags: "",
   level: "",
-  // category: "",
   demoUrl: "",
   thumbnail: "",
   curriculum: "",
-
 };
 
 const initialCourseContentData = [
@@ -53,8 +48,7 @@ const initialCourseContentData = [
     videoLength: 0,
     links: [{ title: "", url: "" }],
     suggestion: "",
-    quiz: [{title: "", correctAnswer: [""], mockAnswer: [""]}]
-
+    quiz: [{ title: "", correctAnswer: [""], mockAnswer: [""] }],
   },
 ];
 
@@ -70,11 +64,10 @@ export type CourseContentDataType = {
   }[];
   suggestion: string;
   quiz: {
-    title: string,
+    title: string;
     correctAnswer: string[],
     mockAnswer: string[],
   }[];
-
 }[];
 
 const EditCourseForms: FC<Props> = (props): JSX.Element => {
@@ -100,10 +93,11 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
 
   const [courseData, setCourseData] = useState({});
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const submitHandler = async () => {
     const data = {
       ...courseInfo,
-
       totalVideos: courseContentData.length,
       benefits,
       prerequisites,
@@ -117,16 +111,18 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
   const [editCourse, { isLoading, isSuccess, error }] = useEditCourseMutation();
 
   const editCourseHandler = async () => {
+    setIsSubmitting(true);
     const data = courseData;
 
     if (!isLoading) {
       await editCourse({ id, data });
     }
+    setIsSubmitting(false);
   };
 
   useEffect(() => {
     if (data?.courseData && data?.courseData.length) {
-      setCourseContentData(() => data?.courseData);
+      setCourseContentData(data?.courseData);
     }
   }, [data]);
 
@@ -143,66 +139,69 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
         toast.error(errorData.data.message);
       }
     }
-  }, [isLoading, isSuccess, error]);
+  }, [isSuccess, error]);
+
+  useEffect(() => {
+    if (fetchInitialDataLoading) {
+      toast.loading("Loading course data...");
+    } else {
+      toast.dismiss();
+    }
+  }, [fetchInitialDataLoading]);
 
   return (
     <div className="flex">
       <div className="w-[80%]">
-        {active === 0 && (
-          <CourseInfomation
-            active={active}
-            setActive={setActive}
-            initialCourseInfo={data}
-            courseInfo={courseInfo}
-            setCourseInfo={setCourseInfo}
-          />
-        )}
-        
-        {/* {active === 1 && (
-          <CourseCurriculumn
-            active={active}
-            setActive={setActive}
-            courseCurri={courseCurri}
-            setCourseCurri={setCourseCurri}
-          />
-        )} */}
+        {fetchInitialDataLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <>
+            {active === 0 && (
+              <CourseInfomation
+                active={active}
+                setActive={setActive}
+                initialCourseInfo={data}
+                courseInfo={courseInfo}
+                setCourseInfo={setCourseInfo}
+              />
+            )}
 
-        {active === 1 && (
-          <CourseData
-            active={active}
-            setActive={setActive}
-            initialBenefits={data.benefits}
-            initialPrerequisites={data.prerequisites}
-            initialForWho={data.forWho}
-            benefits={benefits}
-            setBenefits={setBenefits}
-            prerequisites={prerequisites}
-            setPrerequisites={setPrerequisites}
-            forWho={forWho}
-            setForWho={setForWho}
-          />
-        )}
+            {active === 1 && (
+              <CourseData
+                active={active}
+                setActive={setActive}
+                initialBenefits={data.benefits}
+                initialPrerequisites={data.prerequisites}
+                initialForWho={data.forWho}
+                benefits={benefits}
+                setBenefits={setBenefits}
+                prerequisites={prerequisites}
+                setPrerequisites={setPrerequisites}
+                forWho={forWho}
+                setForWho={setForWho}
+              />
+            )}
 
-        
+            {active === 2 && (
+              <CourseContent
+                active={active}
+                setActive={setActive}
+                courseContentData={courseContentData}
+                setCourseContentData={setCourseContentData}
+                submitCourseHandler={submitHandler}
+              />
+            )}
 
-        {active === 2 && (
-          <CourseContent
-            active={active}
-            setActive={setActive}
-            courseContentData={courseContentData}
-            setCourseContentData={setCourseContentData}
-            submitCourseHandler={submitHandler}
-          />
-        )}
-
-        {active === 3 && (
-          <CoursePreview
-            active={active}
-            setActive={setActive}
-            courseData={courseData}
-            courseContentData={courseContentData}
-            createCourseHandler={editCourseHandler}
-          />
+            {active === 3 && (
+              <CoursePreview
+                active={active}
+                setActive={setActive}
+                courseData={courseData}
+                courseContentData={courseContentData}
+                createCourseHandler={editCourseHandler}
+              />
+            )}
+          </>
         )}
       </div>
       <div className="flex-1 fixed z-[-1] top-[80px] right-8">

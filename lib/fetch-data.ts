@@ -1,5 +1,6 @@
 import axios from "axios";
 import { cache } from "react";
+import { string } from "yup";
 
 // export const getPostData = async () => {
 //   try {
@@ -134,5 +135,52 @@ export const getCourseReviews = async (courseId: string) => {
     return { reviews: data.course.reviews, ratings: data.course.ratings };
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getAnswersQuiz = async (contentId: string) => {
+  try {
+    const { data } = await axios(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/quiz/${contentId}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    console.log("Fetched data:", data);
+    return data;
+    
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+export const resetUserLearningProgress = async () => {
+  try {
+    const response = await axios (
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/reset-user-progress`
+    );
+
+    return response.data;
+  } catch (error:any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const getUserLearningProgress = async (courseId: string) => {
+  try {
+    const response = await axios (
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/user/progress/${courseId}`,
+      {
+        withCredentials: true,
+
+      }
+    );
+
+      
+    return response.data;
+  } catch (error:any) {
+    throw new Error(error.response.data.message);
   }
 };

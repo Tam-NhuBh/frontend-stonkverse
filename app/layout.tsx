@@ -21,8 +21,7 @@ export default function RootLayout({
           <body
             className="bg-white dark-bg bg-no-repeat bg-cover transition h-full"
           >
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-           
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>           
               {children}
               <Toaster position="bottom-center" reverseOrder={false} />
             </ThemeProvider>

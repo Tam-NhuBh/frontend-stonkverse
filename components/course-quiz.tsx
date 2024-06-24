@@ -1,7 +1,8 @@
 import React, { FC, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BtnWithIcon from "./btn-with-icon";
-import { addAnswerQuiz } from "@/lib/mutation-data";
+import { addAnswerQuiz } from "@/lib/mutation-data"; 
+import { getAnswersQuiz } from "@/lib/fetch-data"; 
 
 interface QuizQuestion {
   id: string;
@@ -13,12 +14,14 @@ interface QuizQuestion {
 
 interface Props {
   courseId: string;
+  quizId: string;
   contentId: string;
   questions: QuizQuestion[];
   onClose: () => void;
+  onQuizSubmit: () => void;
 }
 
-const CourseQuiz: FC<Props> = ({ courseId, contentId, questions }) => {
+const CourseQuiz: FC<Props> = ({ courseId, contentId, questions, quizId, onClose, onQuizSubmit }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: string]: string[] }>({});
   const [score, setScore] = useState<number | null>(null);
   const [questionScores, setQuestionScores] = useState<{ [key: string]: number }>({});
@@ -27,58 +30,38 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions }) => {
   const [isResubmitEnabled, setIsResubmitEnabled] = useState<boolean>(false);
   const [canEnableResubmit, setCanEnableResubmit] = useState<boolean>(false);
   const [resubmitTimeout, setResubmitTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
 
   useEffect(() => {
-    const savedAnswers = localStorage.getItem(`quizAnswers_${courseId}_${contentId}`);
-    const savedScore = localStorage.getItem(`quizScore_${courseId}_${contentId}`);
-    const savedQuestionScores = localStorage.getItem(`questionScores_${courseId}_${contentId}`);
-    const savedHasSubmitted = localStorage.getItem(`hasSubmitted_${courseId}_${contentId}`);
-
-    if (isFirstLoad) {
-      setIsFirstLoad(false);
-    } else {
-      setSelectedAnswers(savedAnswers ? JSON.parse(savedAnswers) : {});
-      setScore(savedScore ? JSON.parse(savedScore) : null);
-      setQuestionScores(savedQuestionScores ? JSON.parse(savedQuestionScores) : {});
-      setHasSubmitted(savedHasSubmitted ? JSON.parse(savedHasSubmitted) : false);
-    }
-  }, [courseId, contentId, setSelectedAnswers, setScore, setQuestionScores, setHasSubmitted, isFirstLoad]);
-
-  useEffect(() => {
-    if (!isFirstLoad) {
-      localStorage.setItem(`quizAnswers_${courseId}_${contentId}`, JSON.stringify(selectedAnswers));
-    }
-  }, [selectedAnswers, courseId, contentId]);
-
-  useEffect(() => {
-    if (!isFirstLoad) {
-      localStorage.setItem(`quizScore_${courseId}_${contentId}`, JSON.stringify(score));
-    }
-  }, [score, courseId, contentId]);
-
-  useEffect(() => {
-    if (!isFirstLoad) {
-      localStorage.setItem(`questionScores_${courseId}_${contentId}`, JSON.stringify(questionScores));
-    }
-  }, [questionScores, courseId, contentId]);
-
-  useEffect(() => {
-    if (!isFirstLoad) {
-      localStorage.setItem(`hasSubmitted_${courseId}_${contentId}`, JSON.stringify(hasSubmitted));
-    }
-  }, [hasSubmitted, courseId, contentId]);
-
-  useEffect(() => {
-    if (!isFirstLoad) {
-      if (hasSubmitted) {
-        const timeout = setTimeout(() => setCanEnableResubmit(true), 40000);
-        setResubmitTimeout(timeout);
-      } else {
-        setCanEnableResubmit(false);
-        setIsResubmitEnabled(false);
-        if (resubmitTimeout) clearTimeout(resubmitTimeout);
+    const fetchSavedAnswers = async () => {
+      try {
+        if (!contentId) {
+          toast.error("Invalid content ID");
+          return;
+        }
+  
+        const savedAnswers = await getAnswersQuiz(contentId);
+        if (savedAnswers && savedAnswers.answers && savedAnswers.answers[contentId]) {
+          const answersForContent = savedAnswers.answers[contentId];
+          setSelectedAnswers(answersForContent);
+          setHasSubmitted(true);
+          console.log("Fetched and set saved answers: ", answersForContent);
+        }
+      } catch (error: any) {
+        toast.error("An error occurred while fetching saved answers");
+        console.error(error);
       }
+    };
+    fetchSavedAnswers();
+  }, [contentId]);
+
+  useEffect(() => {
+    if (hasSubmitted) {
+      const timeout = setTimeout(() => setCanEnableResubmit(true), 40000);
+      setResubmitTimeout(timeout);
+    } else {
+      setCanEnableResubmit(false);
+      setIsResubmitEnabled(false);
+      if (resubmitTimeout) clearTimeout(resubmitTimeout);
     }
   }, [hasSubmitted]);
 
@@ -119,11 +102,12 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions }) => {
         setQuestionScores(detailedScores);
         toast.success("Quiz answers submitted successfully!");
         setHasSubmitted(true);
-        const timeout = setTimeout(() => setCanEnableResubmit(true), 40000);
+        onQuizSubmit(); 
+        const timeout = setTimeout(() => setCanEnableResubmit(true), 4000);
         setResubmitTimeout(timeout);
       }
     } catch (error) {
-      toast.error("An error occurred while submitting your answers. Please try again.");
+      toast.error("An error occurred while submitting your answers. Please try again!");
     } finally {
       setIsSubmitting(false);
     }
@@ -144,14 +128,10 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions }) => {
     setScore(null);
     setQuestionScores({});
     setSelectedAnswers({});
-    localStorage.removeItem(`quizAnswers_${courseId}_${contentId}`);
-    localStorage.removeItem(`quizScore_${courseId}_${contentId}`);
-    localStorage.removeItem(`questionScores_${courseId}_${contentId}`);
-    localStorage.removeItem(`hasSubmitted_${courseId}_${contentId}`);
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-slate-900 dark:border-slate-700 ">
+    <div className="p-6 bg-white dark:bg-slate-900 dark:border-slate-100">
       <h2 className="text-3xl font-semibold mb-4">Quiz</h2>
       <div className="grid gap-4 mb-5">
         {questions.map((question, index) => {

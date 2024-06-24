@@ -169,23 +169,14 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
             )}
           </ul>
 
-          <div className="mt-14">
-            {courseDetail.curriculum && typeof courseDetail.curriculum.url === 'string' && (
-              <iframe
-                src={courseDetail.curriculum.url}
-                style={{
-                  height: '600px', // Đặt chiều cao mong muốn
-                  width: '100%' // Đặt chiều rộng mong muốn
-                }}
-              ></iframe>
-            )}
-          </div>
+
 
           <div className="mt-14">
             <CourseContentTabs
               prerequisites={courseDetail.prerequisites as { title: string }[]}
               forWho={courseDetail.forWho as { title: string }[]}
               description={courseDetail.description as string}
+              curr={courseDetail.curriculum.url as string}
             />
           </div>
 
@@ -232,7 +223,6 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
           <CoursePlayer
             videoUrl={courseDetail.demoUrl}
             title={courseDetail.name}
-            onVideoEnd={() => {}}
           />
 
           <div className="mt-2 p-4 gap-2 relative">
