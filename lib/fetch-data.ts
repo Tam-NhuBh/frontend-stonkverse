@@ -2,17 +2,6 @@ import axios from "axios";
 import { cache } from "react";
 import { string } from "yup";
 
-// export const getPostData = async () => {
-//   try {
-//     const { data } = await axios(
-//       `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Banner`
-//     );
-
-//     return data.layout.banner;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 export const getAllCoursesData = async () => {
   try {
@@ -54,17 +43,6 @@ export const getUserCoursesData = async (courseIds: string[]) => {
   }
 };
 
-// export const getCourseByCategory = async (categorySlug: string) => {
-//   try {
-//     const { data } = await axios(
-//       `${process.env.NEXT_PUBLIC_SERVER_URL}/get-courses/${categorySlug}`
-//     );
-
-//     return data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 export const getCoursesByQuery = async (query: string) => {
   try {
@@ -78,17 +56,6 @@ export const getCoursesByQuery = async (query: string) => {
   }
 };
 
-// export const getCourseSearchByQuery = async (query: string) => {
-//   try {
-//     const { data } = await axios(
-//       `${process.env.NEXT_PUBLIC_SERVER_URL}/get-key-search/${query}`
-//     );
-
-//     return data.courses;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 export const getAllFAQs = async () => {
   try {
@@ -179,6 +146,18 @@ export const getUserLearningProgress = async (courseId: string) => {
     );
 
       
+    return response.data;
+  } catch (error:any) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export const getIndexStock = async () => {
+  try {
+    const response = await axios (
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/get-index`
+    );
+
     return response.data;
   } catch (error:any) {
     throw new Error(error.response.data.message);

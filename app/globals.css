@@ -477,12 +477,12 @@ html {
   }
 }
 
-/* chatbot client css */
+/*Chatbot client css */
 .chatbot-container {
   position: fixed;
   right: 20px;
   bottom: 70px;
-  z-index: 1000; /* Giá trị cao để đảm bảo nó luôn nằm trên cùng */
+  z-index: 1000; 
 }
 
 @layer components {
@@ -520,4 +520,14 @@ html {
   min-width: 300px; 
 }
 
+.glow {
+  color: #000000;
+  text-shadow: 0 0 5px rgb(135, 134, 134);
+  transition: text-shadow 0.3s ease-in-out;
+}
 
+.dark .glow {
+  color: #d4d4d4ee;
+  text-shadow: 0 0 5px rgb(255, 255, 255);
+  transition: text-shadow 0.3s ease-in-out;
+}

@@ -9,40 +9,27 @@ import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import MailForm from "./mail-form";
 import NextImage from "../next-image";
-import axios from "axios";
+import { getIndexStock } from "@/lib/fetch-data";
+import { FaArrowDown, FaArrowUp} from "react-icons/fa";
+import { CircularProgress } from "@mui/material";
+import { IoMdTrendingUp } from "react-icons/io";
 
 interface Props { }
 
 const Footer: FC<Props> = (): JSX.Element => {
-  const [stockData, setStockData] = useState({
-    symbol: "",
-    openPrice: 0,
-    closePrice: 0,
-    changePercent: 0,
-  });
+  const [stockInfo, setStockInfo] = useState<{ symbol: string; close_price: number; change_percent: string } | null>(null);
+  useEffect(() => {
+    const fetchStockInfo = async () => {
+      try {
+        const data = await getIndexStock();
+        setStockInfo(data);
+      } catch (error) {
+        console.error("Failed to fetch stock info:", error);
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchStockData = async () => {
-  //     try {
-  //       const response = await axios.get("https://stock-service-iota.vercel.app/historical_data/filter", {
-  //         params: { symbol: "VCB" }, // Lọc theo symbol VCB
-  //       });
-  //       const data = response.data[0]; // Giả sử chỉ quan tâm kết quả đầu tiên
-  //       if (data) {
-  //         const changePercent = ((data.close_price - data.open_price) / data.open_price) * 100;
-  //         setStockData({
-  //           symbol: data.symbol,
-  //           openPrice: data.open_price,
-  //           closePrice: data.close_price,
-  //           changePercent,
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error("Failed to fetch stock data", error);
-  //     }
-  //   };
-  //   fetchStockData();
-  // }, []);
+    fetchStockInfo();
+  }, []);
 
   return (
     <footer className="bg-[#fbfafa] dark:bg-opacity-50 dark-bg border-t dark:border-slate-600">
@@ -134,9 +121,21 @@ const Footer: FC<Props> = (): JSX.Element => {
         <div className="container text-[#999999] text-xs flex items-center justify-between">
           <span className=" my-2 text-center">
             <div className="stock-info">
-              <span>{stockData.symbol}</span>{" "}
-              <span>{stockData.closePrice.toLocaleString()} </span>
-              <span>{stockData.changePercent.toFixed(2)}%</span>
+              {stockInfo ? (
+                <div className="flex items-center text-black dark:text-white">
+                  <IoMdTrendingUp/>
+                  <span className="flex justify-center font-bold mx-2">{stockInfo.symbol}</span>
+                  <span className="flex justify-center mx-1 glow">{stockInfo.close_price}</span>
+                  <span className="flex justify-center mx-1 glow">{stockInfo.change_percent}%</span>
+                  {parseFloat(stockInfo.change_percent) >= 0 ? (
+                    <FaArrowUp className="text-green-500" />
+                  ) : (
+                    <FaArrowDown className="text-red-500" />
+                  )}
+                </div>
+              ) : (
+                <CircularProgress size={16} />
+              )}
             </div>
           </span>
 
