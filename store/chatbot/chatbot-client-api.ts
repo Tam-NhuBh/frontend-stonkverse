@@ -1,5 +1,5 @@
 export const chatbotApi = async (userMessage: string) => {
-    const API_URL = "https://backend-stonkverse.vercel.app/api/v1/chat/ask";
+    const API_URL = "http://207.148.64.246:8080/ask";
   
     try {
         const requestOptions = {

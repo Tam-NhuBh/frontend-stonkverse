@@ -15,29 +15,29 @@ interface Props {
   value?: number;
 }
 
-const CircularProgressWithLabel: FC<Props> = ({ open, value }): JSX.Element => {
-  return (
-    <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress
-        variant="determinate"
-        value={value}
-        size={45}
-        color={value && value > 90 ? "info" : "error"}
-        thickness={4}
-        style={{ zIndex: open ? -1 : 1 }}
-      />
-      <Box
-        sx={{
-          inset: 0,
-          position: "absolute",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      ></Box>
-    </Box>
-  );
-};
+// const CircularProgressWithLabel: FC<Props> = ({ open, value }): JSX.Element => {
+//   return (
+//     <Box sx={{ position: "relative", display: "inline-flex" }}>
+//       <CircularProgress
+//         variant="determinate"
+//         value={value}
+//         size={45}
+//         color={value && value > 90 ? "info" : "error"}
+//         thickness={4}
+//         style={{ zIndex: open ? -1 : 1 }}
+//       />
+//       <Box
+//         sx={{
+//           inset: 0,
+//           position: "absolute",
+//           display: "flex",
+//           alignItems: "center",
+//           justifyContent: "center",
+//         }}
+//       ></Box>
+//     </Box>
+//   );
+// };
 
 const DashboardWidgets: FC<Props> = ({ open }): JSX.Element => {
   const [ordersComparePercentage, setOrdersComparePercentage] = useState<any>();
@@ -99,7 +99,7 @@ const DashboardWidgets: FC<Props> = ({ open }): JSX.Element => {
 
   return (
     <div className="w-[90%] mx-auto mt-8 mb-12">
-      <div className="grid grid-cols-[70%,30%] gap-4">
+      <div className="grid grid-cols-[50%,50%] gap-4 mb-4">
         <UserAnalytics isDashboard />
 
         {/* <div>
@@ -149,10 +149,10 @@ const DashboardWidgets: FC<Props> = ({ open }): JSX.Element => {
             </div>
           </div>
         </div> */}
-        <AllInvoices isDashboard />
         <OrdersAnalytics isDashboard />
-
       </div>
+      <AllInvoices isDashboard />
+
     </div>
   );
 };

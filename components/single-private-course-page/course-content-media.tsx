@@ -52,12 +52,13 @@ useEffect(() => {
 }, [activeVideo]);
 
 useEffect(() => {
-  setCurrentVideoHasQuiz(courseData[activeVideo]?.quiz?.length > 0);
+  setCurrentVideoHasQuiz(courseData?.[activeVideo]?.quiz?.length > 0);
 }, [activeVideo, courseData]);
 
 useEffect(() => {
   const fetchQuizCompletionStatus = async () => {
     try {
+      if (!courseData || !courseData?.[activeVideo]) return;
       const answers = await getAnswersQuiz(courseData?.[activeVideo]?._id.toString());
       if (answers && answers.answers && answers.answers[courseData?.[activeVideo]?._id.toString()]) {
         setQuizCompleted((prevCompleted) => {

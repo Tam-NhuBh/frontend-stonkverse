@@ -261,7 +261,7 @@ const CoursePreview: FC<Props> = ({
             <BtnWithIcon content="Buy Now" customClasses="w-full mt-4" />
 
             <p className="text-slate-500 dark:text-dark_text text-sm mt-6 mb-4 text-center">
-              30-Day Money-Back Guarantee
+              {/* 30-Day Money-Back Guarantee */}
             </p>
           </div>
         </div>

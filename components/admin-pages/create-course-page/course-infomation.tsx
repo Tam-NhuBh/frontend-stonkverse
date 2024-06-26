@@ -130,7 +130,6 @@ const CourseInfomation: FC<Props> = ({
     
     const file = await blobUrlToBase64(data.curriculum);
 
-    // Cập nhật trường curriculum trong data từ Blob URL thành đối tượng File
     data.curriculum = file;
     setCourseInfo(data);
 
@@ -190,10 +189,9 @@ const CourseInfomation: FC<Props> = ({
     if (e.target.files) {
       const file = e.target.files[0];
       if (file && file.type === "application/pdf") {
-        // Tạo Blob URL từ file PDF
         const pdfUrl = URL.createObjectURL(file);
         setValue("curriculum", pdfUrl);
-        console.log(pdfUrl)
+        console.log("curriculum: ",pdfUrl)
       } else {
         toast.error("Only PDF files are allowed for the course curriculum.");
       }
@@ -217,7 +215,6 @@ const CourseInfomation: FC<Props> = ({
     const file = e.dataTransfer.files[0];
     if (file) {
       if (file.type === "application/pdf") {
-        // Tạo Blob URL từ file PDF
         const pdfUrl = URL.createObjectURL(file);
         setValue("curriculum", pdfUrl);
       } else {

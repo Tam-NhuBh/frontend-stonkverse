@@ -55,8 +55,8 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   let discountPercentage = 0;
   if (courseDetail?.estimatedPrice) {
     discountPercentage =
-      ((courseDetail.estimatedPrice - courseDetail.price) /
-        courseDetail.estimatedPrice) *
+      ((courseDetail?.estimatedPrice - courseDetail?.price) /
+        courseDetail?.estimatedPrice) *
       100;
   }
 
@@ -83,7 +83,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   };
 
   const handleCourseAccess = () => {
-    router.push(`/course-access/${courseDetail._id}`);
+    router.push(`/course-access/${courseDetail?._id}`);
   };
 
   const createIntent = async (amount: number) => {
@@ -101,24 +101,24 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
     }
 
     if (courseDetail) {
-      const amount = Math.round(courseDetail.price * 100);
+      const amount = Math.round(courseDetail?.price * 100);
       createIntent(amount);
     }
   }, [publishableKey, courseDetail]);
 
-  const formattedReviews = [...courseDetail.reviews].reverse();
+  const formattedReviews = [...courseDetail?.reviews].reverse();
 
   return (
     <div className="container my-8">
       <div className="w-full flex gap-16 max-[845px]:flex-col-reverse">
         <div className="w-[60%] max-[845px]:w-full">
           <h1 className="text-gradient text-2xl font-bold">
-            {courseDetail.name}
+            {courseDetail?.name}
           </h1>
 
           <div className="flex items-center mt-6 gap-4 flex-wrap">
             <div className="main-gradient text-dark_text w-fit px-2 py-1 rounded-[5px]">
-              {courseDetail.tags}
+              {courseDetail?.tags}
             </div>
 
             <div className="flex items-center gap-1">
@@ -135,7 +135,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
               <DotSpan /> <span className="text-slate-500">Ratings</span>{" "}
               <Rating
                 name="half-rating dark:text-dark_text text-tertiary"
-                defaultValue={courseDetail.ratings}
+                defaultValue={courseDetail?.ratings}
                 precision={0.5}
                 readOnly
                 size="small"
@@ -152,7 +152,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
             </div>
             <span className="mt-6 text-slate-500 dark:text-dark_text">
               Created By{" "}
-              <b className="text-tertiary dark:text-secondary">{user.name}</b>
+              <b className="text-tertiary dark:text-secondary">{user?.name}</b>
             </span>
           </div>
 
@@ -160,10 +160,10 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
             What you&apos;ll learn In This Course
           </h2>
           <ul className="list-disc text-slate-500 dark:text-dark_text space-y-2">
-            {courseDetail.benefits.map(
+            {courseDetail?.benefits.map(
               (benefit: { title: string }, index: number) => (
                 <li key={index} className="ml-4">
-                  {benefit.title}
+                  {benefit?.title}
                 </li>
               )
             )}
@@ -173,16 +173,16 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
 
           <div className="mt-14">
             <CourseContentTabs
-              prerequisites={courseDetail.prerequisites as { title: string }[]}
-              forWho={courseDetail.forWho as { title: string }[]}
-              description={courseDetail.description as string}
-              curr={courseDetail.curriculum.url as string}
+              prerequisites={courseDetail?.prerequisites as { title: string }[]}
+              forWho={courseDetail?.forWho as { title: string }[]}
+              description={courseDetail?.description as string}
+              curr={courseDetail?.curriculum?.url as string}
             />
           </div>
 
           <div className="mb-10">
             <CourseContentList
-              list={courseDetail.courseData}
+              list={courseDetail?.courseData}
               courseLength={courseLength}
             />
           </div>
@@ -190,13 +190,13 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
           <div className="flex items-center gap-3 mb-4">
             <p className="flex items-center gap-1 font-bold text-xl">
               <BiSolidStar className="-mt-1 !text-[#b4690e] dark:!text-[#faaf00]" />
-              <span>{courseDetail.ratings} Course Rating</span>
+              <span>{courseDetail?.ratings} Course Rating</span>
             </p>
 
             <DotSpan />
 
             <p className="font-bold text-xl">
-              {courseDetail.reviews.length} Reviews
+              {courseDetail?.reviews?.length} Reviews
             </p>
           </div>
 
@@ -204,12 +204,12 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
             <div className="grid grid-cols-2 gap-6 max-[722px]:grid-cols-1">
               {formattedReviews.map((review: IReview, index) => (
                 <Comment
-                  key={review._id.toString()}
-                  name={review.user?.name}
-                  avatar={review.user?.avatar?.url}
-                  content={review.comment}
-                  rating={review.rating}
-                  createdAt={review.createdAt}
+                  key={review?._id.toString()}
+                  name={review?.user?.name}
+                  avatar={review?.user?.avatar?.url}
+                  content={review?.comment}
+                  rating={review?.rating}
+                  createdAt={review?.createdAt}
                   showReplyButton={false}
                 />
               ))}
@@ -221,8 +221,8 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
 
         <div className="flex-1 custom-shadow dark:border dark:border-slate-700 z-0 h-fit">
           <CoursePlayer
-            videoUrl={courseDetail.demoUrl}
-            title={courseDetail.name}
+            videoUrl={courseDetail?.demoUrl}
+            title={courseDetail?.name}
           />
 
           <div className="mt-2 p-4 gap-2 relative">
@@ -234,7 +234,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                     className="max-[1100px]:hidden"
                   />{" "}
                   You purchased this course on{" "}
-                  {formatShortDate(isPurchased.createdDate)}
+                  {formatShortDate(isPurchased?.createdDate)}
                 </p>
                 <button
                   onClick={handleCourseAccess}
@@ -249,20 +249,20 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
             ) : (
               <div className="flex items-center">
                 <span className="mr-2 font-bold text-3xl text-gradient">
-                  {courseDetail.price === 0
+                  {courseDetail?.price === 0
                     ? "Free"
-                    : "$" + courseDetail.price + ".00"}
+                    : "$" + courseDetail?.price + ".00"}
                 </span>
 
-                {courseDetail.estimatedPrice &&
-                  courseDetail.estimatedPrice > courseDetail.price && (
+                {courseDetail?.estimatedPrice &&
+                  courseDetail?.estimatedPrice > courseDetail?.price && (
                     <span className="line-through text-xl opacity-50">
-                      ${courseDetail.estimatedPrice}.00
+                      ${courseDetail?.estimatedPrice}.00
                     </span>
                   )}
 
-                {courseDetail.estimatedPrice &&
-                  courseDetail.estimatedPrice > courseDetail.price && (
+                {courseDetail?.estimatedPrice &&
+                  courseDetail?.estimatedPrice > courseDetail?.price && (
                     <span className="ml-auto text-slate-500 font-bold">
                       Discount {discountPercentagePrice}%
                     </span>
@@ -276,7 +276,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 Reviews
               </span>
               <span className="font-bold text-slate-500">
-                {courseDetail.reviews.length} Reviews
+                {courseDetail?.reviews?.length} Reviews
               </span>
             </div>
 
@@ -286,7 +286,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 Rating
               </span>
               <span className="font-bold text-slate-500 ">
-                {courseDetail.ratings} Scores
+                {courseDetail?.ratings} Scores
               </span>
             </div>
 
@@ -324,7 +324,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 Lectures
               </span>
               <span className="font-bold text-slate-500">
-                {courseDetail.courseData.length || 0} Lecture
+                {courseDetail?.courseData?.length || 0} Lecture
               </span>
             </div>
 
@@ -342,7 +342,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 Students
               </span>
               <span className="font-bold text-slate-500">
-                {courseDetail.purchased} Students
+                {courseDetail?.purchased} Students
               </span>
             </div>
 
@@ -368,7 +368,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                   />
                 </div>
                 <BtnWithIcon
-                  content={`Buy Now ${courseDetail.price}$`}
+                  content={`Buy Now ${courseDetail?.price}$`}
                   customClasses="w-full mt-4"
                   onClick={orderHandler}
                 />
