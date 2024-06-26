@@ -240,13 +240,13 @@ const AdminSidebar: FC<Props> = ({
               {!isCollapsed && "Customization"}
             </Typography>
 
-            <Item
+            {/* <Item
               title="Banner"
               to="/admin/banner"
               icon={<Web />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
 
             <Item
               title="FAQ"

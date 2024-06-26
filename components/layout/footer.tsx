@@ -1,36 +1,18 @@
-"use client"
 import {
   footerCol1,
   footerCol2,
   footerCol3,
   footerCol4,
 } from "@/data/footer-items";
-import { FC, useEffect, useState } from "react";
+import { FC} from "react";
 import Link from "next/link";
 import MailForm from "./mail-form";
 import NextImage from "../next-image";
-import { getIndexStock } from "@/lib/fetch-data";
-import { FaArrowDown, FaArrowUp} from "react-icons/fa";
-import { CircularProgress } from "@mui/material";
-import { IoMdTrendingUp } from "react-icons/io";
+import GetIndexStock from "../get-index-stock";
 
 interface Props { }
 
 const Footer: FC<Props> = (): JSX.Element => {
-  const [stockInfo, setStockInfo] = useState<{ symbol: string; close_price: number; change_percent: string } | null>(null);
-  useEffect(() => {
-    const fetchStockInfo = async () => {
-      try {
-        const data = await getIndexStock();
-        setStockInfo(data);
-      } catch (error) {
-        console.error("Failed to fetch stock info:", error);
-      }
-    };
-
-    fetchStockInfo();
-  }, []);
-
   return (
     <footer className="bg-[#fbfafa] dark:bg-opacity-50 dark-bg border-t dark:border-slate-600">
       <div className="container flex flex-wrap gap-1 py-10 max-[1017px]:gap-3">
@@ -115,32 +97,13 @@ const Footer: FC<Props> = (): JSX.Element => {
           <p className="footer-title">Support</p>
           <MailForm />
         </div>
-      </div>
 
-      <div className="border-t dark:border-slate-700 py-1 fixed bottom-0 left-0 right-0 bg-white dark:bg-opacity-50 dark-bg ">
-        <div className="container text-[#999999] text-xs flex items-center justify-between">
-          <span className=" my-2 text-center">
-            <div className="stock-info">
-              {stockInfo ? (
-                <div className="flex items-center text-black dark:text-white">
-                  <IoMdTrendingUp/>
-                  <span className="flex justify-center font-bold mx-2">{stockInfo.symbol}</span>
-                  <span className="flex justify-center mx-1 glow">{stockInfo.close_price}</span>
-                  <span className="flex justify-center mx-1 glow">{stockInfo.change_percent}%</span>
-                  {parseFloat(stockInfo.change_percent) >= 0 ? (
-                    <FaArrowUp className="text-green-500" />
-                  ) : (
-                    <FaArrowDown className="text-red-500" />
-                  )}
-                </div>
-              ) : (
-                <CircularProgress size={16} />
-              )}
-            </div>
-          </span>
-
-        </div>
+        <div className="flex-1">
+          <GetIndexStock/>
+          </div>
       </div>
+          
+
     </footer>
   );
 };

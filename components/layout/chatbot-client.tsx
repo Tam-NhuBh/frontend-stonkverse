@@ -92,7 +92,7 @@ const ChatBotClient: React.FC = () => {
                     )}
                 </ul>
 
-                <div className="chat-input dark:bg-opacity-50 dark-bg border-t dark:border-slate-600">
+                <div className="chat-input bg-white dark:bg-opacity-50 dark-bg border-t dark:border-slate-600">
                     <textarea 
                         ref={chatInputRef}
                         placeholder="Enter a message..."

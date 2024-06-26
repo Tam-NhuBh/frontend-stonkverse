@@ -27,7 +27,6 @@ const CourseContent: FC<Props> = ({
   const [isCollapsed, setIsCollapsed] = useState(
     Array(courseContentData.length).fill(false)
   );
-  const [userAnswers, setUserAnswers] = useState<Array<Array<string>>>([]);
 
   const [activeSection, setActiveSection] = useState(1);
 

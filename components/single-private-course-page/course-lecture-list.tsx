@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import React, { FC, Dispatch, SetStateAction } from "react";
 import { AccordionWrapper } from "../accordion-materials";
 import { AccordionDetails, AccordionSummary } from "@mui/material";
 import { formatVideoLength } from "@/lib/format-data";
@@ -6,6 +6,7 @@ import { MdOutlineOndemandVideo, MdQuiz, MdCheckCircle } from "react-icons/md";
 import { BiSolidChevronDown } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { ICourseData } from "@/types";
+import toast from "react-hot-toast";
 
 interface Props {
   courseData: ICourseData[];
@@ -66,8 +67,8 @@ const CourseLectureList: FC<Props> = ({
           >
             <AccordionSummary
               expandIcon={<BiSolidChevronDown className="mt-1" />}
-              aria-controls={`panel${{ index }}d-content`}
-              id={`panel${{ index }}d-header`}
+              aria-controls={`panel${index + 1}d-content`}
+              id={`panel${index + 1}d-header`}
             >
               <div className="relative w-full h-full">
                 <div className="flex items-start justify-between">
@@ -91,12 +92,16 @@ const CourseLectureList: FC<Props> = ({
                 <div key={videoIndex}>
                   <div
                     className={`cursor-pointer py-2 px-4 hover:bg-slate-200 dark:hover:bg-slate-900 transition flex items-center justify-between gap-2 ${video.order === activeVideo
-                        ? "bg-slate-200 dark:bg-slate-900"
-                        : "bg-white dark:bg-slate-600"
-                      }`}
+                      ? "bg-slate-200 dark:bg-slate-900"
+                      : "bg-white dark:bg-slate-600"
+                    }`}
                     onClick={() => {
-                      setActiveVideo(video.order);
-                      setActiveContentType("video");
+                      if (!courseData.slice(0, video.order).some((vid, idx) => vid.quiz?.length && !quizCompleted[idx])) {
+                        setActiveVideo(video.order);
+                        setActiveContentType("video");
+                      } else {
+                        toast.error("Please complete the current quiz before moving to another video.");
+                      }
                     }}
                   >
                     <div>
@@ -104,12 +109,14 @@ const CourseLectureList: FC<Props> = ({
                         <span className="font-semibold">
                           {video.title}
                         </span>
-                        {(quizCompleted[video.order] || !video.quiz || video.quiz.length === 0) && (
-                          <MdCheckCircle className="text-green-500 ml-2" />
-                        )}
                       </p>
                       <span className="text-xs flex items-center gap-1 mt-2">
-                        <MdOutlineOndemandVideo className="-mt-[2px]" />
+                        {quizCompleted?.[video?.order] || !video?.quiz || video?.quiz?.length === 0 ? (
+                          <MdCheckCircle className="-mt-[2px] text-green-500" />
+                        ) : (
+                          <MdOutlineOndemandVideo className="-mt-[2px]" />
+                        )}
+
                         {formatVideoLength(video.videoLength)}
                       </span>
                     </div>

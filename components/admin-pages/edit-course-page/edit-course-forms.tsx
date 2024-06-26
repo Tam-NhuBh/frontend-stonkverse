@@ -64,7 +64,7 @@ export type CourseContentDataType = {
   }[];
   suggestion: string;
   quiz: {
-    title: string;
+    title: string,
     correctAnswer: string[],
     mockAnswer: string[],
   }[];
