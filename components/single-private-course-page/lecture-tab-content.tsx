@@ -1,11 +1,13 @@
 "use client";
 import { useMediaQuery } from "@mui/material";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { HiExternalLink } from "react-icons/hi";
 import QuestionAndAnswer from "./question-and-answer";
 import CourseReviews from "./course-reviews";
 import { ICourseData, ILink, IQuestion } from "@/types";
 import CourseLectureList from "./course-lecture-list";
+import { getAnswersQuiz } from "@/lib/fetch-data";
+import toast from "react-hot-toast";
 
 interface Props {
   courseData: ICourseData[];
@@ -32,12 +34,34 @@ const LectureTabContent: FC<Props> = ({
 }): JSX.Element => {
   const [active, setActive] = useState(0);
   const notComputer = useMediaQuery("(max-width:1100px)");
+  const [quizCompleted, setQuizCompleted] = useState<boolean[]>(Array(courseData?.length).fill(false));
 
   const description = courseData?.[activeVideo]?.description;
   const resources = courseData?.[activeVideo]?.links;
   const questions = courseData?.[activeVideo]?.questions;
   const contentId = courseData?.[activeVideo]?._id.toString();
   const activeTitle = courseData?.[activeVideo]?.title;
+  useEffect(() => {
+    const fetchQuizCompletionStatus = async () => {
+      try {
+        if (!courseData || !courseData?.[activeVideo]) return;
+        const answers = await getAnswersQuiz(courseData?.[activeVideo]?._id.toString());
+        if (answers && answers.answers && answers.answers[courseData?.[activeVideo]?._id.toString()]) {
+          setQuizCompleted((prevCompleted) => {
+            const newCompleted = [...prevCompleted];
+            newCompleted[activeVideo] = true;
+            return newCompleted;
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching quiz answers:", error);
+        toast.error("An error occurred while fetching quiz answers.");
+      }
+    };
+  
+    fetchQuizCompletionStatus();
+  }, [activeVideo, courseData]);
+  
 
   return (
     <>
@@ -93,9 +117,10 @@ const LectureTabContent: FC<Props> = ({
           <CourseLectureList
             courseData={courseData}
             activeVideo={activeVideo}
-            setActiveVideo={setActiveVideo} 
-            setActiveContentType={setActiveContentType}            
-          />
+            setActiveVideo={setActiveVideo}
+            setActiveContentType={setActiveContentType} 
+            quizCompleted={quizCompleted}
+            />
         )}
 
         {active === 0 && <div>{description}</div>}
