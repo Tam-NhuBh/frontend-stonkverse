@@ -9,6 +9,7 @@ import { ICourseData, IQuestionQuiz } from "@/types";
 import toast from "react-hot-toast";
 import { getAnswersQuiz } from "@/lib/fetch-data";
 import { AiOutlineReload } from "react-icons/ai";
+import { useUpdateLessonCompletionMutation } from "@/store/course/course-api";
 
 interface Props {
   courseId: string;
@@ -36,6 +37,7 @@ const CourseContentMedia: FC<Props> = ({
   const [currentQuizId, setCurrentQuizId] = useState<string>("");
   const [retakeQuizClicked, setRetakeQuizClicked] = useState(false);
   const [videoQuizCompleted, setVideoQuizCompleted] = useState<boolean[]>(Array(courseData?.length).fill(false)); // State để lưu trạng thái hoàn thành quiz của từng video
+  const [completedVideos, setCompletedVideos] = useState<boolean[]>(Array(courseData?.length).fill(false));
 
   const filteredQuestions = (courseData?.[activeVideo]?.quiz ?? [])
   .filter((question: IQuestionQuiz) => question.title !== undefined)
@@ -46,6 +48,8 @@ const CourseContentMedia: FC<Props> = ({
     correctAnswer: question.correctAnswer ?? [],
     maxScore: question.maxScore,
   }));
+
+const [updateLessonCompletion] = useUpdateLessonCompletionMutation();
 
 useEffect(() => {
   window.scrollTo(0, 0);
@@ -85,7 +89,17 @@ const handleNextVideo = async () => {
       setNextVideoTriggered(true);
     }
   } else {
-    setActiveVideo((prevIndex) => Math.min(prevIndex + 1, courseData.length - 1));
+    try {
+      await updateLessonCompletion({ courseId, courseDataId: courseData?.[activeVideo]?._id.toString() });
+      setCompletedVideos((prev) => {
+        const updated = [...prev];
+        updated[activeVideo] = true;
+        return updated;
+      });
+      setActiveVideo((prevIndex) => Math.min(prevIndex + 1, courseData.length - 1));
+    } catch (error) {
+      toast.error("An error occurred while updating lesson completion.");
+    }
   }
 };
 
@@ -95,17 +109,27 @@ const handleBackVideo = () => {
   }
 };
 
-const handleQuizSubmit = () => {
-  setQuizCompleted((prevCompleted) => {
-    const updatedCompleted = [...prevCompleted];
-    updatedCompleted[activeVideo] = true;
-    return updatedCompleted;
-  });
-  setQuizSubmitted(true);
-  setShowQuizModal(false);
-  if (nextVideoTriggered) {
-    setActiveVideo((prevIndex) => Math.min(prevIndex + 1, courseData.length - 1));
-    setNextVideoTriggered(false);
+const handleQuizSubmit = async () => {
+  try {
+    await updateLessonCompletion({ courseId, courseDataId: courseData?.[activeVideo]?._id.toString() });
+    setQuizCompleted((prevCompleted) => {
+      const updatedCompleted = [...prevCompleted];
+      updatedCompleted[activeVideo] = true;
+      return updatedCompleted;
+    });
+    setQuizSubmitted(true);
+    setShowQuizModal(false);
+    setCompletedVideos((prev) => {
+      const updated = [...prev];
+      updated[activeVideo] = true;
+      return updated;
+    });
+    if (nextVideoTriggered) {
+      setActiveVideo((prevIndex) => Math.min(prevIndex + 1, courseData.length - 1));
+      setNextVideoTriggered(false);
+    }
+  } catch (error) {
+    toast.error("An error occurred while updating lesson completion.");
   }
 };
 
@@ -209,8 +233,8 @@ return (
           activeVideo={activeVideo}
           setActiveVideo={handleVideoClick}
           setActiveContentType={setActiveContentType}
-          quizCompleted={quizCompleted}
-        />
+          quizCompleted={quizCompleted} 
+          videoQuizCompleted={videoQuizCompleted}        />
       </div>
     )}
 

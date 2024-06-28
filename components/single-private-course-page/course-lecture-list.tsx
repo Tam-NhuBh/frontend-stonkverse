@@ -16,6 +16,7 @@ interface Props {
   setActiveVideo: Dispatch<SetStateAction<number>>;
   setActiveContentType: Dispatch<SetStateAction<string>>;
   quizCompleted: boolean[];
+  videoQuizCompleted: boolean[];
 }
 
 const CourseLectureList: FC<Props> = ({
@@ -26,6 +27,7 @@ const CourseLectureList: FC<Props> = ({
   setActiveVideo,
   setActiveContentType,
   quizCompleted,
+  videoQuizCompleted,
 }): JSX.Element => {
   const rawSections = new Set<string>(
     courseData?.map((item) => item.videoSection)
@@ -107,11 +109,11 @@ const CourseLectureList: FC<Props> = ({
                     <div>
                       <p className="flex items-center">
                         <span className="font-semibold">
-                          {video.title}
+                          {video?.title}
                         </span>
                       </p>
                       <span className="text-xs flex items-center gap-1 mt-2">
-                        {quizCompleted?.[video?.order] || !video?.quiz || video?.quiz?.length === 0 ? (
+                        {videoQuizCompleted?.[video?.order] || !video?.quiz || video?.quiz.length === 0 ? (
                           <MdCheckCircle className="-mt-[2px] text-green-500" />
                         ) : (
                           <MdOutlineOndemandVideo className="-mt-[2px]" />

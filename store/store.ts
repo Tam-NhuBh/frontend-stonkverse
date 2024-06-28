@@ -10,11 +10,9 @@ export const store = configureStore({
     getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
-// Types for RootState and AppDispatch
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-// Call refresh token function on every page load
 const initializeApp = async () => {
   await store.dispatch(
     apiSlice.endpoints.refreshToken.initiate({}, { forceRefetch: true })

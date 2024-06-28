@@ -114,7 +114,7 @@ export const getAnswersQuiz = async (contentId: string) => {
       }
     );
 
-    console.log("Fetched data:", data);
+    // console.log("Fetched data:", data);
     return data;
     
   } catch (error) {
