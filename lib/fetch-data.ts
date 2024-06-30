@@ -1,6 +1,5 @@
 import axios from "axios";
 import { cache } from "react";
-import { string } from "yup";
 
 
 export const getAllCoursesData = async () => {
@@ -135,22 +134,6 @@ export const resetUserLearningProgress = async () => {
   }
 };
 
-export const getUserLearningProgress = async (courseId: string) => {
-  try {
-    const response = await axios (
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/user/progress/${courseId}`,
-      {
-        withCredentials: true,
-
-      }
-    );
-
-      
-    return response.data;
-  } catch (error:any) {
-    throw new Error(error.response.data.message);
-  }
-};
 
 export const getIndexStock = async () => {
   try {
