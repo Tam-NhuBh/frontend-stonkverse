@@ -161,26 +161,3 @@ export const addNewContact = async (contactData: {
     console.log(error.response.data.message);
   }
 };
-
-export const updateLessonCompletion = async (courseId: string, courseDataId: string) => {
-  try {
-    const { data } = await axios.post(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/user/progress/${courseId}/${courseDataId}`,
-
-      {
-        withCredentials: true,
-      }
-    );
-
-    return data;
-  } catch (error: any) {
-    toast.error(error.response.data.message);
-    console.log(error.response.data.message);
-    throw new Error(error.response.data.message); 
-  }
-};
-
-
-
-
-

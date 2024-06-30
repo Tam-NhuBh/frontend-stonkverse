@@ -46,14 +46,21 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
-    // submitQuiz: builder.mutation({
-    //   query: (data) => ({
-    //     url: "add-answer-quiz",
-    //     method: "POST",
-    //     body: { data },
-    //     credentials: "include" as const,
-    //   }),
-    // }),
+    updateLessonCompletion: builder.mutation({
+      query: ({ courseId, courseDataId }) => ({
+        url: `user/progress/${courseId}/${courseDataId}`,
+        method: "POST",
+        body: { courseId, courseDataId },
+        credentials: "include" as const,
+      }),
+    }),
+    getLessonCompletion: builder.query({
+      query: (courseId: string) => ({
+        url: `user/progress/${courseId}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -64,5 +71,6 @@ export const {
   useGetSingleCourseQuery,
   useEditCourseMutation,
   useGetCourseContentQuery,
-  // useSubmitQuizMutation,
+  useUpdateLessonCompletionMutation,
+  useGetLessonCompletionQuery,
 } = courseApi;

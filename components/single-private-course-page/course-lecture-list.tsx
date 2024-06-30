@@ -1,4 +1,4 @@
-import React, { FC, Dispatch, SetStateAction } from "react";
+import React, { FC, Dispatch, SetStateAction, useEffect } from "react";
 import { AccordionWrapper } from "../accordion-materials";
 import { AccordionDetails, AccordionSummary } from "@mui/material";
 import { formatVideoLength } from "@/lib/format-data";
@@ -7,8 +7,10 @@ import { BiSolidChevronDown } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { ICourseData } from "@/types";
 import toast from "react-hot-toast";
+// import { getUserLearningProgress } from "@/lib/fetch-data";
 
 interface Props {
+  courseId: string;
   courseData: ICourseData[];
   setOpenSidebar?: Dispatch<SetStateAction<boolean>>;
   setIconHover?: Dispatch<SetStateAction<boolean>>;
@@ -16,9 +18,12 @@ interface Props {
   setActiveVideo: Dispatch<SetStateAction<number>>;
   setActiveContentType: Dispatch<SetStateAction<string>>;
   quizCompleted: boolean[];
+  completedVideos: string[];
+  setCompletedVideos: Dispatch<SetStateAction<string[]>>;
 }
 
 const CourseLectureList: FC<Props> = ({
+  courseId,
   courseData,
   setOpenSidebar,
   setIconHover,
@@ -26,6 +31,8 @@ const CourseLectureList: FC<Props> = ({
   setActiveVideo,
   setActiveContentType,
   quizCompleted,
+  completedVideos,
+  setCompletedVideos,
 }): JSX.Element => {
   const rawSections = new Set<string>(
     courseData?.map((item) => item.videoSection)
@@ -44,6 +51,35 @@ const CourseLectureList: FC<Props> = ({
       (video) => video.videoSection === section
     ),
   }));
+
+  const handleVideoClick = (videoIndex: number) => {
+    const allPreviousQuizzesCompleted = courseData.slice(0, videoIndex).every((video, index) => {
+      return !video.quiz?.length || quizCompleted[index];
+    });
+
+    if (allPreviousQuizzesCompleted) {
+      setActiveVideo(videoIndex);
+      setActiveContentType("video");
+    } else {
+      toast.error("Please complete the current quiz before moving to another video.");
+    }
+  };
+
+  // useEffect(() => {
+  //   const fetchUserLearningProgress = async () => {
+  //     try {
+  //       const progress = await getUserLearningProgress(courseId);
+  //       if (progress && progress.learningProgress && progress.learningProgress.progress) {
+  //         setCompletedVideos(progress.learningProgress.progress);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching user learning progress:", error);
+  //       toast.error("An error occurred while fetching learning progress.");
+  //     }
+  //   };
+
+  //   fetchUserLearningProgress();
+  // }, [courseId, setCompletedVideos]);
 
   return (
     <div className="overflow-y-scroll max-h-[calc(100%-62px)] no-scrollbar">
@@ -95,28 +131,20 @@ const CourseLectureList: FC<Props> = ({
                       ? "bg-slate-200 dark:bg-slate-900"
                       : "bg-white dark:bg-slate-600"
                     }`}
-                    onClick={() => {
-                      if (!courseData.slice(0, video.order).some((vid, idx) => vid.quiz?.length && !quizCompleted[idx])) {
-                        setActiveVideo(video.order);
-                        setActiveContentType("video");
-                      } else {
-                        toast.error("Please complete the current quiz before moving to another video.");
-                      }
-                    }}
+                    onClick={() => handleVideoClick(video.order)}
                   >
                     <div>
                       <p className="flex items-center">
                         <span className="font-semibold">
-                          {video.title}
+                          {video?.title}
                         </span>
                       </p>
                       <span className="text-xs flex items-center gap-1 mt-2">
-                        {quizCompleted?.[video?.order] || !video?.quiz || video?.quiz?.length === 0 ? (
+                        {completedVideos?.includes(video._id.toString()) ? (
                           <MdCheckCircle className="-mt-[2px] text-green-500" />
                         ) : (
                           <MdOutlineOndemandVideo className="-mt-[2px]" />
                         )}
-
                         {formatVideoLength(video.videoLength)}
                       </span>
                     </div>

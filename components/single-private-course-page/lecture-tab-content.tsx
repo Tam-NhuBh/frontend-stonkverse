@@ -16,6 +16,10 @@ interface Props {
   activeVideo: number;
   setActiveVideo: Dispatch<SetStateAction<number>>;
   setActiveContentType: Dispatch<SetStateAction<string>>; 
+  quizCompleted: boolean[];
+  completedVideos: string[];
+  setCompletedVideos: Dispatch<SetStateAction<string[]>>;
+
 }
 
 const panelItemClasses =
@@ -30,7 +34,10 @@ const LectureTabContent: FC<Props> = ({
   courseData,
   activeVideo,
   setActiveVideo,
-  setActiveContentType
+  setActiveContentType,
+  completedVideos,
+  setCompletedVideos,
+  
 }): JSX.Element => {
   const [active, setActive] = useState(0);
   const notComputer = useMediaQuery("(max-width:1100px)");
@@ -41,6 +48,7 @@ const LectureTabContent: FC<Props> = ({
   const questions = courseData?.[activeVideo]?.questions;
   const contentId = courseData?.[activeVideo]?._id.toString();
   const activeTitle = courseData?.[activeVideo]?.title;
+
   useEffect(() => {
     const fetchQuizCompletionStatus = async () => {
       try {
@@ -118,8 +126,11 @@ const LectureTabContent: FC<Props> = ({
             courseData={courseData}
             activeVideo={activeVideo}
             setActiveVideo={setActiveVideo}
-            setActiveContentType={setActiveContentType} 
-            quizCompleted={quizCompleted}
+            setActiveContentType={setActiveContentType}
+            quizCompleted={quizCompleted} 
+            completedVideos={completedVideos}
+            courseId={courseId}
+            setCompletedVideos={setCompletedVideos}          
             />
         )}
 
