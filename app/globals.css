@@ -168,7 +168,7 @@ html {
 /* Loading page */
 
 .loading-page-body {
-  @apply absolute ml-[-50px] animate-[speeder_0.4s_linear_infinite] left-2/4 top-2/4;
+  @apply absolute ml-[-20px] left-2/4 top-2/4;
 }
 
 .loading-page-body > span {
@@ -201,9 +201,7 @@ html {
   @apply dark:bg-secondary bg-slate-800;
 }
 
-.loading-page-face {
-  @apply absolute h-3 w-5 rotate-[-40deg] right-[-125px] top-[-15px] rounded-[20px_20px_0_0] after:content-[""] after:h-3 after:w-3 after:absolute after:rotate-[40deg] after:origin-[50%_50%] after:rounded-[0_0_0_2px] after:right-1 after:top-[7px] dark:bg-secondary bg-slate-800;
-}
+
 
 .loading-page-face:after {
   @apply dark:bg-secondary bg-slate-800;
@@ -564,4 +562,48 @@ html {
   40% {
       transform: translateY(-10px);
   }
+}
+
+.user-learning-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.course-score-card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+
+/* redirecting css */
+.pulsing-2 {
+  width:80px;
+  height:80px;
+  border-radius: 50%;
+  background:#91bbdb;
+  box-shadow: 0 0 0 0 rgba(82, 112, 148, 0.267);
+  animation:pl2 1.5s infinite linear;
+  position: relative;
+  transform: translate(-50%, -50%);
+
+}
+.pulsing-2:before,
+.pulsing-2:after {
+  content:"";
+  position: absolute;
+  inset:0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(127, 213, 223, 0.267);
+  animation: inherit;
+  animation-delay: -0.5s;
+  
+}
+.pulsing-2:after {
+  animation-delay: -1s;
+}
+@keyframes pl2 {
+    100% {box-shadow: 0 0 0 40px #0000}
 }

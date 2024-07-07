@@ -207,6 +207,13 @@ const AdminSidebar: FC<Props> = ({
               selected={selected}
               setSelected={setSelected}
             />
+            <Item
+              title="Contacts"
+              to="/admin/contacts"
+              icon={<Web />}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
             <Typography
               variant='h6'
@@ -239,14 +246,6 @@ const AdminSidebar: FC<Props> = ({
             >
               {!isCollapsed && "Customization"}
             </Typography>
-
-            {/* <Item
-              title="Banner"
-              to="/admin/banner"
-              icon={<Web />}
-              selected={selected}
-              setSelected={setSelected}
-            /> */}
 
             <Item
               title="FAQ"

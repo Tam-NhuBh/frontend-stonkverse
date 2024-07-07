@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { profileItemsData } from "@/data/profile-items";
 import { signOut } from "next-auth/react";
 import LoggedinUserAvatar from "../loggedin-user-avatar";
@@ -43,40 +43,34 @@ const ProfileSidebar: FC<Props> = ({ active, setActive }): JSX.Element => {
       </div>
 
       {profileItemsData.map((item, index) => {
-        if (index === 2) {
-          if (isAdmin) {
-            return (
-              <Link
-                href="/admin"
-                className={`${common} ${
-                  active === 4
-                    ? "main-gradient text-dark_text"
-                    : "bg-transparent"
-                }`}
-                key={2}
-                onClick={() => {
-                  setActive(4);
-                }}
-              >
-                {item.icon({})}
-                <span className="max-[960px]:hidden text-base">
-                  {item.title}
-                </span>
-              </Link>
-            );
-          } else return null;
+        if (item.title === "Admin Dashboard" && !isAdmin) {
+          return null;
         }
 
-        return (
-          <div
+        const adjustedIndex = item.title === "Admin Dashboard" ? 5 : index + 2;
+
+        return item.title === "Admin Dashboard" ? (
+          <Link
+            href="/admin"
             className={`${common} ${
-              active === index + 2
-                ? "main-gradient text-dark_text"
-                : "bg-transparent"
+              active === adjustedIndex ? "main-gradient text-dark_text" : "bg-transparent"
             }`}
             key={index}
             onClick={() => {
-              !item.isLogout ? setActive(index + 2) : logoutHandler();
+              setActive(adjustedIndex);
+            }}
+          >
+            {item.icon({})}
+            <span className="max-[960px]:hidden text-base">{item.title}</span>
+          </Link>
+        ) : (
+          <div
+            className={`${common} ${
+              active === adjustedIndex ? "main-gradient text-dark_text" : "bg-transparent"
+            }`}
+            key={index}
+            onClick={() => {
+              !item.isLogout ? setActive(adjustedIndex) : logoutHandler();
             }}
           >
             {item.icon({})}

@@ -29,7 +29,6 @@ export const createOrder = async (courseId: string, payment_info: any) => {
 
     return data.order;
   } catch (error: any) {
-    toast.error(error.response.data.message);
     console.log(error.response.data.message);
   }
 };
@@ -51,7 +50,6 @@ export const createQuestion = async (
 
     return data;
   } catch (error: any) {
-    toast.error(error.response.data.message);
     console.log(error.response.data.message);
   }
 };
@@ -72,7 +70,6 @@ export const createReview = async (
 
     return data;
   } catch (error: any) {
-    toast.error(error.response.data.message);
     console.log(error.response.data.message);
   }
 };
@@ -94,7 +91,6 @@ export const addAnswer = async (
 
     return data;
   } catch (error: any) {
-    toast.error(error.response.data.message);
     console.log(error.response.data.message);
   }
 };
@@ -115,7 +111,6 @@ export const addReviewReply = async (
 
     return data;
   } catch (error: any) {
-    toast.error(error.response.data.message);
     console.log(error.response.data.message);
   }
 };
@@ -139,7 +134,6 @@ export const addAnswerQuiz = async (
 
     return data;
   } catch (error: any) {
-    toast.error(error.response.data.message);
     console.log(error.response.data.message);
   }
 };
@@ -157,7 +151,7 @@ export const addNewContact = async (contactData: {
 
     return data;
   } catch (error: any) {
-    toast.error(error.response.data.message);
     console.log(error.response.data.message);
   }
 };
+

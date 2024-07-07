@@ -2,6 +2,7 @@ import { IconType } from "react-icons";
 import { AiOutlineLogout } from "react-icons/ai";
 import { GiBookmark, GiPadlock } from "react-icons/gi";
 import { RiAdminLine } from "react-icons/ri";
+import { BiCalendarPlus } from "react-icons/bi";
 
 export const profileItemsData: {
   icon: IconType;
@@ -15,6 +16,10 @@ export const profileItemsData: {
   {
     icon: GiBookmark,
     title: "Enrolled Courses",
+  },
+  {
+    icon: BiCalendarPlus,
+    title: "My Learning Progress",
   },
   {
     icon: RiAdminLine,

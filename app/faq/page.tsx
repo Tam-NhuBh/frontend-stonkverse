@@ -6,14 +6,14 @@ import { NextPage } from "next";
 import { IFaq } from "../admin/faq/page";
 import Heading from "@/components/heading";
 
-export const generateMetadata = () => {
-  return {
-    title: "Frequently Asked Questions &ndash",
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/faq`,
-    },
-  };
-};
+// export const generateMetadata = () => {
+//   return {
+//     title: "Frequently Asked Questions &ndash",
+//     alternates: {
+//       canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/faq`,
+//     },
+//   };
+// };
 
 interface Props {}
 

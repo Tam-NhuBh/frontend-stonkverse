@@ -19,7 +19,7 @@ const DataTable: FC<Props> = ({ isLoading, rows, columns }): JSX.Element => {
       ) : (
         <Box marginTop="20px">
           <Box
-            sx={{
+            sx={{ height: "500px", overflowY: "auto",
               "& .MuiDataGrid-root": {
                 fontFamily: "revert",
                 border: "none",

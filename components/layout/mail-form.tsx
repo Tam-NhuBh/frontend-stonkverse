@@ -27,7 +27,7 @@ interface FormValues {
 
 const MailForm: FC<Props> = (props): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log("test:",isLoading)
   const form = useForm<FormValues>({
     defaultValues: {
       email: "",
