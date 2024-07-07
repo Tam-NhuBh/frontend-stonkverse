@@ -97,12 +97,11 @@ const Footer: FC<Props> = (): JSX.Element => {
           <p className="footer-title">Support</p>
           <MailForm />
         </div>
-
-        <div className="flex-1">
+ 
+      </div>
+      <div className="flex-1">
           <GetIndexStock/>
           </div>
-      </div>
-          
 
     </footer>
   );

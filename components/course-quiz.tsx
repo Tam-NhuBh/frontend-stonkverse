@@ -56,7 +56,7 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions, quizId, onClose
 
   useEffect(() => {
     if (hasSubmitted) {
-      const timeout = setTimeout(() => setCanEnableResubmit(true), 40000);
+      const timeout = setTimeout(() => setCanEnableResubmit(true), 1);
       setResubmitTimeout(timeout);
     } else {
       setCanEnableResubmit(false);
@@ -103,7 +103,7 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions, quizId, onClose
         toast.success("Quiz answers submitted successfully!");
         setHasSubmitted(true);
         onQuizSubmit(); 
-        const timeout = setTimeout(() => setCanEnableResubmit(true), 4000);
+        const timeout = setTimeout(() => setCanEnableResubmit(true), 1);
         setResubmitTimeout(timeout);
       }
     } catch (error) {

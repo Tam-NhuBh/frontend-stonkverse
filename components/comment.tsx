@@ -148,7 +148,7 @@ const Comment: FC<Props> = ({
         {content}
       </div>
 
-      {(isQuestion || isAdmin) && showReplyButton &&(
+      {(isQuestion || isAdmin) && showReplyButton && (
         <div className="flex items-center gap-4 mt-4 text-tertiary dark:text-secondary">
           <BtnWithIcon
             content={openReplies ? "Hide replies?" : "Reply this?"}
@@ -161,27 +161,25 @@ const Comment: FC<Props> = ({
       {openReplies && (
         <div className="ml-10">
           <div className="mt-4 mb-6">
-            {isQuestion
-              ? questionReplies?.map((reply) => (
-                  <CommentReply
-                    key={reply._id.toString()}
-                    avatar={reply.user?.avatar?.url}
-                    name={reply.user?.name}
-                    content={reply?.answer}
-                    createdAt={reply?.createdAt}
+            {isQuestion && questionReplies?.map((reply) => (
+              <CommentReply
+                key={reply?._id?.toString()}
+                avatar={reply?.user?.avatar?.url}
+                name={reply?.user?.name}
+                content={reply?.answer}
+                createdAt={reply?.createdAt}
+              />
+            ))}
+            {!isQuestion && reviewReplies?.map((reviewReply) => (
+              <CommentReply
+                key={reviewReply?._id?.toString()}
+                avatar={reviewReply?.user?.avatar?.url}
+                name={reviewReply?.user?.name}
+                content={reviewReply?.answer}
+                createdAt={reviewReply?.createdAt}
+              />
+            ))}
 
-                  />
-                ))
-              : reviewReplies?.map((reviewReply) => (
-                  <CommentReply
-                    key={reviewReply._id.toString()}
-                    avatar={reviewReply.user?.avatar?.url}
-                    name={reviewReply.user?.name}
-                    content={reviewReply?.answer}
-                    createdAt={reviewReply?.createdAt}
-
-                  />
-                ))}
           </div>
 
           <FormInput
@@ -191,7 +189,7 @@ const Comment: FC<Props> = ({
             label="Write your response"
             placeholder="Eg: I think you shoud solve this problem by this way ..."
             value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
+            onChange={(e) => setAnswer(e?.target?.value)}
           />
 
           <div className="text-right -mt-4">

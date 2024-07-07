@@ -146,3 +146,31 @@ export const getIndexStock = async () => {
     throw new Error(error.response.data.message);
   }
 };
+
+export const getCurrentUserProgress= async (courseIds: string[]) => {
+  try {
+    const { data } = await axios.post(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/get-user-progress`,
+      { courseIds },
+      {
+        withCredentials: true,
+      }
+    );
+    return data.courseScores;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getQuizQuestions = async (courseId: string) => {
+  try {
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/course/${courseId}/quiz-questions`
+    );
+
+    return data.questions;
+  } catch (error) {
+    console.log(error);
+  }
+};
+

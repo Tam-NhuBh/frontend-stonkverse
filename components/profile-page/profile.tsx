@@ -3,6 +3,7 @@ import ProfileSidebar from "./profile-sidebar";
 import ProfileInfo from "./profile-info";
 import ChangePassword from "./change-password";
 import UserCourses from "./user-courses";
+import UserLeaningProgress from "./user-learning-progress";
 
 interface Props {}
 
@@ -20,8 +21,10 @@ const Profile: FC<Props> = (props): JSX.Element => {
           <ChangePassword />
         ) : active === 3 ? (
           <UserCourses />
+        ) : active === 4 ? (
+          <UserLeaningProgress />
         ) : (
-          ""
+            ""
         )}
       </div>
     </div>
