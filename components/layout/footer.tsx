@@ -1,7 +1,7 @@
 import {
   footerCol1,
-  footerCol2,
-  footerCol3,
+  // footerCol2,
+  // footerCol3,
   footerCol4,
 } from "@/data/footer-items";
 import { FC} from "react";
@@ -83,14 +83,14 @@ const Footer: FC<Props> = (): JSX.Element => {
 
 
         <div className="w-[20%] px-3 max-[1017px]:w-[25%] max-[717px]:w-[45%] max-[717px]:px-0">
-          <p className="footer-title">Policies</p>
+          {/* <p className="footer-title">LEGAL</p>
           <ul>
             {footerCol3.map((item, index) => (
               <li key={index} className="footer-item">
                 <Link href={item.link}>{item.title}</Link>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
 
         <div className="flex-1">

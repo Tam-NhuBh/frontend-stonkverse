@@ -1,5 +1,6 @@
 export const linkConstants = {
-  privacy: "/privacy-policy",
+  policy: "/policy",
+  
 };
 
 export const pageConstants = {

@@ -11,19 +11,19 @@ export const footerCol1: { title: string; content: string }[] = [
   },
 ];
 
-export const footerCol2: footerItemType[] = [
-  { title: "News", link: linkConstants.privacy },
-  { title: "Stocks", link: linkConstants.privacy },
-  { title: "Bonds", link: linkConstants.privacy },
-  { title: "Company", link: linkConstants.privacy },
-  { title: "Economy", link: linkConstants.privacy },
-  { title: "Finance", link: linkConstants.privacy },
-];
+// export const footerCol2: footerItemType[] = [
+//   { title: "News", link: linkConstants.privacy },
+//   { title: "Stocks", link: linkConstants.privacy },
+//   { title: "Bonds", link: linkConstants.privacy },
+//   { title: "Company", link: linkConstants.privacy },
+//   { title: "Economy", link: linkConstants.privacy },
+//   { title: "Finance", link: linkConstants.privacy },
+// ];
 
-export const footerCol3: footerItemType[] = [
-  { title: "Privacy Policy", link: linkConstants.privacy },
-  { title: "Terms of Use", link: linkConstants.privacy },
-];
+// export const footerCol3: footerItemType[] = [
+//   { title: "Privacy Policy", link: linkConstants.policy },
+//   { title: "Terms of Use", link: linkConstants.policy },
+// ];
 
 
 export const footerCol4: { title: string; link: string, icon: IconType }[] = [
