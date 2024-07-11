@@ -46,7 +46,7 @@ const Hero: FC<Props> = async (props): Promise<JSX.Element> => {
           <p className="font-josefin text-slate-700 dark:text-dark_text">
             500K+ People already trusted us.&nbsp;
             <Link href="/courses" className="text-gradient font-bold">
-              View Courses
+              View Courses For Beginners
             </Link>
           </p>
         </div>
