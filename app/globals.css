@@ -577,33 +577,3 @@ html {
   background-color: #f9f9f9;
 }
 
-
-/* redirecting css */
-.pulsing-2 {
-  width:80px;
-  height:80px;
-  border-radius: 50%;
-  background:#91bbdb;
-  box-shadow: 0 0 0 0 rgba(82, 112, 148, 0.267);
-  animation:pl2 1.5s infinite linear;
-  position: relative;
-  transform: translate(-50%, -50%);
-
-}
-.pulsing-2:before,
-.pulsing-2:after {
-  content:"";
-  position: absolute;
-  inset:0;
-  border-radius: inherit;
-  box-shadow: 0 0 0 0 rgba(127, 213, 223, 0.267);
-  animation: inherit;
-  animation-delay: -0.5s;
-  
-}
-.pulsing-2:after {
-  animation-delay: -1s;
-}
-@keyframes pl2 {
-    100% {box-shadow: 0 0 0 40px #0000}
-}
