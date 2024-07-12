@@ -105,7 +105,8 @@ const Comment: FC<Props> = ({
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
-      toast.error(error.message);
+      toast.error("Cannot create answer with inappropriate content");
+
     }
   };
 
