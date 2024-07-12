@@ -118,11 +118,11 @@ const Signup: FC<Props> = ({ setRoute, setOpenModal }): JSX.Element => {
 
         <BtnWithLoading content="SIGNUP" isLoading={isLoading} type="submit" />
 
-        <p className="mt-8 mb-2 text-center">Or join with</p>
+        {/* <p className="mt-8 mb-2 text-center">Or join with</p>
         <div className="flex items-center justify-center gap-x-2">
           <FcGoogle size={30} className="cursor-pointer" />
           <AiFillGithub size={30} className="cursor-pointer" />
-        </div>
+        </div> */}
 
         <p className="text-center mt-8">
           Already have an account?
