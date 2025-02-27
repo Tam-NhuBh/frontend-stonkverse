@@ -66,7 +66,7 @@ const QuestionAndAnswer: FC<Props> = ({
       contentId
     );
 
-    if (res.success) {
+    if (res?.success) {
       setIsLoading(false);
       toast.success("Add New Question Successfully!");
       reset();

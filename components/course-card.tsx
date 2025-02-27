@@ -13,6 +13,7 @@ interface Props {
 }
 
 const CourseCard: FC<Props> = ({ course }): JSX.Element => {
+  console.log("courseData:", course)
   return (
     <div className="rounded-[5px] shadow-md dark:border-none dark:bg-slate-500 bg-white dark:bg-opacity-20 custom-hover cursor-pointer">
       <Link
