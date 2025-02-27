@@ -155,11 +155,9 @@ const Header: FC<Props> = (): JSX.Element | null => {
           </>
         )
       }
-      <div className="breadcrumbs-container">
-        <div className="breadcrumbs-content">
+      <div>
           <BreadCrumbsComp />
         </div>
-      </div>
     </div >
 
   );

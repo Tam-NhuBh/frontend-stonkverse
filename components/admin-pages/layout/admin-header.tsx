@@ -1,96 +1,118 @@
-"use client";
+"use client"
 
-import ThemeSwitcher from "@/components/layout/theme-switcher";
-import {
-  useGetAllNotificationsQuery,
-  useUpdateNotifcationStatusMutation,
-} from "@/store/notification/notification-api";
-import { FC, useState, useEffect } from "react";
-import { IoMdNotificationsOutline, IoMdCheckmarkCircleOutline } from "react-icons/io";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
-import { IoCheckmarkDoneSharp } from "react-icons/io5";
-TimeAgo.addDefaultLocale(en);
-const timeAgo = new TimeAgo("en-US");
+import ThemeSwitcher from "@/components/layout/theme-switcher"
+import { useGetAllNotificationsQuery, useUpdateNotifcationStatusMutation } from "@/store/notification/notification-api"
+import { type FC, useState, useEffect } from "react"
+import { IoMdNotificationsOutline, IoMdCheckmarkCircleOutline } from "react-icons/io"
+import TimeAgo from "javascript-time-ago"
+import en from "javascript-time-ago/locale/en"
+import { IoCheckmarkDoneSharp } from "react-icons/io5"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
+import { ChevronRight, Home } from "lucide-react"
 
-interface Props { }
+TimeAgo.addDefaultLocale(en)
+const timeAgo = new TimeAgo("en-US")
+
+type Props = {}
 
 const AdminHeader: FC<Props> = (): JSX.Element => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const { data, refetch } = useGetAllNotificationsQuery(undefined, {
     refetchOnMountOrArgChange: true,
-  });
-  const [updateNotificationStatus, { isSuccess }] =
-    useUpdateNotifcationStatusMutation();
+  })
+  const [updateNotificationStatus, { isSuccess }] = useUpdateNotifcationStatusMutation()
+  const pathname = usePathname() ?? "/"
+  const breadcrumbItems = pathname.split("/").filter(Boolean) // Get segments
 
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([])
 
   useEffect(() => {
     if (data) {
-      console.log("Fetched notifications:", data);
-      setNotifications(data.notifications || []);
+      setNotifications(data.notifications || [])
     }
-  }, [data]);
+  }, [data])
 
   const handleNotificationStatusChange = async (id: string) => {
-    await updateNotificationStatus(id);
-    refetch();
-  };
+    await updateNotificationStatus({ id })
+    refetch()
+  }
 
   return (
-    <div className="flex items-center justify-end fixed p-6 top-9 right-8 z-[1000]">
-      <ThemeSwitcher />
-      <div
-        className="relative cursor-pointer m-2"
-        onClick={() => setOpen(!open)}
-      >
-        <IoMdNotificationsOutline className="text-2xl cursor-pointer dark:text-dark_text text-black -mt-1" />
-        <span className="absolute -top-[10px] -right-2 bg-[#3ccba0] rounded-full w-5 h-5 text-xs flex items-center justify-center text-dark_text">
-          {notifications.length}
-        </span>
+    <div className="bg-white dark:bg-gray-800 shadow-md">
+      <div className="container mx-auto px-4 py-2">
+        <div className="flex items-center justify-between flex-wrap min-w-0">
+          <div className="flex-1 min-w-0 mr-4 overflow-x-auto">
+            <div className="flex flex-wrap items-center text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">
+              <Link href="/" className="flex items-center hover:text-primary transition-colors mr-2 whitespace-nowrap">
+                <Home className="w-4 h-4 sm:w-5 sm:h-5 mr-1" />
+                <span className="p-1">Home</span>
+              </Link>
+
+              {breadcrumbItems.map((segment, index) => {
+                const path = "/" + breadcrumbItems.slice(0, index + 1).join("/")
+                const isLast = index === breadcrumbItems.length - 1
+
+                return (
+                  <div key={path} className="flex items-center">
+                    <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 mx-1 sm:mx-2 text-gray-400 flex-shrink-0" />
+                    <Link
+                      href={path}
+                      className={`flex items-center hover:text-primary transition-colors whitespace-nowrap ${
+                        isLast ? "font-semibold" : ""
+                      }`}
+                    >
+                      <span className="truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]">
+                        {segment.replace("-", " ")}
+                      </span>
+                    </Link>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+          <div className="flex items-center space-x-4 flex-shrink-0">
+            <ThemeSwitcher />
+            <div className="relative cursor-pointer" onClick={() => setOpen(!open)}>
+              <IoMdNotificationsOutline className="text-2xl cursor-pointer dark:text-dark_text text-black" />
+              <span className="absolute -top-2 -right-2 bg-[#3ccba0] rounded-full w-5 h-5 text-xs flex items-center justify-center text-white">
+                {notifications.length}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {open && (
-        <div className="fixed top-20 right-8 z-[10000]">
-          <div className="w-[350px] max-h-[450px] dark:bg-[#111C43] bg-white shadow-xl border dark:border-slate-700 rounded overflow-hidden">
-            <h5 className="text-center text-[20px] text-white dark:text-dark_text py-3 bg-[#45cba0] rounded-t">
-              Notifications
-            </h5>
+        <div className="absolute top-16 right-4 z-50">
+          <div className="w-80 max-h-[450px] bg-white dark:bg-gray-800 shadow-xl border dark:border-gray-700 rounded-lg overflow-hidden">
+            <h5 className="text-center text-lg font-semibold text-white py-3 bg-[#45cba0]">Notifications</h5>
 
-            <div className="h-[400px] overflow-y-auto">
+            <div className="max-h-[400px] overflow-y-auto">
               {notifications.length === 0 ? (
-                <p className="text-center text-tertiary dark:text-dark_text mt-4">
-                  No notifications
-                </p>
+                <p className="text-center text-gray-500 dark:text-gray-400 py-4">No notifications</p>
               ) : (
                 notifications.map((item: any, index: number) => (
                   <div
                     key={index}
-                    className="dark:bg-[#2d3a4ea1] bg-[#00000013] border-b dark:border-b-[#ffffff47] border-b-[#0000000f] transition-transform transform hover:scale-105"
+                    className="border-b dark:border-gray-700 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer" // Added cursor-pointer
                   >
-                    <div className="w-full flex items-center justify-between p-3">
-                      <p className="text-tertiary dark:text-dark_text font-semibold">
-                        {item.title}
-                      </p>
+                    <div className="flex items-center justify-between">
+                      <p className="font-semibold text-gray-800 dark:text-gray-200">{item.title}</p>
                       {item.read ? (
                         <IoMdCheckmarkCircleOutline
                           className="text-green-500 cursor-pointer"
                           onClick={() => handleNotificationStatusChange(item._id)}
                         />
                       ) : (
-                        <p
-                          className="text-tertiary dark:text-dark_text cursor-pointer hover:text-gray-300"
+                        <IoCheckmarkDoneSharp
+                          className="text-gray-400 dark:text-gray-500 cursor-pointer hover:text-gray-600 dark:hover:text-gray-300"
                           onClick={() => handleNotificationStatusChange(item._id)}
-                        >
-                          <IoCheckmarkDoneSharp />
-                        </p>
+                        />
                       )}
                     </div>
-
-                    <p className="px-3 text-tertiary dark:text-dark_text text-sm">
-                      {item.message}
-                    </p>
-                    <p className="px-3 pb-3 text-tertiary dark:text-dark_text text-xs">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{item.message}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
                       {timeAgo.format(new Date(item.createdAt))}
                     </p>
                   </div>
@@ -101,7 +123,8 @@ const AdminHeader: FC<Props> = (): JSX.Element => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AdminHeader;
+export default AdminHeader
+

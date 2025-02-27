@@ -10,6 +10,7 @@ import Footer from "@/components/layout/footer";
 import Heading from "@/components/heading";
 import { pageConstants } from "@/constants";
 import ChatBotClient from "@/components/layout/chatbot-client";
+import Categories from "@/components/home-page/categories";
 
 
 interface Props { }
@@ -37,6 +38,7 @@ const page: NextPage<Props> = async () => {
         <div className="chatbot-container">
           <ChatBotClient />
         </div>
+        <Categories />
         <Courses />
         <Features />
         {/* <Reviews /> */}

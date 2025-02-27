@@ -22,14 +22,9 @@ const AdminLayout: FC<Props> = ({ children }): JSX.Element | null => {
         />
       </div>
 
-      <div className="flex-1 transition">
-        <div className="breadcrumbs-container">
-          <div className="breadcrumbs-content">
-            <BreadCrumbsComp />
-          </div>
-        </div>
+      <div className="flex-1 flex flex-col">
         <AdminHeader />
-        {children}
+        <div className="flex-1">{children}</div>
       </div>
     </div>
   );

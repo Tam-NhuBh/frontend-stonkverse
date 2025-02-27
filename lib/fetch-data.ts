@@ -26,6 +26,18 @@ export const getAllCategories = async () => {
   }
 };
 
+export const getCourseByCategory = async (categorySlug: string) => {
+  try {
+    const { data } = await axios(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/get-courses/${categorySlug}`
+    );
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getUserCoursesData = async (courseIds: string[]) => {
   try {
     const { data } = await axios.post(
