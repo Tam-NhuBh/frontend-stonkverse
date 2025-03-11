@@ -24,16 +24,17 @@ const page: NextPage<Props> = async ({ params }) => {
       />
       <div className="min-h-screen">
         <Header />
-        <div className="container mt-28 mb-14">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-6 md:mt-8">
+            <div className="flex flex-wrap gap-2 md:gap-3 items-center">
+              <CategoryTag 
+                categories={categories} 
+                exclude={data?.category} 
+              />
+          </div>
+        </div>
+  
+        <div className="container mt-16 sm:mt-20 md:mt-28 mb-14">
           <div>
-            <h2 className="section-title">
-              <p>
-                Expand Your Career{" "}
-                <span className="text-gradient font-bold">Opportunity</span>
-              </p>
-              <p>With Our Courses</p>
-            </h2>
-
             <p className="font-semibold text-tertiary dark:text-dark_text text-center mb-6 text-lg">
               We found{" "}
               <span className="text-gradient font-bold">
@@ -41,9 +42,7 @@ const page: NextPage<Props> = async ({ params }) => {
               </span>{" "}
               available for you
             </p>
-
-            <CategoryTag categories={categories} exclude={data?.category} />
-
+  
             <div className="mt-10 main-grid">
               {courses?.map((course) => (
                 <CourseCard key={course?._id.toString()} course={course} />
@@ -51,7 +50,7 @@ const page: NextPage<Props> = async ({ params }) => {
             </div>
           </div>
         </div>
-
+  
         <Footer />
       </div>
     </>

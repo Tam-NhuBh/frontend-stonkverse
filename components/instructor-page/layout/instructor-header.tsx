@@ -16,7 +16,7 @@ const timeAgo = new TimeAgo("en-US")
 
 type Props = {}
 
-const AdminHeader: FC<Props> = (): JSX.Element => {
+const InstructorHeader: FC<Props> = (): JSX.Element => {
   const [open, setOpen] = useState(false)
   const { data, refetch } = useGetAllNotificationsQuery(undefined, {
     refetchOnMountOrArgChange: true,
@@ -126,5 +126,5 @@ const AdminHeader: FC<Props> = (): JSX.Element => {
   )
 }
 
-export default AdminHeader
+export default InstructorHeader
 

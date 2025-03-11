@@ -156,7 +156,7 @@ const AllInvoices: FC<Props> = ({ isDashboard }): JSX.Element => {
             },
           }}
         >
-          <h5 className="text-lg uppercase font-semibold">
+          <h5 className="text-lg uppercase font-semibold mb-3">
             Recent Transactions
           </h5>
           <DataGrid

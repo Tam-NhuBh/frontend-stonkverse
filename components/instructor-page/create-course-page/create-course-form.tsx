@@ -1,21 +1,21 @@
 "use client";
 
 import { FC, useEffect, useState } from "react";
-import CourseInfomation from "./course-infomation";
-import CourseOptions from "./course-options";
-import CourseData from "./course-data";
-import CourseContent from "./course-content";
-import CoursePreview from "./course-preview";
+import CourseInfomationInstructor from "./course-infomation";
+import CourseOptionsInstructor from "./course-options";
+import CourseDataInstructor from "./course-data";
+import CourseContentInstructor from "./course-content";
+import CoursePreviewInstructor from "./course-preview";
 import { useCreateCourseMutation } from "@/store/course/course-api";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
 
 interface Props { }
 
-export type CourseInfoValues = {
+export type CourseInfoValuesInstructor = {
   name: string;
   description: string;
-  category: string;
+  // category: string;
   price: string;
   estimatedPrice: string;
   tags: string;
@@ -25,10 +25,10 @@ export type CourseInfoValues = {
   curriculum: string
 };
 
-export const initialCourseInfo = {
+export const initialCourseInfoInstructor = {
   name: "",
   description: "",
-  category: "",
+  // category: "",
   price: "",
   estimatedPrice: "",
   tags: "",
@@ -38,7 +38,7 @@ export const initialCourseInfo = {
   curriculum: ""
 };
 
-const initialCourseContentData = [
+const initialCourseContentDataInstructor = [
   {
     videoUrl: "",
     title: "",
@@ -51,7 +51,7 @@ const initialCourseContentData = [
   },
 ];
 
-export type CourseContentDataType = {
+export type CourseContentDataTypeInstructor = {
   videoUrl: string;
   title: string;
   description: string;
@@ -69,17 +69,17 @@ export type CourseContentDataType = {
   }[];
 }[];
 
-const CreateCourseForm: FC<Props> = (props): JSX.Element => {
+const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
   const [active, setActive] = useState(0);
 
-  const [courseInfo, setCourseInfo] = useState(initialCourseInfo);
+  const [courseInfo, setCourseInfo] = useState(initialCourseInfoInstructor);
 
   const [benefits, setBenefits] = useState([{ title: "" }]);
   const [prerequisites, setPrerequisites] = useState([{ title: "" }]);
   const [forWho, setForWho] = useState([{ title: "" }]);
 
   const [courseContentData, setCourseContentData] = useState(
-    initialCourseContentData
+    initialCourseContentDataInstructor
   );
 
   const [courseData, setCourseData] = useState({});
@@ -125,7 +125,7 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
     <div className="flex">
       <div className="w-[80%]">
         {active === 0 && (
-          <CourseInfomation
+          <CourseInfomationInstructor
             active={active}
             setActive={setActive}
             courseInfo={courseInfo}
@@ -143,7 +143,7 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
         )} */}
         
         {active === 1 && (
-          <CourseData
+          <CourseDataInstructor
             active={active}
             setActive={setActive}
             benefits={benefits}
@@ -156,7 +156,7 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
         )}
 
         {active === 2 && (
-          <CourseContent
+          <CourseContentInstructor
             active={active}
             setActive={setActive}
             courseContentData={courseContentData}
@@ -166,7 +166,7 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
         )}
 
         {active === 3 && (
-          <CoursePreview
+          <CoursePreviewInstructor
             active={active}
             setActive={setActive}
             courseData={courseData}
@@ -176,10 +176,10 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
         )}
       </div>
       <div className="flex-1 fixed z-[-1] top-[80px] right-8">
-        <CourseOptions active={active} setActive={setActive} />
+        <CourseOptionsInstructor active={active} setActive={setActive} />
       </div>
     </div>
   );
 };
 
-export default CreateCourseForm;
+export default CreateCourseFormInstructor;

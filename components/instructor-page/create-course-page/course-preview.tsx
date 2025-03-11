@@ -1,5 +1,4 @@
 import { Dispatch, FC, SetStateAction } from "react";
-import CoursePlayer from "../../course-player";
 import BtnWithIcon from "@/components/btn-with-icon";
 import DotSpan from "@/components/dot-span";
 import { formatShortDate, formatVideoLength } from "@/lib/format-data";
@@ -9,7 +8,7 @@ import { MdKey, MdLiveTv, MdOutlineSource } from "react-icons/md";
 import { CgTimelapse } from "react-icons/cg";
 import { RiFileList2Line } from "react-icons/ri";
 import { PiStudentBold } from "react-icons/pi";
-import CourseContentTabs from "./course-content-tabs";
+import CourseContentTabsInstructor from "./course-content-tabs";
 import {
   BiBarChartAlt2,
   BiCommentDetail,
@@ -18,6 +17,7 @@ import {
 } from "react-icons/bi";
 import Comment from "@/components/comment";
 import BottomNavigator from "./bottom-navigator";
+import CoursePlayer from "@/components/course-player";
 
 interface Props {
   active: number;
@@ -27,7 +27,7 @@ interface Props {
   createCourseHandler: () => void;
 }
 
-const CoursePreview: FC<Props> = ({
+const CoursePreviewInstructor: FC<Props> = ({
   active,
   setActive,
   courseData,
@@ -101,7 +101,7 @@ const CoursePreview: FC<Props> = ({
           </ul>
 
           <div className="mt-10">
-            <CourseContentTabs
+            <CourseContentTabsInstructor
               prerequisites={courseData.prerequisites as { title: string }[]}
               forWho={courseData.forWho as { title: string }[]}
               description={courseData.description as string}
@@ -192,7 +192,7 @@ const CoursePreview: FC<Props> = ({
               <span className="font-bold text-slate-500">No</span>
             </div>
 
-            <div className="course-info-item">
+            {/* <div className="course-info-item">
               <span className="flex gap-1 items-center">
                 <BiBarChartAlt2 className="dark:text-secondary -mt-1" />
                 Category
@@ -200,7 +200,7 @@ const CoursePreview: FC<Props> = ({
               <span className="font-bold text-slate-500">
                 {courseData.category}
               </span>
-            </div>
+            </div> */}
 
             <div className="course-info-item">
               <span className="flex gap-1 items-center">
@@ -276,4 +276,4 @@ const CoursePreview: FC<Props> = ({
   );
 };
 
-export default CoursePreview;
+export default CoursePreviewInstructor;

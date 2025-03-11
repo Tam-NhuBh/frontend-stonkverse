@@ -15,26 +15,26 @@ import { MdUpload } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import BottomNavigator from "./bottom-navigator";
 import FormSelect from "@/components/form-select";
 import axios from "axios";
-import { CourseInfoValues } from "./create-course-form";
+import { CourseInfoValuesInstructor } from "./create-course-form";
 import ContainNextImage from "@/components/contain-next-image";
 import toast from "react-hot-toast";
+import BottomNavigatorInstructor from "./bottom-navigator";
 
 
 interface Props {
   active: number;
   setActive: Dispatch<SetStateAction<number>>;
-  courseInfo: CourseInfoValues;
+  courseInfo: CourseInfoValuesInstructor;
   initialCourseInfo?: any;
-  setCourseInfo: Dispatch<SetStateAction<CourseInfoValues>>;
+  setCourseInfo: Dispatch<SetStateAction<CourseInfoValuesInstructor>>;
 }
 
 const courseInfoSchema = Yup.object({
   name: Yup.string().required("Please enter course's name"),
   description: Yup.string().required("Please enter course's description"),
-  category: Yup.string().required("Please choose course's category"),
+  // category: Yup.string().required("Please choose course's category"),
   price: Yup.string().required("Please enter course's price"),
   estimatedPrice: Yup.string().required(
     "Please enter course's estimated price"
@@ -48,7 +48,7 @@ const courseInfoSchema = Yup.object({
 
 const level = ["Beginner", "Intermediate", "Expert"];
 
-const CourseInfomation: FC<Props> = ({
+const CourseInfomationInstructor: FC<Props> = ({
   active,
   setActive,
   setCourseInfo,
@@ -58,27 +58,27 @@ const CourseInfomation: FC<Props> = ({
   const [dragging, setDragging] = useState(false);
   const [draggingPDF, setDraggingPDF] = useState(false);
 
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
 
-  const courseInfoForm = useForm<CourseInfoValues>({
+  const courseInfoForm = useForm<CourseInfoValuesInstructor>({
     defaultValues: initialCourseInfo,
     resolver: yupResolver(courseInfoSchema),
   });
 
-  const getAllCategories = async () => {
-    const { data } = await axios(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Categories`
-    );
-    const fetchCategories = data?.layout.categories.map(
-      (item: { title: string }) => item.title
-    );
+  // const getAllCategories = async () => {
+  //   const { data } = await axios(
+  //     `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Categories`
+  //   );
+  //   const fetchCategories = data?.layout.categories.map(
+  //     (item: { title: string }) => item.title
+  //   );
 
-    setCategories(fetchCategories);
-  };
+  //   setCategories(fetchCategories);
+  // };
 
-  useEffect(() => {
-    getAllCategories();
-  }, []);
+  // useEffect(() => {
+  //   getAllCategories();
+  // }, []);
 
   const { register, handleSubmit, formState, setValue, watch } = courseInfoForm;
   const { errors } = formState;
@@ -124,7 +124,7 @@ const CourseInfomation: FC<Props> = ({
     return URL.createObjectURL(blob);
   }
 
-  const onSubmit = async (data: CourseInfoValues) => {
+  const onSubmit = async (data: CourseInfoValuesInstructor) => {
     setActive(active + 1);
     console.log(data);
     
@@ -240,7 +240,7 @@ const CourseInfomation: FC<Props> = ({
   useEffect(() => {
     setValue("name", courseInfo.name);
     setValue("description", courseInfo.description);
-    setValue("category", courseInfo.category);
+    // setValue("category", courseInfo.category);
     setValue("price", courseInfo.price);
     setValue("estimatedPrice", courseInfo.estimatedPrice);
     setValue("level", courseInfo.level);
@@ -255,7 +255,7 @@ const CourseInfomation: FC<Props> = ({
     if (initialCourseInfo) {
       setValue("name", initialCourseInfo.name);
       setValue("description", initialCourseInfo.description);
-      setValue("category", initialCourseInfo.category);
+      // setValue("category", initialCourseInfo.category);
       setValue("price", initialCourseInfo.price);
       setValue("estimatedPrice", initialCourseInfo.estimatedPrice);
       setValue("level", initialCourseInfo.level);
@@ -318,13 +318,13 @@ const CourseInfomation: FC<Props> = ({
             errorMsg={errors.tags?.message}
             placeholder="Stock, Marketing..."
           />
-          <FormSelect
+          {/* <FormSelect
             id="category"
             label="Category"
             options={categories}
             errorMsg={errors.category?.message}
             register={register("category")}
-          />
+          /> */}
 
 
           {/* <div className="grid grid-cols-2 gap-4"> */}
@@ -411,10 +411,10 @@ const CourseInfomation: FC<Props> = ({
           hidden
           onChange={(e) => handleUploadPDF(e)}
         /> 
-        <BottomNavigator onlyNext customClasses="mt-4" />
+        <BottomNavigatorInstructor onlyNext customClasses="mt-4" />
       </form>
     </div>
   );
 };
 
-export default CourseInfomation;
+export default CourseInfomationInstructor;

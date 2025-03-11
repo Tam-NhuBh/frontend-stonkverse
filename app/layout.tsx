@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import { StoreProvider } from "@/store/store-provider";
 import UserSessionProvider from "@/components/user-session-provider";
+import { Suspense } from "react";
+import { Loader } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Stock E-learning",
@@ -21,9 +23,9 @@ export default function RootLayout({
           <body
             className="bg-white dark-bg bg-no-repeat bg-cover transition h-full"
           >
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>           
-              {children}
-              <Toaster position="bottom-center" reverseOrder={false} />
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                {children}
+                <Toaster position="bottom-center" reverseOrder={false} />
             </ThemeProvider>
           </body>
         </html>

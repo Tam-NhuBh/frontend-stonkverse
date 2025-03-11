@@ -8,7 +8,7 @@ import { useMount } from "@/hooks/useMount";
 import useUserInfo from "@/hooks/useUserInfo";
 import { NextPage } from "next";
 
-interface Props {}
+interface Props { }
 
 const ProfilePage: NextPage<Props> = () => {
   const user = useUserInfo();
@@ -21,7 +21,7 @@ const ProfilePage: NextPage<Props> = () => {
     <ProtectedPage>
       <Heading
         title={`${user.name} Profile`}
-     />
+      />
       <Header />
       <div className="min-h-screen">
         <div className="mt-8 container">

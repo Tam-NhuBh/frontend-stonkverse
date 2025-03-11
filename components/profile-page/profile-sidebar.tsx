@@ -6,6 +6,7 @@ import useIsAdmin from "@/hooks/useIsAdmin";
 import Link from "next/link";
 import { useLogoutMutation } from "@/store/auth/auth-api";
 import { useRouter } from "next/navigation";
+import useIsInstructor from "@/hooks/useIsInstructor";
 
 interface Props {
   active: number;
@@ -18,6 +19,7 @@ const common =
 const ProfileSidebar: FC<Props> = ({ active, setActive }): JSX.Element => {
   const isAdmin = useIsAdmin();
   const router = useRouter();
+  const isInstructor = useIsInstructor()
 
   const [logout] = useLogoutMutation();
 
@@ -44,20 +46,23 @@ const ProfileSidebar: FC<Props> = ({ active, setActive }): JSX.Element => {
 
       {profileItemsData.map((item, index) => {
         if (item.title === "Admin Dashboard" && !isAdmin) {
-          return null;
+          return null
         }
 
-        const adjustedIndex = item.title === "Admin Dashboard" ? 5 : index + 2;
+        if (item.title === "Instructor Dashboard" && !isInstructor) {
+          return null
+        }
 
-        return item.title === "Admin Dashboard" ? (
+        const adjustedIndex =
+          item.title === "Admin Dashboard" ? 6 : item.title === "Instructor Dashboard" ? 5 : index + 2
+
+        return item.title === "Admin Dashboard" || item.title === "Instructor Dashboard" ? (
           <Link
-            href="/admin"
-            className={`${common} ${
-              active === adjustedIndex ? "main-gradient text-dark_text" : "bg-transparent"
-            }`}
+            href={item.title === "Admin Dashboard" ? "/admin" : "/instructor"}
+            className={`${common} ${active === adjustedIndex ? "main-gradient text-dark_text" : "bg-transparent"}`}
             key={index}
             onClick={() => {
-              setActive(adjustedIndex);
+              setActive(adjustedIndex)
             }}
           >
             {item.icon({})}
@@ -65,18 +70,16 @@ const ProfileSidebar: FC<Props> = ({ active, setActive }): JSX.Element => {
           </Link>
         ) : (
           <div
-            className={`${common} ${
-              active === adjustedIndex ? "main-gradient text-dark_text" : "bg-transparent"
-            }`}
+            className={`${common} ${active === adjustedIndex ? "main-gradient text-dark_text" : "bg-transparent"}`}
             key={index}
             onClick={() => {
-              !item.isLogout ? setActive(adjustedIndex) : logoutHandler();
+              !item.isLogout ? setActive(adjustedIndex) : logoutHandler()
             }}
           >
             {item.icon({})}
             <span className="max-[960px]:hidden text-base">{item.title}</span>
           </div>
-        );
+        )
       })}
     </div>
   );

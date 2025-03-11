@@ -106,7 +106,9 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
     }
   }, [publishableKey, courseDetail]);
 
-  const formattedReviews = [...courseDetail?.reviews].reverse();
+  const formattedReviews = Array.isArray(courseDetail?.reviews)
+  ? [...courseDetail.reviews].reverse()
+  : [];
 
   return (
     <div className="container my-8">
@@ -298,7 +300,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
               <span className="font-bold text-slate-500">No</span>
             </div>
 
-            {/* <div className="course-info-item">
+            <div className="course-info-item">
               <span className="flex gap-1 items-center">
                 <BiBarChartAlt2 className="text-secondary -mt-1" />
                 Category
@@ -306,7 +308,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
               <span className="font-bold text-slate-500">
                 {courseDetail.category}
               </span>
-            </div> */}
+            </div>
 
             <div className="course-info-item">
               <span className="flex gap-1 items-center">

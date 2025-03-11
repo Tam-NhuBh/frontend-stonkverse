@@ -23,7 +23,7 @@ const Categories: FC<Props> = async (props): Promise<JSX.Element> => {
         </h2>
 
         <div className="main-grid">
-          {categories.map((category, index) => (
+          {categories?.map((category, index) => (
             <CategoryCard
               category={category}
               key={category._id.toString()}

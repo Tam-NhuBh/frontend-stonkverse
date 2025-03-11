@@ -23,11 +23,13 @@ import {
 import GroupsIcon from "@mui/icons-material/Groups";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, LinearProgress, Typography } from "@mui/material";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
 import { MenuItem, Menu, ProSidebar } from "react-pro-sidebar";
+import { TestTube, TestTube2 } from "lucide-react";
+import { GiProgression } from "react-icons/gi";
 
 interface itemProps {
   title: string;
@@ -55,7 +57,7 @@ interface Props {
   setIsCollapsed: Dispatch<SetStateAction<boolean>>;
 }
 
-const AdminSidebar: FC<Props> = ({
+const InstructorSidebar: FC<Props> = ({
   isCollapsed,
   setIsCollapsed,
 }): JSX.Element | null => {
@@ -79,9 +81,8 @@ const AdminSidebar: FC<Props> = ({
     <Box
       sx={{
         "& .pro-sidebar-inner": {
-          background: `${
-            theme === "dark" ? "#111C43 !important" : "#fff !important"
-          }`,
+          background: `${theme === "dark" ? "#111C43 !important" : "#fff !important"
+            }`,
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
@@ -176,13 +177,13 @@ const AdminSidebar: FC<Props> = ({
               {!isCollapsed && "Stock E-Learning"}
             </Typography>
 
-            <Item
+            {/* <Item
               title="Dashboard"
-              to="/admin"
+              to="/instructor"
               icon={<HomeOutlined />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
 
             <Item
               title="Live Website"
@@ -202,83 +203,62 @@ const AdminSidebar: FC<Props> = ({
 
             <Item
               title="Users"
-              to="/admin/users"
+              to="/instructor/users"
               icon={<GroupsIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
-              title="Contacts"
-              to="/admin/contacts"
-              icon={<Web />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant='h6'
-              className="admin-nav-title"
-              sx={{ m: "15px 20px 5px 25px" }}
-            >
-              {!isCollapsed && "Content"}
-            </Typography>
 
             <Item
               title="Create Course"
-              to="/admin/create-course"
+              to="/instructor/create-course"
               icon={<VideoCall />}
               selected={selected}
               setSelected={setSelected}
             />
 
             <Item
-              title="Live Courses"
-              to="/admin/courses"
+              title="Course Overview"
+              to="/instructor/courses"
               icon={<OndemandVideo />}
               selected={selected}
               setSelected={setSelected}
             />
 
-            <Typography
+            <Item
+              title="Create Final Test"
+              to="/instructor/final-test"
+              icon={<TestTube2 />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+
+            <Item
+              title="User Progress"
+              to="/instructor/user-progress"
+              icon={<GiProgression fontSize={20}/>}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            {/* <Typography
               variant='h6'
               className="admin-nav-title"
               sx={{ m: "15px 20px 5px 25px" }}
             >
               {!isCollapsed && "Customization"}
-            </Typography>
+            </Typography>  */}
 
-            <Item
-              title="FAQ"
-              to="/admin/faq"
-              icon={<Quiz />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-{/* XEM LẠI */}
+
             {/* <Item
               title="Categories"
-              to="/admin/categories"
+              to="/instructor/categories"
               icon={<Wysiwyg />}
               selected={selected}
               setSelected={setSelected}
-            /> */}
-
-            <Typography
-              variant='h6'
-              className="admin-nav-title"
-              sx={{ m: "15px 20px 5px 25px" }}
-            >
-              {!isCollapsed && "Controllers"}
-            </Typography>
-
-            <Item
-              title="Assign Admin Role"
-              to="/admin/team"
-              icon={<PeopleOutline />}
-              selected={selected}
-              setSelected={setSelected}
             />
-
+           */}
           </Box>
         </Menu>
       </ProSidebar>
@@ -286,4 +266,4 @@ const AdminSidebar: FC<Props> = ({
   );
 };
 
-export default AdminSidebar;
+export default InstructorSidebar;

@@ -24,7 +24,7 @@ const GetIndexStock: FC<Props>= (): JSX.Element => {
     }, []);
 
     return (
-        <div className="border-t dark:border-slate-700 py-1 fixed bottom-0 left-0 right-0 bg-white dark:bg-opacity-50 dark-bg ">
+        <div className="border-t dark:border-slate-700 py-1 fixed bottom-0 left-0 right-0 bg-white dark:bg-opacity-50 dark-bg z-50">
             <div className="container text-[#999999] text-xs flex items-center justify-between">
                 <span className=" my-2 text-center">
                     <div className="stock-info">

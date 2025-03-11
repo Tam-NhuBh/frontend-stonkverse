@@ -21,6 +21,7 @@ export type CourseInfoValues = {
   price: string;
   estimatedPrice: string;
   tags: string;
+  category: string;
   level: string;
   demoUrl: string;
   thumbnail: string;
@@ -33,6 +34,7 @@ export const initialCourseInfo = {
   price: "",
   estimatedPrice: "",
   tags: "",
+  category: "",
   level: "",
   demoUrl: "",
   thumbnail: "",

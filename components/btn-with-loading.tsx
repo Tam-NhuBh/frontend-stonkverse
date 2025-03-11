@@ -2,8 +2,8 @@ import { FC } from "react";
 import { ImSpinner } from "react-icons/im";
 
 interface Props {
-  isLoading: boolean;
-  content: string;
+  isLoading?: boolean;
+  content?: string;
   customClasses?: string;
   type?: "submit" | "button";
   onClick?: any;
