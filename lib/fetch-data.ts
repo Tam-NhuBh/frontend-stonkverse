@@ -1,5 +1,6 @@
 import axios from "axios";
 import { cache } from "react";
+import axiosClient from "./api-client";
 
 
 export const getAllCoursesData = async () => {
@@ -26,17 +27,19 @@ export const getAllCategories = async () => {
   }
 };
 
-// export const getAllEmail = async () => {
-//   try {
-//     const { data } = await axios(
-//       `${process.env.NEXT_PUBLIC_SERVER_URL}/list-email`
-//     );
-
-//     return data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+type getAllEmailResponse = {
+  email: string[];
+};
+export const getAllEmail = async () => {
+  try {
+    const data:getAllEmailResponse = await axiosClient(
+      `/get-email`
+    );
+    return data.email;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const getCourseByCategory = async (categorySlug: string) => {
   try {

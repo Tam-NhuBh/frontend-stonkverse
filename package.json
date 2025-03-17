@@ -29,6 +29,7 @@
     "next": "latest",
     "next-auth": "^4.23.2",
     "next-themes": "^0.2.1",
+    "query-string": "^9.1.1",
     "react": "latest",
     "react-dom": "latest",
     "react-hook-form": "^7.47.0",
