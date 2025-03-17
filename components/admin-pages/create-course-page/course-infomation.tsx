@@ -127,7 +127,7 @@ const CourseInfomation: FC<Props> = ({
   const onSubmit = async (data: CourseInfoValues) => {
     setActive(active + 1);
     console.log(data);
-    
+
     const file = await blobUrlToBase64(data.curriculum);
 
     data.curriculum = file;
@@ -172,10 +172,10 @@ const CourseInfomation: FC<Props> = ({
         }
       }
     }
-  
+
     convertAndSetCurriculum();
   }, [courseInfo.curriculum, setValue]);
-  
+
   // // giải phóng blobUrl
   // useEffect(() => {
   //   return () => {
@@ -191,7 +191,7 @@ const CourseInfomation: FC<Props> = ({
       if (file && file.type === "application/pdf") {
         const pdfUrl = URL.createObjectURL(file);
         setValue("curriculum", pdfUrl);
-        console.log("curriculum: ",pdfUrl)
+        console.log("curriculum: ", pdfUrl)
       } else {
         toast.error("Only PDF files are allowed for the course curriculum.");
       }
@@ -225,13 +225,13 @@ const CourseInfomation: FC<Props> = ({
   useEffect(() => {
     if (initialCourseInfo && initialCourseInfo.thumbnail) {
       const thumbnailUrl = initialCourseInfo.thumbnail.url;
-      
+
       if (thumbnailUrl) {
         const updateThumbnail = async () => {
           const thumbnailBlobUrl = await blobUrlToBase64(thumbnailUrl);
           setValue("thumbnail", thumbnailBlobUrl);
         };
-        
+
         updateThumbnail();
       }
     }
@@ -296,7 +296,7 @@ const CourseInfomation: FC<Props> = ({
             register={register("price")}
             errorMsg={errors.price?.message}
             placeholder="29"
-      
+
           />
 
           <FormInput
@@ -325,17 +325,17 @@ const CourseInfomation: FC<Props> = ({
             errorMsg={errors.category?.message}
             register={register("category")}
           />
+        </div>
 
-
-          {/* <div className="grid grid-cols-2 gap-4"> */}
-           <FormSelect
+        <div className="grid grid-cols-2 gap-4">
+          <FormSelect
             options={level}
-            id={"level"} 
+            id={"level"}
             label="Course Level"
             register={register("level")}
-            errorMsg={errors.level?.message}          />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
+            errorMsg={errors.level?.message}
+          />
+
           <FormInput
             id="demoUrl"
             label="Demo URL"
@@ -389,13 +389,13 @@ const CourseInfomation: FC<Props> = ({
         >
           {curriculum ? (
             <object
-            data={curriculum}
-            type="application/pdf"
-            width="100%"
-            height="500px"
-            style={{ marginTop: '20px'}}
-          >
-          </object>         
+              data={curriculum}
+              type="application/pdf"
+              width="100%"
+              height="500px"
+              style={{ marginTop: '20px' }}
+            >
+            </object>
           ) : (
             <span className="text-center">
               <MdUpload size={40} className="mx-auto mb-2" />
@@ -410,7 +410,7 @@ const CourseInfomation: FC<Props> = ({
           accept="application/pdf"
           hidden
           onChange={(e) => handleUploadPDF(e)}
-        /> 
+        />
         <BottomNavigator onlyNext customClasses="mt-4" />
       </form>
     </div>

@@ -124,7 +124,7 @@ const CoursePreview: FC<Props> = ({
             <p className="font-bold text-xl">0 reviews</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          {/* <div className="grid grid-cols-2 gap-6">
             <Comment
               name="Irfani S."
               avatar="https://res.cloudinary.com/dfhheac8o/image/upload/v1696561586/avatars/qtwgyytoxntruc8hkfr6.png"
@@ -140,7 +140,7 @@ const CoursePreview: FC<Props> = ({
               rating={4.5}
               createdAt={new Date("2022-03-25")}
             />
-          </div>
+          </div> */}
         </div>
 
         <div className="flex-1 shadow-md dark:border dark:border-slate-700 z-0">

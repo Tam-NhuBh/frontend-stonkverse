@@ -15,7 +15,7 @@ interface Props { }
 export type CourseInfoValuesInstructor = {
   name: string;
   description: string;
-  // category: string;
+  category: string;
   price: string;
   estimatedPrice: string;
   tags: string;
@@ -28,7 +28,7 @@ export type CourseInfoValuesInstructor = {
 export const initialCourseInfoInstructor = {
   name: "",
   description: "",
-  // category: "",
+  category: "",
   price: "",
   estimatedPrice: "",
   tags: "",
@@ -98,7 +98,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
   };
 
   const [createCourse, { isLoading, isSuccess, error }] =
-    useCreateCourseMutation();
+    useCreateCourseMutation(); //XEM LẠI API
 
   const createCourseHandler = async () => {
     const data = courseData;
@@ -110,7 +110,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Created Course Successfully!");
-      redirect("/admin/courses");
+      redirect("/instructor/courses");
     }
 
     if (error) {
@@ -133,15 +133,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
           />
         )}
 
-        {/* {active === 1 && (
-          <CourseCurriculumn
-            active={active}
-            setActive={setActive}
-            courseInfo={courseInfo}
-            setCourseInfo={setCourseInfo}
-          />
-        )} */}
-        
+       
         {active === 1 && (
           <CourseDataInstructor
             active={active}

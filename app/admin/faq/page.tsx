@@ -8,7 +8,7 @@ import { Types } from "mongoose";
 import { NextPage } from "next";
 import { useFieldArray, useForm } from "react-hook-form";
 
-interface Props {}
+interface Props { }
 
 export interface IFaq {
   _id: Types.ObjectId;
@@ -52,7 +52,7 @@ const FAQPage: NextPage<Props> = () => {
 
   return (
     <AdminProtectedPage>
-      <div className="w-[75%] mt-8 ml-8 mr-auto">
+      <div className="w-[75%] mt-8 mx-auto">
         <FAQAccordion
           fields={fields}
           register={register}

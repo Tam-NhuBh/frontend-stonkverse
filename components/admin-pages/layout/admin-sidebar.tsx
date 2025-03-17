@@ -254,14 +254,14 @@ const AdminSidebar: FC<Props> = ({
               selected={selected}
               setSelected={setSelected}
             />
-{/* XEM LẠI */}
-            {/* <Item
+
+            <Item
               title="Categories"
               to="/admin/categories"
               icon={<Wysiwyg />}
               selected={selected}
               setSelected={setSelected}
-            /> */}
+            />
 
             <Typography
               variant='h6'
@@ -272,7 +272,7 @@ const AdminSidebar: FC<Props> = ({
             </Typography>
 
             <Item
-              title="Assign Admin Role"
+              title="Assign Role"
               to="/admin/team"
               icon={<PeopleOutline />}
               selected={selected}

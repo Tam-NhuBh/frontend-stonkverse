@@ -1,7 +1,6 @@
 "use client";
 
-import AllUsers from "@/components/admin-pages/users-page/all-users";
-import UserManagementTestComponent from "@/components/instructor-page/final-test/user-management";
+import AllUsers from "@/components/instructor-page/users-page/all-users";
 import ProtectedPage from "@/components/protected-page";
 import { useMount } from "@/hooks/useMount";
 import { NextPage } from "next";

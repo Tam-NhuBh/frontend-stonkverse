@@ -1,5 +1,6 @@
 "use client";
 
+import DataTable from "@/components/admin-pages/data-table";
 import { formatShortDate } from "@/lib/format-data";
 import {
   useGetAllUsersQuery,
@@ -8,7 +9,6 @@ import { Box, Button, Modal } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { FC, useEffect, useState } from "react";
 import { AiOutlineDelete, AiOutlineMail } from "react-icons/ai";
-import DataTable from "../data-table";
 
 interface Props {}
 
@@ -83,7 +83,8 @@ const AllUsers: FC<Props> = (props): JSX.Element => {
   return (
     <div className="mt-8 w-[90%] mx-auto ">
       <DataTable rows={rows} columns={columns} isLoading={isLoading} />;
-    
+    {/* XEM LẠI API XEM DANH SÁCH SINH VIEN ĐANG KÝ HỌC KHÓA CỦA MMINHF VÀ BIỂU ĐỒ 
+    LEARNING RATES */}
     </div>
   );
 };

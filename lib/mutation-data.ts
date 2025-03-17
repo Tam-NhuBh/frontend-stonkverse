@@ -155,3 +155,21 @@ export const addNewContact = async (contactData: {
   }
 };
 
+// instructor
+// export const createCourseIns = async (contactData: {
+//   email: string;
+//   problem: string;
+//   explain: string;
+// }) => {
+//   try {
+//     const { data } = await axios.post(
+//       `${process.env.NEXT_PUBLIC_SERVER_URL}/contact`,
+//       contactData
+//     );
+
+//     return data;
+//   } catch (error: any) {
+//     console.log(error.response.data.message);
+//   }
+// };
+

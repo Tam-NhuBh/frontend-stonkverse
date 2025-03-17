@@ -63,9 +63,9 @@ const CategoriesPage: NextPage<Props> = () => {
   if (!hasMounted) return null;
 
   return (
-    <AdminProtectedPage title="Edit Categories | E-Learning">
-      <div className="w-1/2 mx-auto my-24">
-        <EditCategories
+    <AdminProtectedPage>
+      <div className="w-[75%] mt-8 mx-auto">
+      <EditCategories
           fields={fields}
           register={register}
           remove={remove}

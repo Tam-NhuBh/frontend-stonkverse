@@ -26,6 +26,18 @@ export const getAllCategories = async () => {
   }
 };
 
+// export const getAllEmail = async () => {
+//   try {
+//     const { data } = await axios(
+//       `${process.env.NEXT_PUBLIC_SERVER_URL}/list-email`
+//     );
+
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 export const getCourseByCategory = async (categorySlug: string) => {
   try {
     const { data } = await axios(

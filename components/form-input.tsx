@@ -55,7 +55,6 @@ const FormInput: FC<Props> = ({
         readOnly={readOnly}
         onChange={onChange}
         onKeyPress={(event: { key: string; preventDefault: () => void; }) => {
-          // Nếu type là number, chỉ cho phép nhập số
           if (type === 'number' && !/[0-9]/.test(event.key)) {
             event.preventDefault();
           }

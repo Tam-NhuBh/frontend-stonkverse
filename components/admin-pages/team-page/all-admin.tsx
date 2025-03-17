@@ -34,7 +34,7 @@ interface FormValues {
   role: string;
 }
 
-const roles = ["admin", "user"];
+const roles = ["ADMIN", "INSTRUCTOR", "USER"];
 
 const AllAdmins: FC<Props> = (props): JSX.Element => {
   const { isLoading, data, refetch } = useGetAllUsersQuery(
@@ -175,12 +175,12 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
             <h4 className="form-title">Assign permissions to users</h4>
             <div className="mt-4">
               <form onSubmit={handleSubmit(onSubmit)} className="pb-6">
-                <FormInput
+                <FormSelect
                   id="email"
                   label="Email"
                   register={register("email")}
-                  errorMsg={errors.email?.message}
-                  placeholder="Example@gmail.com"
+                  errorMsg={errors.email?.message} 
+                  options={roles} // XEM LẠI THÊM API LIST EMAIL
                 />
                 <FormSelect
                   options={roles}

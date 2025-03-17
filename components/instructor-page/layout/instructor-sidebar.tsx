@@ -62,7 +62,6 @@ const InstructorSidebar: FC<Props> = ({
   setIsCollapsed,
 }): JSX.Element | null => {
   const user = useUserInfo();
-  const [logout, setLogout] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
@@ -72,10 +71,6 @@ const InstructorSidebar: FC<Props> = ({
   }, []);
 
   if (!mounted) return null;
-
-  const logoutHandler = () => {
-    setLogout(true);
-  };
 
   return (
     <Box
@@ -112,7 +107,10 @@ const InstructorSidebar: FC<Props> = ({
           top: 0,
           left: 0,
           height: "100vh",
-          width: isCollapsed ? "0%" : "15%",
+          width: isCollapsed ? "80px" : "15%",
+          minWidth: isCollapsed ? "80px" : "250px",
+          transition: "width 0.3s ease",
+          zIndex: 100,
         }}
       >
         <Menu iconShape="square">
@@ -122,19 +120,12 @@ const InstructorSidebar: FC<Props> = ({
             style={{ margin: "10px 0 20px 0" }}
           >
             {!isCollapsed && (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
+              <Box display="flex" justifyContent="space-between" alignItems="center">
                 <div className="text-[20px] dark:text-dark_text text-tertiary font-bold !font-poppins">
                   Stock E-Learning
                 </div>
 
-                <IconButton
-                  onClick={() => setIsCollapsed(!isCollapsed)}
-                  className="inline-block !-mr-6 !-mt-[6px]"
-                >
+                <IconButton onClick={() => setIsCollapsed(!isCollapsed)} className="inline-block !-mr-6 !-mt-[6px]">
                   <ArrowBackIos className="text-tertiary dark:text-[#ffffffc1]" />
                 </IconButton>
               </Box>
@@ -174,24 +165,18 @@ const InstructorSidebar: FC<Props> = ({
               className="admin-nav-title"
               sx={{ m: "15px 20px 5px 25px" }}
             >
-              {!isCollapsed && "Stock E-Learning"}
+              {!isCollapsed && "Stock E-learning"}
             </Typography>
 
-            {/* <Item
+            <Item
               title="Dashboard"
               to="/instructor"
               icon={<HomeOutlined />}
               selected={selected}
               setSelected={setSelected}
-            /> */}
-
-            <Item
-              title="Live Website"
-              to="/"
-              icon={<Public />}
-              selected={selected}
-              setSelected={setSelected}
             />
+
+            <Item title="Live Website" to="/" icon={<Public />} selected={selected} setSelected={setSelected} />
 
             <Typography
               variant='h6'
@@ -200,14 +185,6 @@ const InstructorSidebar: FC<Props> = ({
             >
               {!isCollapsed && "Data"}
             </Typography>
-
-            <Item
-              title="Users"
-              to="/instructor/users"
-              icon={<GroupsIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
 
             <Item
               title="Create Course"
@@ -233,32 +210,21 @@ const InstructorSidebar: FC<Props> = ({
               setSelected={setSelected}
             />
 
-
-            <Item
-              title="User Progress"
-              to="/instructor/user-progress"
-              icon={<GiProgression fontSize={20}/>}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            {/* <Typography
+            <Typography
               variant='h6'
               className="admin-nav-title"
               sx={{ m: "15px 20px 5px 25px" }}
             >
-              {!isCollapsed && "Customization"}
-            </Typography>  */}
+              {!isCollapsed && "User"}
+            </Typography>
 
-
-            {/* <Item
-              title="Categories"
-              to="/instructor/categories"
-              icon={<Wysiwyg />}
+            <Item
+              title="Users"
+              to="/instructor/users"
+              icon={<GroupsIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-           */}
           </Box>
         </Menu>
       </ProSidebar>

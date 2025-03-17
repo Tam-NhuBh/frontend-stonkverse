@@ -1,22 +1,22 @@
 "use client";
 
+import AnalyticsAreaChart from "@/components/analytics-area-chart";
 import LoadingSpinner from "@/components/loading-spinner";
-import { useGetOrderssAnalyticsQuery } from "@/store/analytics/analytics-api";
+import { useGetUsersAnalyticsQuery } from "@/store/analytics/analytics-api";
 import { FC, useEffect, useState } from "react";
-import AnalyticsAreaChart from "../../analytics-area-chart";
 
 interface Props {
   isDashboard?: boolean;
 }
 
-const OrdersAnalytics: FC<Props> = ({ isDashboard }): JSX.Element => {
-  const { data, isLoading } = useGetOrderssAnalyticsQuery({});
+const UserAnalytics: FC<Props> = ({ isDashboard }): JSX.Element => {
+  const { data, isLoading } = useGetUsersAnalyticsQuery({});
 
   const [renderedData, setRenderedData] = useState([]);
 
   useEffect(() => {
     if (data) {
-      const formattedData = data.orders.map((item: any) => ({
+      const formattedData = data.users.map((item: any) => ({
         name: item.month,
         Count: Number(item.count),
       }));
@@ -32,7 +32,7 @@ const OrdersAnalytics: FC<Props> = ({ isDashboard }): JSX.Element => {
       ) : (
         <AnalyticsAreaChart
           data={renderedData}
-          title="ORDERS ANALYTICS"
+          title="USERS ANALYTICS"
           isDashboard={isDashboard}
         />
       )}
@@ -40,4 +40,4 @@ const OrdersAnalytics: FC<Props> = ({ isDashboard }): JSX.Element => {
   );
 };
 
-export default OrdersAnalytics;
+export default UserAnalytics;

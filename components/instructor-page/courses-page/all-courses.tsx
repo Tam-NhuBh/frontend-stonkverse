@@ -15,6 +15,8 @@ import BtnWithLoading from "@/components/btn-with-loading";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import DataTable from "@/components/admin-pages/data-table";
+import { ViewAgenda } from "@mui/icons-material";
+import { EyeIcon } from "lucide-react";
 
 interface Props {}
 
@@ -49,14 +51,19 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
       flex: 0.5,
     },
     {
+      field: "status",
+      headerName: "Status",
+      flex: 0.5,
+    },
+    {
       field: "",
-      headerName: "Edit",
+      headerName: "",
       flex: 0.2,
       renderCell: (params: any) => {
         return (
           <>
-            <Link href={`/admin/edit-course/${params.row.id}`}>
-              <FiEdit
+            <Link href={`/instrutor/edit-course/${params.row.id}`}>
+              <EyeIcon
                 size={17}
                 className="dark:text-dark_text text-slate-700 mr-6"
               />
@@ -65,28 +72,7 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
         );
       },
     },
-    {
-      field: " ",
-      headerName: "Delete",
-      flex: 0.2,
-      renderCell: (params: any) => {
-        return (
-          <>
-            <Button
-              onClick={() => {
-                setDeleteModal(true);
-                setCurrentCourseId(params.row.id);
-              }}
-            >
-              <AiOutlineDelete
-                size={20}
-                className="dark:text-dark_text text-slate-700 mr-4"
-              />
-            </Button>
-          </>
-        );
-      },
-    },
+
   ];
 
   let rows = [];

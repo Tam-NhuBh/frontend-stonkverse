@@ -1,10 +1,10 @@
 "use client";
 
-import DashboardHero from "@/components/admin-pages/dashboard-page/dashboard-hero";
 import Heading from "@/components/heading";
 import { NextPage } from "next";
 import { useMount } from "@/hooks/useMount";
 import InstructorProtectedPage from "@/components/instructor-protected-page";
+import DashboardComp from "@/components/instructor-page/dashboard-page/dashboard-comp";
 
 interface Props {}
 
@@ -18,7 +18,7 @@ const InstructorPage: NextPage<Props> = () => {
       <Heading
         title="Instructor Dashboard"
       />
-      <DashboardHero isDashboard />
+      <DashboardComp isDashboard />
     </InstructorProtectedPage>
   );
 };

@@ -2,7 +2,16 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { stockData, StockData } from "@/data/stock-bubble"
+
+interface StockData {
+  symbol: string
+  id: string
+  price: number
+  percentChange: number // Note: We'll map from percentchange to percentChange
+  marketCap: number // Note: We'll map from marketcap to marketCap
+  logo: string | null
+  name?: string // Adding optional name field
+}
 
 interface BubblePosition {
   x: number
@@ -20,6 +29,7 @@ interface BubblePosition {
 }
 
 export default function StockTrading() {
+  const [stockData, setStockData] = useState<StockData[]>([])
   const [selectedStock, setSelectedStock] = useState<string | null>(null)
   const [bubblePositions, setBubblePositions] = useState<Record<string, BubblePosition>>({})
   const containerRef = useRef<HTMLDivElement>(null)
@@ -29,10 +39,34 @@ export default function StockTrading() {
   const timeRef = useRef(0)
   const selectedStockData = stockData.find((c: { symbol: string | null }) => c.symbol === selectedStock)
 
- 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://automation.immergreen.cc/webhook/stock-market")
+        const apiResponse = await response.json()
+        // console.log("data stock:", apiResponse)
+        const transformedData = apiResponse.map((item: { symbol: any; id: any; price: any; percentchange: string; marketcap: any; logo: any }) => ({
+          symbol: item.symbol,
+          id: item.id,
+          price: item.price,
+          percentChange: Number.parseFloat(item.percentchange),
+          marketCap: item.marketcap, 
+          logo: item.logo,
+        }))
 
-    const initializeBubblePositions = useCallback(() => {
-    if (!containerRef.current) return
+        setStockData(transformedData)
+      } catch (error) {
+        console.error("Error fetching stock data:", error)
+        setStockData([])
+      }
+    }
+
+    fetchData()
+  }, [])
+
+
+  const initializeBubblePositions = useCallback(() => {
+    if (!containerRef.current || stockData.length === 0) return
 
     const container = containerRef.current
     const rect = container.getBoundingClientRect()
@@ -50,7 +84,7 @@ export default function StockTrading() {
 
     stockData.forEach((stock: { percentChange: number; symbol: string | number }, index: number) => {
       const baseSize = Math.abs(stock.percentChange)
-      const size = Math.max(80, Math.min(120, baseSize * 2 + 80)) 
+      const size = Math.max(80, Math.min(120, baseSize * 2 + 80))
 
       const col = index % columns
       const row = Math.floor(index / columns)
@@ -59,7 +93,7 @@ export default function StockTrading() {
       const randomOffsetY = (Math.random() - 0.5) * (cellHeight * 0.3)
 
       const x = (col + 0.5) * cellWidth + randomOffsetX
-      const y = (row + 0.5) * cellHeight + randomOffsetY + 60 
+      const y = (row + 0.5) * cellHeight + randomOffsetY + 60
 
       const speed = 0.5 + Math.random() * 1.5
       const angle = Math.random() * Math.PI * 2
@@ -82,7 +116,7 @@ export default function StockTrading() {
 
     setBubblePositions(positions)
     setIsInitialized(true)
-  }, [])
+  }, [stockData])
 
   const updateBubblePositions = useCallback(() => {
     if (!containerRef.current) return
@@ -101,10 +135,10 @@ export default function StockTrading() {
 
         bubble.x += bubble.vx
         bubble.y += bubble.vy
-       
+
         if (bubble.x < bubble.size / 2) {
           bubble.x = bubble.size / 2
-          bubble.vx = Math.abs(bubble.vx) * 0.8 
+          bubble.vx = Math.abs(bubble.vx) * 0.8
         } else if (bubble.x > rect.width - bubble.size / 2) {
           bubble.x = rect.width - bubble.size / 2
           bubble.vx = -Math.abs(bubble.vx) * 0.8
@@ -188,8 +222,10 @@ export default function StockTrading() {
   }, [initializeBubblePositions])
 
   useEffect(() => {
-    initializeBubblePositions()
-  }, [initializeBubblePositions])
+    if (stockData.length > 0) {
+      initializeBubblePositions()
+    }
+  }, [initializeBubblePositions, stockData])
 
   useEffect(() => {
     if (isInitialized) {
@@ -278,6 +314,11 @@ export default function StockTrading() {
     return { top, left }
   }
 
+  // Function to format currency
+  const formatCurrency = (value: number) => {
+    return value.toLocaleString()
+  }
+
   return (
     <div className="w-full">
       <div
@@ -296,7 +337,6 @@ export default function StockTrading() {
                 ? ["rgba(239, 68, 68, 0.2)", "rgba(239, 68, 68, 0.1)"]
                 : ["rgba(34, 197, 94, 0.2)", "rgba(34, 197, 94, 0.1)"]
               const borderColor = isNegative ? "rgb(239, 68, 68)" : "rgb(34, 197, 94)"
-
 
               return (
                 <motion.div
@@ -330,10 +370,16 @@ export default function StockTrading() {
                       />
                     )}
                   </div>
-                  <div className="text-gray-800 dark:text-gray-300 font-semibold drop-shadow-lg" style={{ fontSize: position.size * 0.18 }}>
+                  <div
+                    className="text-gray-800 dark:text-gray-300 font-semibold drop-shadow-lg"
+                    style={{ fontSize: position.size * 0.18 }}
+                  >
                     {stock.symbol}
                   </div>
-                  <div className="text-red-500 font-medium drop-shadow-lg" style={{ fontSize: position.size * 0.15 }}>
+                  <div
+                    className={`${isNegative ? "text-red-500" : "text-green-500"} font-medium drop-shadow-lg`}
+                    style={{ fontSize: position.size * 0.15 }}
+                  >
                     {stock.percentChange > 0 ? "+" : ""}
                     {stock.percentChange}%
                   </div>
@@ -349,7 +395,7 @@ export default function StockTrading() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
-                className="absolute z-50 w-64 rounded-lg bg-gray-800 p-4 shadow-lg"
+                className="absolute z-50 w-64 rounded-sm bg-gray-50 dark:bg-gray-800 p-4 shadow-lg"
                 style={{
                   left: calculatePopupPosition(bubblePositions[selectedStock]).left,
                   top: calculatePopupPosition(bubblePositions[selectedStock]).top,
@@ -366,28 +412,28 @@ export default function StockTrading() {
                       />
                     )}
                   </div>
-                  <h3 className="text-lg font-bold text-white">
-                    {selectedStockData.name} ({selectedStock})
+                  <h3 className="text-lg font-bold text-black dark:text-white">
+                    {selectedStockData.name || selectedStock} ({selectedStock})
                   </h3>
                 </div>
                 <div className="mb-1 flex justify-between">
-                  <span className="text-gray-400">Giá hiện tại:</span>
-                  <span className="font-medium text-white">${selectedStockData.price.toLocaleString()}</span>
+                  <span className="text-gray-400">Price:</span>
+                  <span className="font-medium text-black dark:text-white">{formatCurrency(selectedStockData.price)} </span>
                 </div>
                 <div className="mb-1 flex justify-between">
-                  <span className="text-gray-400">Thay đổi 24h:</span>
+                  <span className="text-gray-400">Percentage change:</span>
                   <span className={selectedStockData.percentChange < 0 ? "text-red-500" : "text-green-500"}>
                     {selectedStockData.percentChange > 0 ? "+" : ""}
                     {selectedStockData.percentChange}%
                   </span>
                 </div>
                 <div className="mb-1 flex justify-between">
-                  <span className="text-gray-400">Vốn hóa:</span>
-                  <span className="font-medium text-white">${selectedStockData.marketCap.toLocaleString()}</span>
+                  <span className="text-gray-400">Market cap:</span>
+                  <span className="font-medium  text-black dark:text-white">{formatCurrency(selectedStockData.marketCap)}</span>
                 </div>
-                <div className="mt-2 text-center">
+                <div className="mt-7 text-center">
                   <button
-                    className="rounded bg-green-600 px-4 py-1 text-sm font-medium text-white hover:bg-green-700"
+                    className="rounded-sm bg-green-600 px-5 py-1 text-sm font-medium text-white hover:bg-green-700"
                     onClick={(e) => {
                       e.stopPropagation()
                       setSelectedStock(null)

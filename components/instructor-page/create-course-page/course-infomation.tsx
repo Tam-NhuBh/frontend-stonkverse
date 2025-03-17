@@ -14,13 +14,13 @@ import FormInput from "@/components/form-input";
 import { MdUpload } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
 import FormSelect from "@/components/form-select";
 import axios from "axios";
 import { CourseInfoValuesInstructor } from "./create-course-form";
 import ContainNextImage from "@/components/contain-next-image";
 import toast from "react-hot-toast";
-import BottomNavigatorInstructor from "./bottom-navigator";
+import * as Yup from "yup";
+import BottomNavigator from "@/components/admin-pages/create-course-page/bottom-navigator";
 
 
 interface Props {
@@ -34,7 +34,7 @@ interface Props {
 const courseInfoSchema = Yup.object({
   name: Yup.string().required("Please enter course's name"),
   description: Yup.string().required("Please enter course's description"),
-  // category: Yup.string().required("Please choose course's category"),
+  category: Yup.string().required("Please choose course's category"),
   price: Yup.string().required("Please enter course's price"),
   estimatedPrice: Yup.string().required(
     "Please enter course's estimated price"
@@ -58,27 +58,27 @@ const CourseInfomationInstructor: FC<Props> = ({
   const [dragging, setDragging] = useState(false);
   const [draggingPDF, setDraggingPDF] = useState(false);
 
-  // const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const courseInfoForm = useForm<CourseInfoValuesInstructor>({
     defaultValues: initialCourseInfo,
     resolver: yupResolver(courseInfoSchema),
   });
 
-  // const getAllCategories = async () => {
-  //   const { data } = await axios(
-  //     `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Categories`
-  //   );
-  //   const fetchCategories = data?.layout.categories.map(
-  //     (item: { title: string }) => item.title
-  //   );
+  const getAllCategories = async () => {
+    const { data } = await axios(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Categories`
+    );
+    const fetchCategories = data?.layout.categories.map(
+      (item: { title: string }) => item.title
+    );
 
-  //   setCategories(fetchCategories);
-  // };
+    setCategories(fetchCategories);
+  };
 
-  // useEffect(() => {
-  //   getAllCategories();
-  // }, []);
+  useEffect(() => {
+    getAllCategories();
+  }, []);
 
   const { register, handleSubmit, formState, setValue, watch } = courseInfoForm;
   const { errors } = formState;
@@ -127,7 +127,7 @@ const CourseInfomationInstructor: FC<Props> = ({
   const onSubmit = async (data: CourseInfoValuesInstructor) => {
     setActive(active + 1);
     console.log(data);
-    
+
     const file = await blobUrlToBase64(data.curriculum);
 
     data.curriculum = file;
@@ -172,10 +172,10 @@ const CourseInfomationInstructor: FC<Props> = ({
         }
       }
     }
-  
+
     convertAndSetCurriculum();
   }, [courseInfo.curriculum, setValue]);
-  
+
   // // giải phóng blobUrl
   // useEffect(() => {
   //   return () => {
@@ -191,7 +191,7 @@ const CourseInfomationInstructor: FC<Props> = ({
       if (file && file.type === "application/pdf") {
         const pdfUrl = URL.createObjectURL(file);
         setValue("curriculum", pdfUrl);
-        console.log("curriculum: ",pdfUrl)
+        console.log("curriculum: ", pdfUrl)
       } else {
         toast.error("Only PDF files are allowed for the course curriculum.");
       }
@@ -225,13 +225,13 @@ const CourseInfomationInstructor: FC<Props> = ({
   useEffect(() => {
     if (initialCourseInfo && initialCourseInfo.thumbnail) {
       const thumbnailUrl = initialCourseInfo.thumbnail.url;
-      
+
       if (thumbnailUrl) {
         const updateThumbnail = async () => {
           const thumbnailBlobUrl = await blobUrlToBase64(thumbnailUrl);
           setValue("thumbnail", thumbnailBlobUrl);
         };
-        
+
         updateThumbnail();
       }
     }
@@ -240,7 +240,7 @@ const CourseInfomationInstructor: FC<Props> = ({
   useEffect(() => {
     setValue("name", courseInfo.name);
     setValue("description", courseInfo.description);
-    // setValue("category", courseInfo.category);
+    setValue("category", courseInfo.category);
     setValue("price", courseInfo.price);
     setValue("estimatedPrice", courseInfo.estimatedPrice);
     setValue("level", courseInfo.level);
@@ -255,7 +255,7 @@ const CourseInfomationInstructor: FC<Props> = ({
     if (initialCourseInfo) {
       setValue("name", initialCourseInfo.name);
       setValue("description", initialCourseInfo.description);
-      // setValue("category", initialCourseInfo.category);
+      setValue("category", initialCourseInfo.category);
       setValue("price", initialCourseInfo.price);
       setValue("estimatedPrice", initialCourseInfo.estimatedPrice);
       setValue("level", initialCourseInfo.level);
@@ -296,7 +296,7 @@ const CourseInfomationInstructor: FC<Props> = ({
             register={register("price")}
             errorMsg={errors.price?.message}
             placeholder="29"
-      
+
           />
 
           <FormInput
@@ -318,33 +318,32 @@ const CourseInfomationInstructor: FC<Props> = ({
             errorMsg={errors.tags?.message}
             placeholder="Stock, Marketing..."
           />
-          {/* <FormSelect
+          <FormSelect
             id="category"
             label="Category"
             options={categories}
             errorMsg={errors.category?.message}
             register={register("category")}
-          /> */}
-
-
-          {/* <div className="grid grid-cols-2 gap-4"> */}
-           <FormSelect
-            options={level}
-            id={"level"} 
-            label="Course Level"
-            register={register("level")}
-            errorMsg={errors.level?.message}          />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <FormInput
-            id="demoUrl"
-            label="Demo URL"
-            register={register("demoUrl")}
-            errorMsg={errors.demoUrl?.message}
-            placeholder="URL"
           />
         </div>
 
+        <div className="grid grid-cols-2 gap-4">
+          <FormSelect
+            options={level}
+            id={"level"}
+            label="Course Level"
+            register={register("level")}
+            errorMsg={errors.level?.message}
+          />
+
+            <FormInput
+              id="demoUrl"
+              label="Demo URL"
+              register={register("demoUrl")}
+              errorMsg={errors.demoUrl?.message}
+              placeholder="URL"
+            />
+        </div>
         <label htmlFor="thumbnail" className="form-input-label">
           Course Thumbnail
         </label>
@@ -389,13 +388,13 @@ const CourseInfomationInstructor: FC<Props> = ({
         >
           {curriculum ? (
             <object
-            data={curriculum}
-            type="application/pdf"
-            width="100%"
-            height="500px"
-            style={{ marginTop: '20px'}}
-          >
-          </object>         
+              data={curriculum}
+              type="application/pdf"
+              width="100%"
+              height="500px"
+              style={{ marginTop: '20px' }}
+            >
+            </object>
           ) : (
             <span className="text-center">
               <MdUpload size={40} className="mx-auto mb-2" />
@@ -410,8 +409,8 @@ const CourseInfomationInstructor: FC<Props> = ({
           accept="application/pdf"
           hidden
           onChange={(e) => handleUploadPDF(e)}
-        /> 
-        <BottomNavigatorInstructor onlyNext customClasses="mt-4" />
+        />
+        <BottomNavigator onlyNext customClasses="mt-4" />
       </form>
     </div>
   );

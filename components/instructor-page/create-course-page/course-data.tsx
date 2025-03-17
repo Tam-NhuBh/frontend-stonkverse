@@ -1,10 +1,10 @@
+import BottomNavigator from "@/components/admin-pages/create-course-page/bottom-navigator";
 import FormInput from "@/components/form-input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import { Dispatch, FC, SetStateAction, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as yup from "yup";
-import BottomNavigatorInstructor from "./bottom-navigator";
 
 type IValue = { title: string }[];
 
@@ -240,7 +240,7 @@ const CourseDataInstructor: FC<Props> = ({
         </button>
       </div>
 
-      <BottomNavigatorInstructor backHandler={backHandler} />
+      <BottomNavigator backHandler={backHandler} />
     </form>
   );
 };

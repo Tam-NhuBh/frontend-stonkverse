@@ -57,7 +57,6 @@ const EditCategories: FC<Props> = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <h1 className="text-center font-bold text-2xl mb-8">ALL CATEGORIES</h1>
       {fields.map((field, index) => (
         <div className="relative" key={field.id}>
           <FormInput

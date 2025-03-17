@@ -1,7 +1,7 @@
 "use client";
 
-import CreateCourseForm from "@/components/admin-pages/create-course-page/create-course-form";
 import Heading from "@/components/heading";
+import CreateCourseForm from "@/components/instructor-page/create-course-page/create-course-form";
 import InstructorProtectedPage from "@/components/instructor-protected-page";
 import { useMount } from "@/hooks/useMount";
 import { NextPage } from "next";

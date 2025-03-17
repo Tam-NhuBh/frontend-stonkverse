@@ -30,7 +30,7 @@ const ChatBotClient: React.FC = () => {
 
     const handleChat = () => {
         const userMessage = chatInputRef.current?.value.trim();
-        console.log("usermess:", userMessage)
+        // console.log("usermess:", userMessage)
 
         if (!userMessage) return;
 

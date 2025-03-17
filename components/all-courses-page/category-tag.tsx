@@ -14,7 +14,7 @@ const CategoryTag: FC<Props> = ({
   exclude,
   allCourses,
 }): JSX.Element => {
-  const excludedCategories = categories.filter(
+  const excludedCategories = categories?.filter(
     (category) => category.title !== exclude
   );
   return (
@@ -24,7 +24,7 @@ const CategoryTag: FC<Props> = ({
           All Courses
         </Link>
       )}
-      {excludedCategories.map((category, index) => (
+      {excludedCategories?.map((category, index) => (
         <Link
           key={category._id.toString()}
           href={`/courses/${category.title.toLowerCase().replace(/ /g, "-")}`}

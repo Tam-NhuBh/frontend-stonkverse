@@ -5,6 +5,7 @@ import { NextPage } from "next";
 import { IFaq } from "../admin/faq/page";
 import Heading from "@/components/heading";
 import StockTrading from "@/components/home-page/stock-trading";
+import ChatBotClient from "@/components/layout/chatbot-client";
 
 interface Props {}
 
@@ -22,6 +23,9 @@ const page: NextPage<Props> = async () => {
         <StockTrading/>
 
       </div>
+      <div className="chatbot-container">
+          <ChatBotClient />
+        </div>
       <Footer />
     </>
   );

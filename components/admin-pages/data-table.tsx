@@ -13,7 +13,7 @@ interface Props {
 const DataTable: FC<Props> = ({ isLoading, rows, columns }): JSX.Element => {
   const { theme } = useTheme();
   return (
-    <div className="w-full z-0">
+    <div className="w-full z-0 overflow-y-auto overflow-x-auto">
       {isLoading ? (
         <LoadingSpinner />
       ) : (

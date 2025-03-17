@@ -7,7 +7,7 @@ import { BsLink45Deg } from "react-icons/bs";
 import toast from "react-hot-toast";
 import BtnWithIcon from "@/components/btn-with-icon";
 import { title } from "process";
-import BottomNavigatorInstructor from "./bottom-navigator";
+import BottomNavigator from "@/components/admin-pages/create-course-page/bottom-navigator";
 
 interface Props {
   active: number;
@@ -502,7 +502,7 @@ const CourseContentInstructor: FC<Props> = ({
         </form>
       </div>
 
-      <BottomNavigatorInstructor
+      <BottomNavigator
         backHandler={backHandler}
         nextHandler={optionsHandler}
         customClasses="w-[80%] my-12 mx-auto"

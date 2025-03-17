@@ -1,24 +1,27 @@
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import useIsAdmin from "@/hooks/useIsAdmin";
-import { redirect } from "next/navigation";
-import { FC, ReactNode } from "react";
-import Heading from "./heading";
 
 interface Props {
-  children: ReactNode;
+  children: React.ReactNode;
   title?: string;
 }
 
-const AdminProtectedPage: FC<Props> = ({ children, title }) => {
+export default function AdminProtectedPage({ children, title }: Props) {
   const isAdmin = useIsAdmin();
+  const router = useRouter();
+  const [checked, setChecked] = useState(false);
 
-  return isAdmin ? (
-    <>
-      <Heading title={title} />
-      {children}
-    </>
-  ) : (
-    redirect("/")
-  );
-};
+  useEffect(() => {
+    if (isAdmin !== undefined) {
+      setChecked(true);
+      if (!isAdmin) {
+        router.replace("/"); // Chuyển hướng nếu không phải admin
+      }
+    }
+  }, [isAdmin]);
 
-export default AdminProtectedPage;
+  if (!checked) return null; // Ngăn giao diện render trước khi kiểm tra quyền
+
+  return <>{children}</>;
+}

@@ -4,7 +4,7 @@ import { BiBorderLeft } from "react-icons/bi";
 import { Box, CircularProgress } from "@mui/material";
 import { PiUsersFourLight } from "react-icons/pi";
 import OrdersAnalytics from "../orders-analytics-page/orders-analytics";
-import AllInvoices from "../all-invoices";
+import AllInvoices from "../../all-invoices";
 import {
   useGetOrderssAnalyticsQuery,
   useGetUsersAnalyticsQuery,

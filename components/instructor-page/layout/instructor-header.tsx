@@ -39,7 +39,7 @@ const InstructorHeader: FC<Props> = (): JSX.Element => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800">
+    <div className="bg-white dark:bg-[#111c43]">
       <div className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between flex-wrap min-w-0">
           <div className="flex-1 min-w-0 mr-4 overflow-x-auto">
@@ -84,8 +84,8 @@ const InstructorHeader: FC<Props> = (): JSX.Element => {
       </div>
 
       {open && (
-        <div className="absolute top-16 right-4 z-50">
-          <div className="w-80 max-h-[450px] bg-white dark:bg-gray-800 shadow-xl border dark:border-gray-700 rounded-lg overflow-hidden">
+        <div className="absolute top-10 right-4 z-50">
+          <div className="w-80 max-h-[450px] bg-white dark:bg-gray-800 shadow-xl border dark:border-gray-700 rounded-sm overflow-hidden">
             <h5 className="text-center text-lg font-semibold text-white py-3 bg-[#45cba0]">Notifications</h5>
 
             <div className="max-h-[400px] overflow-y-auto">
