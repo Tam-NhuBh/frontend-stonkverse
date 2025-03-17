@@ -12,13 +12,13 @@ import {
 } from "react-icons/ai";
 import DataTable from "../data-table";
 import BtnWithIcon from "@/components/btn-with-icon";
-import FormInput from "@/components/form-input";
 import FormSelect from "@/components/form-select";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import BtnWithLoading from "@/components/btn-with-loading";
 import toast from "react-hot-toast";
+import { getAllEmail } from "@/lib/fetch-data";
 
 interface Props {}
 
@@ -41,14 +41,30 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
     {},
     { refetchOnMountOrArgChange: true }
   );
+
+  const [emails, setEmails] = useState<string[]>([]);
   const [active, setActive] = useState(false);
   const [deleteUser] = useDeleteUserMutation();
+
+  useEffect(() => {
+    const fetchEmail = async () => {
+      try {
+        const listEmail = await getAllEmail();
+        setEmails(listEmail ?? []);
+      }
+      catch(error: any) 
+      {
+        console.error("Failed to fetch emails:", error);
+      }
+    };
+    fetchEmail();
+  }, []);
 
   const handleDeleteUser = async (userId: string) => {
     try {
       await deleteUser(userId);
       toast.success("User deleted successfully!");
-      refetch(); // Refetch data after successful deletion
+      refetch();
     } catch (error) {
       console.error("Error deleting user:", error);
       toast.error("An error occurred while deleting user. Please try again later.");
@@ -80,15 +96,14 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
 
   if (data) {
     rows = data.users
-      .filter((user: any) => user.role === "admin")
-      .map((admin: any) => ({
+      .map((admin: any, index:number) => ({
+        stt: index + 1,
         id: admin._id,
         name: admin.name,
         email: admin.email,
         role: admin.role[0].toUpperCase() + admin.role.substring(1),
-        courses: `${admin.courses.length} ${
-          admin.courses.length > 1 ? "courses" : "course"
-        }`,
+        courses: `${admin.courses.length} ${admin.courses.length > 1 ? "courses" : "course"
+          }`,
         created_at: formatShortDate(admin.createdAt),
       }));
   }
@@ -110,6 +125,7 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
 
   // Define columns
   const columns: GridColDef[] = [
+    { field: "stt", headerName: "Index", flex: 0.2 },
     { field: "id", headerName: "ID", flex: 0.5 },
     { field: "name", headerName: "Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 0.5 },
@@ -179,8 +195,8 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
                   id="email"
                   label="Email"
                   register={register("email")}
-                  errorMsg={errors.email?.message} 
-                  options={roles} // XEM LẠI THÊM API LIST EMAIL
+                  errorMsg={errors.email?.message}
+                  options={emails} 
                 />
                 <FormSelect
                   options={roles}
