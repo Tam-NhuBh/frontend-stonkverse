@@ -9,9 +9,9 @@ import DataTable from "../data-table";
 import BtnWithIcon from "@/components/btn-with-icon";
 import BtnWithLoading from "@/components/btn-with-loading";
 import toast from "react-hot-toast";
-import {useDeleteContactMutation, useGetAllContactsQuery} from "@/store/contacts/contact-api";
+import { useDeleteContactMutation, useGetAllContactsQuery } from "@/store/contacts/contact-api";
 
-interface Props {}
+interface Props { }
 
 const AllContacts: FC<Props> = (props): JSX.Element => {
   const { isLoading, data, refetch } = useGetAllContactsQuery(
@@ -43,7 +43,7 @@ const AllContacts: FC<Props> = (props): JSX.Element => {
       headerName: "Created At",
       flex: 0.5,
     },
-    
+
     {
       field: " ",
       headerName: "Delete",
@@ -82,7 +82,7 @@ const AllContacts: FC<Props> = (props): JSX.Element => {
 
   const [deleteContact,
     { isLoading: deleteContactLoading, isSuccess, error: deleteContactError },
-  ] =  useDeleteContactMutation();
+  ] = useDeleteContactMutation();
 
   const deleteContactHandler = async () => {
     await deleteContact(currentContactId);
@@ -105,8 +105,9 @@ const AllContacts: FC<Props> = (props): JSX.Element => {
 
   return (
     <div className="mt-8 w-[90%] mx-auto">
-      <DataTable rows={rows} columns={columns} isLoading={isLoading} />
-
+      <div className="w-full overflow-x-auto overflow-y-auto">
+        <DataTable rows={rows} columns={columns} isLoading={isLoading} />
+      </div>
       {deleteModal && (
         <Modal
           open={deleteModal}

@@ -7,29 +7,21 @@ import {
   AdminPanelSettings,
   ArrowBackIos,
   ArrowForwardIos,
-  BarChart,
+  Checklist,
   HomeOutlined,
-  ManageHistory,
-  MapOutlined,
   OndemandVideo,
-  PeopleOutline,
   Public,
-  Quiz,
-  Settings,
   VideoCall,
-  Web,
-  Wysiwyg,
 } from "@mui/icons-material";
 import GroupsIcon from "@mui/icons-material/Groups";
-import ReceiptIcon from "@mui/icons-material/Receipt";
 
-import { Box, IconButton, LinearProgress, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
 import { MenuItem, Menu, ProSidebar } from "react-pro-sidebar";
-import { TestTube, TestTube2 } from "lucide-react";
-import { GiProgression } from "react-icons/gi";
+import { TicketsPlaneIcon } from "lucide-react";
+import { usePathname } from "next/navigation"; // Thêm hook này để lấy đường dẫn hiện tại
 
 interface itemProps {
   title: string;
@@ -57,6 +49,17 @@ interface Props {
   setIsCollapsed: Dispatch<SetStateAction<boolean>>;
 }
 
+// Định nghĩa các menu item một lần duy nhất
+const menuItems = [
+  { title: "Dashboard", to: "/instructor", icon: <HomeOutlined /> },
+  { title: "Live Website", to: "/", icon: <Public /> },
+  { title: "Create Course", to: "/instructor/create-course", icon: <VideoCall /> },
+  { title: "Course Overview", to: "/instructor/courses", icon: <OndemandVideo /> },
+  { title: "Promotion", to: "/instructor/promotion", icon: <TicketsPlaneIcon /> },
+  { title: "Create Final Test", to: "/instructor/final-test", icon: <Checklist /> },
+  { title: "Users", to: "/instructor/users", icon: <GroupsIcon /> },
+];
+
 const InstructorSidebar: FC<Props> = ({
   isCollapsed,
   setIsCollapsed,
@@ -65,10 +68,37 @@ const InstructorSidebar: FC<Props> = ({
   const [selected, setSelected] = useState("Dashboard");
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
+  const pathname = usePathname(); 
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (pathname) {
+      const matchingItem = findMatchingMenuItem(pathname);
+      if (matchingItem) {
+        setSelected(matchingItem.title);
+      }
+    }
+  }, [pathname, mounted]);
+
+  const findMatchingMenuItem = (currentPath: string) => {
+    const exactMatch = menuItems.find(item => item.to === currentPath);
+    if (exactMatch) {
+      return exactMatch;
+    }
+    
+    const sortedItems = [...menuItems].sort((a, b) => b.to.length - a.to.length);
+    
+    for (const item of sortedItems) {
+      if (item.to !== "/" && currentPath.startsWith(item.to)) {
+        return item;
+      }
+    }
+    
+    return menuItems[0];
+  };
 
   if (!mounted) return null;
 
@@ -168,63 +198,57 @@ const InstructorSidebar: FC<Props> = ({
               {!isCollapsed && "Stock E-learning"}
             </Typography>
 
-            <Item
-              title="Dashboard"
-              to="/instructor"
-              icon={<HomeOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item title="Live Website" to="/" icon={<Public />} selected={selected} setSelected={setSelected} />
-
-            <Typography
-              variant='h6'
-              className="admin-nav-title"
-              sx={{ m: "15px 20px 5px 25px" }}
-            >
-              {!isCollapsed && "Data"}
-            </Typography>
-
-            <Item
-              title="Create Course"
-              to="/instructor/create-course"
-              icon={<VideoCall />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="Course Overview"
-              to="/instructor/courses"
-              icon={<OndemandVideo />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="Create Final Test"
-              to="/instructor/final-test"
-              icon={<TestTube2 />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            {/* Render 2 menu item đầu tiên */}
+            {menuItems.slice(0, 2).map((item) => (
+              <Item
+                key={item.title}
+                title={item.title}
+                to={item.to}
+                icon={item.icon}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            ))}
 
             <Typography
               variant='h6'
               className="admin-nav-title"
               sx={{ m: "15px 20px 5px 25px" }}
             >
-              {!isCollapsed && "User"}
+              {!isCollapsed && "Content"}
             </Typography>
 
-            <Item
-              title="Users"
-              to="/instructor/users"
-              icon={<GroupsIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            {/* Render 4 menu item tiếp theo */}
+            {menuItems.slice(2, 6).map((item) => (
+              <Item
+                key={item.title}
+                title={item.title}
+                to={item.to}
+                icon={item.icon}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            ))}
+
+            <Typography
+              variant='h6'
+              className="admin-nav-title"
+              sx={{ m: "15px 20px 5px 25px" }}
+            >
+              {!isCollapsed && "Controller"}
+            </Typography>
+
+            {/* Render menu item cuối cùng */}
+            {menuItems.slice(6).map((item) => (
+              <Item
+                key={item.title}
+                title={item.title}
+                to={item.to}
+                icon={item.icon}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            ))}
           </Box>
         </Menu>
       </ProSidebar>

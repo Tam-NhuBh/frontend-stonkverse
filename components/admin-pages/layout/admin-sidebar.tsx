@@ -7,27 +7,23 @@ import {
   AdminPanelSettings,
   ArrowBackIos,
   ArrowForwardIos,
-  BarChart,
   HomeOutlined,
-  ManageHistory,
-  MapOutlined,
   OndemandVideo,
   PeopleOutline,
   Public,
   Quiz,
-  Settings,
   VideoCall,
   Web,
   Wysiwyg,
 } from "@mui/icons-material";
 import GroupsIcon from "@mui/icons-material/Groups";
-import ReceiptIcon from "@mui/icons-material/Receipt";
 
 import { Box, IconButton, Typography } from "@mui/material";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
 import { MenuItem, Menu, ProSidebar } from "react-pro-sidebar";
+import { usePathname } from "next/navigation"; // Thêm hook này để lấy đường dẫn hiện tại
 
 interface itemProps {
   title: string;
@@ -55,6 +51,42 @@ interface Props {
   setIsCollapsed: Dispatch<SetStateAction<boolean>>;
 }
 
+const menuItems = [
+  { title: "Dashboard", to: "/admin", icon: <HomeOutlined />, section: "Stock E-Learning" },
+  { title: "Live Website", to: "/", icon: <Public />, section: "Stock E-Learning" },
+  
+  // Data section
+  { title: "Users", to: "/admin/users", icon: <GroupsIcon />, section: "Data" },
+  { title: "Contacts", to: "/admin/contacts", icon: <Web />, section: "Data" },
+  
+  // Content section
+  { title: "Create Course", to: "/admin/create-course", icon: <VideoCall />, section: "Content" },
+  { title: "Live Courses", to: "/admin/courses", icon: <OndemandVideo />, section: "Content" },
+  
+  // Customization section
+  { title: "FAQ", to: "/admin/faq", icon: <Quiz />, section: "Customization" },
+  { title: "Categories", to: "/admin/categories", icon: <Wysiwyg />, section: "Customization" },
+  
+  // Controllers section
+  { title: "Assign Role", to: "/admin/team", icon: <PeopleOutline />, section: "Controllers" },
+];
+
+const groupedMenuItems = menuItems.reduce((acc, item) => {
+  if (!acc[item.section]) {
+    acc[item.section] = [];
+  }
+  acc[item.section].push(item);
+  return acc;
+}, {} as Record<string, typeof menuItems>);
+
+const sectionOrder = [
+  "Stock E-Learning",
+  "Data",
+  "Content",
+  "Customization",
+  "Controllers"
+];
+
 const AdminSidebar: FC<Props> = ({
   isCollapsed,
   setIsCollapsed,
@@ -64,10 +96,37 @@ const AdminSidebar: FC<Props> = ({
   const [selected, setSelected] = useState("Dashboard");
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (pathname) {
+      const matchingItem = findMatchingMenuItem(pathname);
+      if (matchingItem) {
+        setSelected(matchingItem.title);
+      }
+    }
+  }, [pathname, mounted]);
+
+  const findMatchingMenuItem = (currentPath: string) => {
+    const exactMatch = menuItems.find(item => item.to === currentPath);
+    if (exactMatch) {
+      return exactMatch;
+    }
+    
+   const sortedItems = [...menuItems].sort((a, b) => b.to.length - a.to.length);
+    
+    for (const item of sortedItems) {
+      if (item.to !== "/" && currentPath.startsWith(item.to)) {
+        return item;
+      }
+    }
+    
+   return menuItems[0]; 
+  };
 
   if (!mounted) return null;
 
@@ -111,7 +170,10 @@ const AdminSidebar: FC<Props> = ({
           top: 0,
           left: 0,
           height: "100vh",
-          width: isCollapsed ? "0%" : "15%",
+          width: isCollapsed ? "80px" : "15%",
+          minWidth: isCollapsed ? "80px" : "250px",
+          transition: "width 0.3s ease",
+          zIndex: 100,
         }}
       >
         <Menu iconShape="square">
@@ -168,117 +230,34 @@ const AdminSidebar: FC<Props> = ({
           )}
 
           <Box>
-            <Typography
-              variant='h6'
-              className="admin-nav-title"
-              sx={{ m: "15px 20px 5px 25px" }}
-            >
-              {!isCollapsed && "Stock E-Learning"}
-            </Typography>
+            {sectionOrder.map((sectionName) => {
+              const sectionItems = groupedMenuItems[sectionName] || [];
+              
+              if (sectionItems.length === 0) return null;
+              
+              return (
+                <div key={sectionName}>
+                  <Typography
+                    variant='h6'
+                    className="admin-nav-title"
+                    sx={{ m: "15px 20px 5px 25px" }}
+                  >
+                    {!isCollapsed && sectionName}
+                  </Typography>
 
-            <Item
-              title="Dashboard"
-              to="/admin"
-              icon={<HomeOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="Live Website"
-              to="/"
-              icon={<Public />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant='h6'
-              className="admin-nav-title"
-              sx={{ m: "15px 20px 5px 25px" }}
-            >
-              {!isCollapsed && "Data"}
-            </Typography>
-
-            <Item
-              title="Users"
-              to="/admin/users"
-              icon={<GroupsIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Contacts"
-              to="/admin/contacts"
-              icon={<Web />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant='h6'
-              className="admin-nav-title"
-              sx={{ m: "15px 20px 5px 25px" }}
-            >
-              {!isCollapsed && "Content"}
-            </Typography>
-
-            <Item
-              title="Create Course"
-              to="/admin/create-course"
-              icon={<VideoCall />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="Live Courses"
-              to="/admin/courses"
-              icon={<OndemandVideo />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant='h6'
-              className="admin-nav-title"
-              sx={{ m: "15px 20px 5px 25px" }}
-            >
-              {!isCollapsed && "Customization"}
-            </Typography>
-
-            <Item
-              title="FAQ"
-              to="/admin/faq"
-              icon={<Quiz />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="Categories"
-              to="/admin/categories"
-              icon={<Wysiwyg />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant='h6'
-              className="admin-nav-title"
-              sx={{ m: "15px 20px 5px 25px" }}
-            >
-              {!isCollapsed && "Controllers"}
-            </Typography>
-
-            <Item
-              title="Assign Role"
-              to="/admin/team"
-              icon={<PeopleOutline />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
+                  {sectionItems.map((item) => (
+                    <Item
+                      key={item.title}
+                      title={item.title}
+                      to={item.to}
+                      icon={item.icon}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                  ))}
+                </div>
+              );
+            })}
           </Box>
         </Menu>
       </ProSidebar>

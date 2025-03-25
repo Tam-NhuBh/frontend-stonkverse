@@ -1,9 +1,8 @@
 import { IconType } from "react-icons";
 import { AiOutlineLogout } from "react-icons/ai";
 import { GiBookmark, GiPadlock } from "react-icons/gi";
-import { RiAccountBoxFill, RiAdminLine } from "react-icons/ri";
+import { RiAdminLine, RiShieldUserLine } from "react-icons/ri";
 import { BiCalendarPlus } from "react-icons/bi";
-import { UserX } from "lucide-react";
 
 export const profileItemsData: {
   icon: IconType;
@@ -28,7 +27,7 @@ export const profileItemsData: {
   },
 
   {
-    icon: RiAccountBoxFill,
+    icon: RiShieldUserLine ,
     title: "Instructor Dashboard",
   },
 

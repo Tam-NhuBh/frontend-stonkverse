@@ -1,6 +1,6 @@
 "use client";
 
-import CreateFinalTest from "@/components/instructor-page/final-test/create-final-test";
+import FinalTestManagement from "@/components/final-test/final-test-management";
 import InstructorProtectedPage from "@/components/instructor-protected-page";
 import { useMount } from "@/hooks/useMount";
 import { NextPage } from "next";
@@ -14,7 +14,7 @@ const UsersPage: NextPage<Props> = () => {
 
     return (
         <InstructorProtectedPage>
-            <CreateFinalTest />
+            <FinalTestManagement />
         </InstructorProtectedPage>
     );
 };

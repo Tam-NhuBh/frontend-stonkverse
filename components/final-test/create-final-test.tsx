@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 import { Check } from "lucide-react"
-import Settings from "./settings"
 import FinalTestOverview from "./final-test-overview"
 import FinalTestInfomation from "./final-test-infomation"
+import Settings from "./final-test-settings"
 
 // Define your types here (simplified for example)
 export interface TestInfoValues {
@@ -62,7 +62,6 @@ export default function CreateFinalTest() {
   })
   const [testData, setTestData] = useState({})
 
-  // Define the steps array here
   const steps = [
     { number: 1, name: "Test Information" },
     { number: 2, name: "Test Settings" },
@@ -81,7 +80,6 @@ export default function CreateFinalTest() {
     <div className="flex min-h-screen mt-5">
       <div className="flex-1">
         <div className="max-w-[1200px] mx-auto px-6">
-          {/* Progress Steps */}
           <div className="sticky top-1 bg-white dark:bg-gray-900 rounded-sm border dark:border-gray-600 shadow-sm p-4 mb-6">
             <div className="relative">
               <div className="flex justify-between">
@@ -89,7 +87,7 @@ export default function CreateFinalTest() {
                   <div
                     key={step.number}
                     className={`flex flex-col items-center relative z-10 ${
-                      active === step.number - 1 ? "text-blue-500" : "text-gray-500"
+                      active === step.number - 1 ? "text-blue-500" : "text-gray-400"
                     }`}
                   >
                     <div

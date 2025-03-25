@@ -15,10 +15,10 @@ import BtnWithLoading from "@/components/btn-with-loading";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import DataTable from "@/components/admin-pages/data-table";
-import { ViewAgenda } from "@mui/icons-material";
+import { ViewAgenda, Visibility } from "@mui/icons-material";
 import { EyeIcon } from "lucide-react";
 
-interface Props {}
+interface Props { }
 
 const AllCourses: FC<Props> = (props): JSX.Element => {
   const { isLoading, data, refetch } = useGetAllCoursesQuery(
@@ -54,7 +54,7 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
       field: "status",
       headerName: "Status",
       flex: 0.5,
-    },
+    }, //XEM LẠI
     {
       field: "",
       headerName: "",
@@ -63,10 +63,12 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
         return (
           <>
             <Link href={`/instrutor/edit-course/${params.row.id}`}>
-              <EyeIcon
-                size={17}
-                className="dark:text-dark_text text-slate-700 mr-6"
-              />
+              <div className="flex justify-center items-center w-full">
+                <Visibility
+                  style={{ cursor: "pointer" }}
+                  className="text-[#475569] dark:text-[#3E4396]"
+                />
+              </div>
             </Link>
           </>
         );
@@ -113,8 +115,9 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
 
   return (
     <div className="mt-8 w-[90%] mx-auto">
-      <DataTable rows={rows} columns={columns} isLoading={isLoading} />
-
+      <div className="w-full overflow-x-auto overflow-y-auto">
+        <DataTable rows={rows} columns={columns} isLoading={isLoading} />
+      </div>
       {deleteModal && (
         <Modal
           open={deleteModal}
