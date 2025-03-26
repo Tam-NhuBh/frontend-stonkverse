@@ -7,6 +7,7 @@ import {
   AdminPanelSettings,
   ArrowBackIos,
   ArrowForwardIos,
+  Checklist,
   HomeOutlined,
   OndemandVideo,
   PeopleOutline,
@@ -24,6 +25,7 @@ import Link from "next/link";
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
 import { MenuItem, Menu, ProSidebar } from "react-pro-sidebar";
 import { usePathname } from "next/navigation"; // Thêm hook này để lấy đường dẫn hiện tại
+import { TicketsPlaneIcon } from "lucide-react";
 
 interface itemProps {
   title: string;
@@ -62,6 +64,8 @@ const menuItems = [
   // Content section
   { title: "Create Course", to: "/admin/create-course", icon: <VideoCall />, section: "Content" },
   { title: "Live Courses", to: "/admin/courses", icon: <OndemandVideo />, section: "Content" },
+  { title: "Promotion", to: "/admin/promotion", icon: <TicketsPlaneIcon /> , section: "Content" },
+  { title: "Create Final Test", to: "/admin/final-test", icon: <Checklist /> , section: "Content" },
   
   // Customization section
   { title: "FAQ", to: "/admin/faq", icon: <Quiz />, section: "Customization" },

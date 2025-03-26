@@ -196,7 +196,7 @@ const PromotionManagement: FC<Props> = ({
     <>
       <Modal open={open} onClose={onClose}>
         <Box
-          className="modal-content-wrapper bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 sm:p-6 max-h-[90vh] overflow-auto"
+          className="modal-content-wrapper bg-[#F5F5F5] dark:bg-slate-900 rounded-lg shadow-xl p-4 sm:p-6 max-h-[90vh] overflow-auto"
           sx={{
             maxWidth: { xs: "95%", sm: "90%", md: 900 },
             width: "100%",
@@ -212,21 +212,31 @@ const PromotionManagement: FC<Props> = ({
             Promotions for {courseName}
           </h2>
 
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
-            <div className="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+            <div className="inline-flex rounded-md border dark:border-gray-700 p-0.5 bg-gray-50 dark:bg-gray-800">
               <button
                 onClick={() => handleTabChange(0)}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${activeTab === 0 ? "bg-background text-foreground shadow-sm" : "hover:bg-muted hover:text-foreground"
+                className={`relative px-4 py-2 text-sm font-medium transition-colors ${activeTab === 0
+                    ? "text-[#0DA5B5] dark:text-blue-400 bg-white dark:bg-gray-700 shadow-sm z-10"
+                    : "text-gray-600 dark:text-gray-300 hover:scale-110 transition-transform duration-200"
                   }`}
               >
                 Card View
+                {activeTab === 0 && (
+                  <span className="absolute inset-0 rounded-md bg-white dark:bg-gray-700 shadow-sm -z-10"></span>
+                )}
               </button>
               <button
                 onClick={() => handleTabChange(1)}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${activeTab === 1 ? "bg-background text-foreground shadow-sm" : "hover:bg-muted hover:text-foreground"
+                className={`relative px-4 py-2 text-sm font-medium transition-colors ${activeTab === 1
+                    ? "text-[#0DA5B5] dark:text-blue-400 bg-white dark:bg-gray-700 shadow-sm z-10"
+                    : "text-gray-600 dark:text-gray-300 hover:scale-110 transition-transform duration-200"
                   }`}
               >
                 Table View
+                {activeTab === 1 && (
+                  <span className="absolute inset-0 rounded-md bg-white dark:bg-gray-700 shadow-sm -z-10"></span>
+                )}
               </button>
             </div>
           </div>
@@ -234,12 +244,12 @@ const PromotionManagement: FC<Props> = ({
           <div className="w-full">
             {isLoading ? (
               <div className="flex justify-center items-center py-12">
-                <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary"></div>
               </div>
             ) : processedPromotions.length > 0 ? (
               <>
                 {activeTab === 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                     {processedPromotions.map((promo) => (
                       <div
                         key={promo.id}
