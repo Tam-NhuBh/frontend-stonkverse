@@ -1,6 +1,7 @@
 import axios from "axios";
 import { cache } from "react";
-import axiosClient from "./api-client";
+import axiosClientV2 from "./api-client-v2";
+import axiosClient from "./api-client-v1";
 
 
 export const getAllCoursesData = async () => {
@@ -27,12 +28,12 @@ export const getAllCategories = async () => {
   }
 };
 
-type getAllEmailResponse = {
+type IEmail = {
   email: string[];
 };
 export const getAllEmail = async () => {
   try {
-    const data:getAllEmailResponse = await axiosClient(
+    const data:IEmail = await axiosClient(
       `/get-email`
     );
     return data.email;
@@ -201,3 +202,34 @@ export const getQuizQuestions = async (courseId: string) => {
   }
 };
 
+type IPromotion = {
+  code: string;
+  course: string;
+  expDate: Date;
+  percentOff: number;
+  usageLimit: number;
+  usageCount: number;
+};
+
+export const getPromotionByID = async (id: string) => {
+  try {
+    const data: IPromotion = await axiosClientV2(
+      `/admin/promotion/${id}`,
+    );
+    console.log("data pro:", data);
+    return data;
+  } catch (error) {
+    console.log("Fetch promotion data fail:",error);
+  }
+};
+
+
+export const getPromotionsByCourse = async (courseId: string) => {
+  try {
+    const data: IPromotion = await axiosClientV2(`/admin/promotion/course/${courseId}`)
+    console.log("promotions for course:", data)
+    return data
+  } catch (error) {
+    console.log("Fetch promotions data fail:", error)
+  }
+}

@@ -4,8 +4,8 @@ import LoadingSpinner from "../loading-spinner";
 import { useTheme } from "next-themes";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
-interface Props {
-  rows: [];
+interface Props <T = any>{
+  rows: T[];
   columns: GridColDef[];
   isLoading: boolean;
 }

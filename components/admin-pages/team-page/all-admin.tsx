@@ -20,7 +20,7 @@ import BtnWithLoading from "@/components/btn-with-loading";
 import toast from "react-hot-toast";
 import { getAllEmail } from "@/lib/fetch-data";
 
-interface Props {}
+interface Props { }
 
 const schema: any = Yup.object({
   email: Yup.string()
@@ -52,8 +52,7 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
         const listEmail = await getAllEmail();
         setEmails(listEmail ?? []);
       }
-      catch(error: any) 
-      {
+      catch (error: any) {
         console.error("Failed to fetch emails:", error);
       }
     };
@@ -96,7 +95,7 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
 
   if (data) {
     rows = data.users
-      .map((admin: any, index:number) => ({
+      .map((admin: any, index: number) => ({
         stt: index + 1,
         id: admin._id,
         name: admin.name,
@@ -177,7 +176,9 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
           customClasses="!bg-[#475569] dark:!bg-[#3e4396] ml-auto"
           onClick={() => setActive(!active)}
         />
-        <DataTable rows={rows} columns={columns} isLoading={isLoading} />
+        <div className="w-full overflow-x-auto overflow-y-auto">
+          <DataTable rows={rows} columns={columns} isLoading={isLoading} />
+        </div>
       </div>
 
       {active && (
@@ -196,7 +197,7 @@ const AllAdmins: FC<Props> = (props): JSX.Element => {
                   label="Email"
                   register={register("email")}
                   errorMsg={errors.email?.message}
-                  options={emails} 
+                  options={emails}
                 />
                 <FormSelect
                   options={roles}

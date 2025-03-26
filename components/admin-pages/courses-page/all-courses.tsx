@@ -16,7 +16,7 @@ import BtnWithLoading from "@/components/btn-with-loading";
 import toast from "react-hot-toast";
 import Link from "next/link";
 
-interface Props {}
+interface Props { }
 
 const AllCourses: FC<Props> = (props): JSX.Element => {
   const { isLoading, data, refetch } = useGetAllCoursesQuery(
@@ -127,8 +127,9 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
 
   return (
     <div className="mt-8 w-[90%] mx-auto">
-      <DataTable rows={rows} columns={columns} isLoading={isLoading} />
-
+      <div className="w-full overflow-x-auto overflow-y-auto">
+        <DataTable rows={rows} columns={columns} isLoading={isLoading} />
+      </div>
       {deleteModal && (
         <Modal
           open={deleteModal}

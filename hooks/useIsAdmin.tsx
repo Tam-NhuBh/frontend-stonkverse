@@ -4,5 +4,5 @@ export default function useIsAdmin() {
   const { user } = useSelector((state: any) => state.auth);
 
   if (!user || !user.role) return undefined; // Tránh trả về false ngay lập tức
-  return user.role === "admin";
+  return user.role === "ADMIN";
 }

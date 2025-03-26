@@ -1,7 +1,7 @@
 "use client";
 
+import AdminProtectedPage from "@/components/admin-protected-page";
 import FinalTestManagement from "@/components/final-test/final-test-management";
-import InstructorProtectedPage from "@/components/instructor-protected-page";
 import { useMount } from "@/hooks/useMount";
 import { NextPage } from "next";
 
@@ -13,9 +13,9 @@ const UsersPage: NextPage<Props> = () => {
     if (!hasMounted) return null;
 
     return (
-        <InstructorProtectedPage>
+        <AdminProtectedPage>
             <FinalTestManagement />
-        </InstructorProtectedPage>
+        </AdminProtectedPage>
     );
 };
 

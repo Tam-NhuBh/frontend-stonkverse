@@ -1,5 +1,5 @@
 import axios from "axios";
-import toast from "react-hot-toast";
+import axiosClientV2 from "./api-client-v2";
 
 export const createPaymentIntent = async (amount: number) => {
   try {
@@ -152,6 +152,43 @@ export const addNewContact = async (contactData: {
     return data;
   } catch (error: any) {
     console.log(error.response.data.message);
+  }
+};
+
+type IPromotion = {
+  code: string;
+  course: string;
+  expDate: Date;
+  percentOff: number;
+  usageLimit: number;
+  usageCount: number;
+};
+
+export const createPromotion = async (params: IPromotion) => {
+  try {
+    const data: IPromotion = await axiosClientV2.post(
+      `/admin/promotion`,
+      params,
+      {
+        withCredentials: true,
+      }
+    );
+    console.log("data create:", data);
+    return data;
+  } catch (error) {
+    console.log("Fail to create promotion:",error);
+  }
+};
+
+export const deletePromotionById = async (id: string) => {
+  try {
+    const data: IPromotion = await axiosClientV2.delete(
+      `/admin/promotion/${id}`,
+    );
+    console.log("data delete:", data);
+    return data;
+  } catch (error) {
+    console.log("Fail to delete promotion:",error);
   }
 };
 
