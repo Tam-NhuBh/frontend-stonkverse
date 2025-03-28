@@ -362,11 +362,11 @@ const PromotionManagement: FC<Props> = ({
           <h4 className="form-title"> Are you sure to delete this promotion?</h4>
           <div className="mt-4 w-[70%] flex justify-between mx-auto pb-4">
             <BtnWithIcon
-              content="Cancel"
+              content="CANCEL"
               onClick={() => setDeletePromotionModal(false)}
             />
             <BtnWithIcon
-              content="Delete"
+              content="DELETE"
               onClick={handleDeletePromotion}
             />
           </div>

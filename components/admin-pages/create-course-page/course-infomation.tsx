@@ -85,7 +85,7 @@ const CourseInfomation: FC<Props> = ({
 
   const thumbnail = watch("thumbnail");
   const curriculum = watch("curriculum");
-
+  const selectedCategory = watch("category")
 
   const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -321,9 +321,9 @@ const CourseInfomation: FC<Props> = ({
           <FormSelect
             id="category"
             label="Category"
-            options={categories}
-            errorMsg={errors.category?.message}
             register={register("category")}
+            errorMsg={errors.category?.message}
+            options={categories}
           />
         </div>
 

@@ -8,7 +8,7 @@ interface Props {
 }
 
 const CourseContentList: FC<Props> = ({ list, courseLength }): JSX.Element => {
-  const rawSections = new Set<string>(list.map((item) => item.videoSection));
+  const rawSections = new Set<string>(list?.map((item) => item.videoSection));
 
   const uniqueSections: string[] = [...rawSections];
 

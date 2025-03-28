@@ -1,10 +1,9 @@
-import { Dispatch, FC, SetStateAction } from "react";
-import { IoMdCheckmark } from "react-icons/io";
-import { Check } from "lucide-react";
+import type { Dispatch, FC, SetStateAction } from "react"
+import { IoMdCheckmark } from "react-icons/io"
 
 interface Props {
-  active: number;
-  setActive: Dispatch<SetStateAction<number>>;
+  active: number
+  setActive: Dispatch<SetStateAction<number>>
 }
 
 const steps = [
@@ -12,44 +11,31 @@ const steps = [
   { number: 2, name: "Course Options" },
   { number: 3, name: "Course Content" },
   { number: 4, name: "Course Preview" },
-];
+]
 
 const CourseOptions: FC<Props> = ({ active, setActive }): JSX.Element => {
   return (
-    <div className="sticky top-1 bg-white dark:bg-gray-900 rounded-sm border dark:border-gray-600 shadow-sm p-4 mb-6">
-      <div className="relative">
-        <div className="flex justify-between">
-          {steps.map((step) => (
-            <div
-              key={step.number}
-              className={`flex flex-col items-center relative z-10 ${
-                active === step.number - 1 ? "text-blue-500" : "text-gray-500"
-              }`}
-            >
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
-                  active === step.number - 1
-                    ? "bg-blue-500 text-white"
-                    : active > step.number - 1
-                      ? "bg-blue-200 text-blue-700"
-                      : "bg-gray-200 text-gray-500"
-                }`}
-              >
-                {active > step.number - 1 ? <Check className="h-5 w-5" /> : step.number}
-              </div>
-              <div className="text-xs font-medium text-center">{step.name}</div>
-            </div>
-          ))}
-        </div>
-        <div className="absolute top-5 left-0 right-0 h-0.5 bg-gray-200 -z-10">
+    <div>
+      {steps.map((step, index) => (
+        <div className="w-full flex py-5 items-center" key={index}>
           <div
-            className="h-full bg-blue-500 transition-all duration-300"
-            style={{ width: `${(active / (steps.length - 1)) * 100}%` }}
-          ></div>
+            className={`w-[35px] h-[35px] rounded-full grid place-items-center ${
+              active + 1 > index ? "bg-[#3e4396]" : "bg-[#384766]"
+            } relative text-dark_text`}
+          >
+            {active > index ? <IoMdCheckmark size={25} /> : <span>{step.number}</span>}
+            {index !== steps.length - 1 && (
+              <div
+                className={`absolute h-[30px] w-1 ${active > index ? "bg-[#3e4396]" : "bg-[#384766]"} bottom-[-100%]`}
+              />
+            )}
+          </div>
+          <h5 className={`pl-3 dark:text-dark_text text-black text-lg`}>{step.name}</h5>
         </div>
-      </div>
+      ))}
     </div>
-  );
-};
+  )
+}
 
-export default CourseOptions;
+export default CourseOptions
+

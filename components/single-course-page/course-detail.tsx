@@ -1,131 +1,145 @@
-"use client";
+"use client"
 
-import { FC, useEffect, useState } from "react";
-import { IFetchedCourse } from "../home-page/courses";
-import useUserInfo from "@/hooks/useUserInfo";
-import DotSpan from "../dot-span";
-import { formatShortDate, formatVideoLength } from "@/lib/format-data";
-import NextImage from "../next-image";
-import CourseContentTabs from "../admin-pages/create-course-page/course-content-tabs";
-import {
-  BiBarChartAlt2,
-  BiCommentDetail,
-  BiLogIn,
-  BiSolidStar,
-  BiStar,
-} from "react-icons/bi";
-import CoursePlayer from "../course-player";
-import { MdKey, MdLiveTv, MdOutlineSource } from "react-icons/md";
-import { CgTimelapse } from "react-icons/cg";
-import { RiFileList2Line } from "react-icons/ri";
-import BtnWithIcon from "../btn-with-icon";
-import { PiStudentBold } from "react-icons/pi";
-import Comment from "@/components/comment";
-import { Box, Modal, Rating } from "@mui/material";
-import CourseContentList from "./course-content-list";
-import { getStripePublishableKey } from "@/lib/fetch-data";
-import { loadStripe } from "@stripe/stripe-js";
-import { createPaymentIntent } from "@/lib/mutation-data";
-import { Elements } from "@stripe/react-stripe-js";
-import CheckOutForm from "./check-out-form";
-import { FaInfoCircle } from "react-icons/fa";
-import Link from "next/link";
-import NoContentYet from "../no-content-yet";
-import { ICourseData, IReview } from "@/types";
-import { useRouter } from 'next/navigation'
+import { type FC, useEffect, useState } from "react"
+import type { IFetchedCourse } from "../home-page/courses"
+import useUserInfo from "@/hooks/useUserInfo"
+import DotSpan from "../dot-span"
+import { formatShortDate, formatVideoLength } from "@/lib/format-data"
+import NextImage from "../next-image"
+import CourseContentTabs from "../admin-pages/create-course-page/course-content-tabs"
+import { BiBarChartAlt2, BiCommentDetail, BiLogIn, BiSolidStar, BiStar } from "react-icons/bi"
+import CoursePlayer from "../course-player"
+import { MdKey, MdLiveTv } from "react-icons/md"
+import { CgTimelapse } from "react-icons/cg"
+import { RiFileList2Line } from "react-icons/ri"
+import BtnWithIcon from "../btn-with-icon"
+import { PiStudentBold } from "react-icons/pi"
+import Comment from "@/components/comment"
+import { Box, Modal, Rating } from "@mui/material"
+import CourseContentList from "./course-content-list"
+import { getStripePublishableKey } from "@/lib/fetch-data"
+import { loadStripe } from "@stripe/stripe-js"
+import { createPaymentIntent, getVerifyPromotion } from "@/lib/mutation-data"
+import { Elements } from "@stripe/react-stripe-js"
+import CheckOutForm from "./check-out-form"
+import { FaInfoCircle } from "react-icons/fa"
+import NoContentYet from "../no-content-yet"
+import type { ICourseData, IReview } from "@/types"
+import { useRouter } from "next/navigation"
+import { toast } from "react-hot-toast"
 
 interface Props {
-  courseDetail: IFetchedCourse;
-  courseId: string;
+  courseDetail: IFetchedCourse
+  courseId: string
 }
 
 const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
-  const user = useUserInfo();
-  const [publishableKey, setPublishableKey] = useState("");
-  const [stripePromise, setStripePromise] = useState<any>(null);
-  const [clientSecret, setClientSecret] = useState("");
-  const [route, setRoute] = useState("");
+  const user = useUserInfo()
+  const [publishableKey, setPublishableKey] = useState("")
+  const [stripePromise, setStripePromise] = useState<any>(null)
+  const [clientSecret, setClientSecret] = useState("")
   const router = useRouter()
+  const [couponCode, setCouponCode] = useState("")
+  const [couponDiscount, setCouponDiscount] = useState(0)
+  const [openModal, setOpenModal] = useState(false)
+  const [isApplying, setIsApplying] = useState(false)
 
-  const [openModal, setOpenModal] = useState(false);
   const isPurchased = user?.courses?.find((course: { courseId: string }) => {
-    return course.courseId === courseId;
-  });
+    return course.courseId === courseId
+  })
 
-  let discountPercentage = 0;
+  let discountPercentage = 0
   if (courseDetail?.estimatedPrice) {
-    discountPercentage =
-      ((courseDetail?.estimatedPrice - courseDetail?.price) /
-        courseDetail?.estimatedPrice) *
-      100;
+    discountPercentage = ((courseDetail?.estimatedPrice - courseDetail?.price) / courseDetail?.estimatedPrice) * 100
   }
 
-  const discountPercentagePrice = discountPercentage.toFixed(0) || 0;
+  const discountPercentagePrice = discountPercentage.toFixed(0) || 0
 
-  const courseLength: number = courseDetail?.courseData.reduce(
-    (acc: number, cur: ICourseData) => {
-      return acc + cur.videoLength;
-    },
-    0
-  );
+  const courseLength: number = courseDetail?.courseData.reduce((acc: number, cur: ICourseData) => {
+    return acc + cur.videoLength
+  }, 0)
 
   const orderHandler = () => {
     if (!user) {
-      setOpenModal(false);
-      return;
+      setOpenModal(false)
+      return
     }
-    setOpenModal(true);
-  };
+    setOpenModal(true)
+  }
+
+  const orderHandlerCouponApply = async () => {
+    setIsApplying(true)
+    const promotionData = {
+      course: courseId,
+      code: couponCode.trim(),
+    }
+
+    try {
+      const response = await getVerifyPromotion(promotionData)
+      if (response?.data?.valid) {
+        // Use the discount from the data object in the response
+        setCouponDiscount(response.data.discount || 0)
+        toast.success("Coupon applied successfully!")
+      } else {
+        toast.error(response?.message || "Invalid coupon code")
+        setCouponDiscount(0)
+      }
+    } catch (error) {
+      toast.error("Failed to apply coupon")
+      setCouponDiscount(0)
+    } finally {
+      setIsApplying(false)
+    }
+  }
 
   const fetchStripeKey = async () => {
-    const stripePublishableKey = await getStripePublishableKey();
-    setPublishableKey(stripePublishableKey);
-  };
+    const stripePublishableKey = await getStripePublishableKey()
+    setPublishableKey(stripePublishableKey)
+  }
 
   const handleCourseAccess = () => {
-    router.push(`/course-access/${courseDetail?._id}`);
-  };
+    router.push(`/course-access/${courseDetail?._id}`)
+  }
+
+  // const createIntent = async (amount: number) => {
+  //   const clientSecret = await createPaymentIntent(amount);
+  //   setClientSecret(clientSecret);
+  // };
 
   const createIntent = async (amount: number) => {
-    const clientSecret = await createPaymentIntent(amount);
-    setClientSecret(clientSecret);
-  };
+    const discountedAmount = couponDiscount > 0 ? Math.round(amount - (amount * couponDiscount) / 100) : amount
+    const clientSecret = await createPaymentIntent(discountedAmount)
+    setClientSecret(clientSecret)
+  }
 
   useEffect(() => {
-    fetchStripeKey();
-  }, []);
+    fetchStripeKey()
+  }, [])
 
   useEffect(() => {
     if (publishableKey) {
-      setStripePromise(loadStripe(publishableKey));
+      setStripePromise(loadStripe(publishableKey))
     }
 
     if (courseDetail) {
-      const amount = Math.round(courseDetail?.price * 100);
-      createIntent(amount);
+      const amount = Math.round(courseDetail?.price * 100)
+      createIntent(amount)
     }
-  }, [publishableKey, courseDetail]);
+  }, [publishableKey, courseDetail, couponDiscount])
 
-  const formattedReviews = Array.isArray(courseDetail?.reviews)
-  ? [...courseDetail.reviews].reverse()
-  : [];
+  const formattedReviews = Array.isArray(courseDetail?.reviews) ? [...courseDetail.reviews].reverse() : []
 
   return (
     <div className="container my-8">
       <div className="w-full flex gap-16 max-[845px]:flex-col-reverse">
         <div className="w-[60%] max-[845px]:w-full">
-          <h1 className="text-gradient text-2xl font-bold">
-            {courseDetail?.name}
-          </h1>
+          <h1 className="text-gradient text-2xl font-bold">{courseDetail?.name}</h1>
 
           <div className="flex items-center mt-6 gap-4 flex-wrap">
-            <div className="main-gradient text-dark_text w-fit px-2 py-1 rounded-[5px]">
-              {courseDetail?.tags}
-            </div>
+            <div className="main-gradient text-dark_text w-fit px-2 py-1 rounded-[5px]">{courseDetail?.tags}</div>
 
             <div className="flex items-center gap-1">
-              <DotSpan /> <span>3</span>{" "}
-              <span className="text-slate-500">Students</span>
+              <DotSpan /> <span>{courseDetail?.purchased}</span> <span className="text-slate-500">Students</span>
             </div>
 
             <div className="flex items-center gap-1">
@@ -153,25 +167,18 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
               />
             </div>
             <span className="mt-6 text-slate-500 dark:text-dark_text">
-              Created By{" "}
-              <b className="text-tertiary dark:text-secondary">{user?.name}</b>
+              Created By <b className="text-tertiary dark:text-secondary">{user?.name}</b>
             </span>
           </div>
 
-          <h2 className="mt-8 font-bold text-xl mb-3">
-            What you&apos;ll learn In This Course
-          </h2>
+          <h2 className="mt-8 font-bold text-xl mb-3">What you&apos;ll learn In This Course</h2>
           <ul className="list-disc text-slate-500 dark:text-dark_text space-y-2">
-            {courseDetail?.benefits.map(
-              (benefit: { title: string }, index: number) => (
-                <li key={index} className="ml-4">
-                  {benefit?.title}
-                </li>
-              )
-            )}
+            {courseDetail?.benefits.map((benefit: { title: string }, index: number) => (
+              <li key={index} className="ml-4">
+                {benefit?.title}
+              </li>
+            ))}
           </ul>
-
-
 
           <div className="mt-14">
             <CourseContentTabs
@@ -183,10 +190,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
           </div>
 
           <div className="mb-10">
-            <CourseContentList
-              list={courseDetail?.courseData}
-              courseLength={courseLength}
-            />
+            <CourseContentList list={courseDetail?.courseData} courseLength={courseLength} />
           </div>
 
           <div className="flex items-center gap-3 mb-4">
@@ -197,9 +201,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
 
             <DotSpan />
 
-            <p className="font-bold text-xl">
-              {courseDetail?.reviews?.length} Reviews
-            </p>
+            <p className="font-bold text-xl">{courseDetail?.reviews?.length} Reviews</p>
           </div>
 
           {formattedReviews.length ? (
@@ -222,26 +224,16 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
         </div>
 
         <div className="flex-1 custom-shadow dark:border dark:border-slate-700 z-0 h-fit">
-          <CoursePlayer
-            videoUrl={courseDetail?.demoUrl}
-            title={courseDetail?.name}
-          />
+          <CoursePlayer videoUrl={courseDetail?.demoUrl} title={courseDetail?.name} />
 
           <div className="mt-2 p-4 gap-2 relative">
             {isPurchased ? (
               <div>
                 <p className="flex items-center gap-1 text-lg mb-2 font-semibold">
-                  <FaInfoCircle
-                    color="#0da5b5"
-                    className="max-[1100px]:hidden"
-                  />{" "}
-                  You purchased this course on{" "}
+                  <FaInfoCircle color="#0da5b5" className="max-[1100px]:hidden" /> You purchased this course on{" "}
                   {formatShortDate(isPurchased?.createdDate)}
                 </p>
-                <button
-                  onClick={handleCourseAccess}
-                  className="primary-btn !w-full !my-4 !block"
-                >
+                <button onClick={handleCourseAccess} className="primary-btn !w-full !my-4 !block">
                   <span className="flex items-center justify-center gap-1">
                     Go to course
                     <BiLogIn size={22} className="-mt-[2px]" />
@@ -251,24 +243,16 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
             ) : (
               <div className="flex items-center">
                 <span className="mr-2 font-bold text-3xl text-gradient">
-                  {courseDetail?.price === 0
-                    ? "Free"
-                    : "$" + courseDetail?.price + ".00"}
+                  {courseDetail?.price === 0 ? "Free" : "$" + courseDetail?.price + ".00"}
                 </span>
 
-                {courseDetail?.estimatedPrice &&
-                  courseDetail?.estimatedPrice > courseDetail?.price && (
-                    <span className="line-through text-xl opacity-50">
-                      ${courseDetail?.estimatedPrice}.00
-                    </span>
-                  )}
+                {courseDetail?.estimatedPrice && courseDetail?.estimatedPrice > courseDetail?.price && (
+                  <span className="line-through text-xl opacity-50">${courseDetail?.estimatedPrice}.00</span>
+                )}
 
-                {courseDetail?.estimatedPrice &&
-                  courseDetail?.estimatedPrice > courseDetail?.price && (
-                    <span className="ml-auto text-slate-500 font-bold">
-                      Discount {discountPercentagePrice}%
-                    </span>
-                  )}
+                {courseDetail?.estimatedPrice && courseDetail?.estimatedPrice > courseDetail?.price && (
+                  <span className="ml-auto text-slate-500 font-bold">Discount {discountPercentagePrice}%</span>
+                )}
               </div>
             )}
 
@@ -277,9 +261,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 <BiCommentDetail className="text-secondary -mt-[2px]" />
                 Reviews
               </span>
-              <span className="font-bold text-slate-500">
-                {courseDetail?.reviews?.length} Reviews
-              </span>
+              <span className="font-bold text-slate-500">{courseDetail?.reviews?.length} Reviews</span>
             </div>
 
             <div className="course-info-item">
@@ -287,9 +269,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 <BiStar className="text-secondary -mt-1" />
                 Rating
               </span>
-              <span className="font-bold text-slate-500 ">
-                {courseDetail?.ratings} Scores
-              </span>
+              <span className="font-bold text-slate-500 ">{courseDetail?.ratings} Scores</span>
             </div>
 
             <div className="course-info-item">
@@ -305,9 +285,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 <BiBarChartAlt2 className="text-secondary -mt-1" />
                 Category
               </span>
-              <span className="font-bold text-slate-500">
-                {courseDetail.category}
-              </span>
+              <span className="font-bold text-slate-500">{courseDetail?.category}</span>
             </div>
 
             <div className="course-info-item">
@@ -315,9 +293,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 <CgTimelapse className="text-secondary -mt-[2px]" />
                 Duration
               </span>
-              <span className="font-bold text-slate-500">
-                {formatVideoLength(courseLength)}
-              </span>
+              <span className="font-bold text-slate-500">{formatVideoLength(courseLength)}</span>
             </div>
 
             <div className="course-info-item">
@@ -325,9 +301,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 <RiFileList2Line className="text-secondary -mt-[2px]" />
                 Lectures
               </span>
-              <span className="font-bold text-slate-500">
-                {courseDetail?.courseData?.length || 0} Lecture
-              </span>
+              <span className="font-bold text-slate-500">{courseDetail?.courseData?.length || 0} Lecture</span>
             </div>
 
             {/* <div className="course-info-item">
@@ -343,9 +317,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 <PiStudentBold className="text-secondary -mt-[2px]" />
                 Students
               </span>
-              <span className="font-bold text-slate-500">
-                {courseDetail?.purchased} Students
-              </span>
+              <span className="font-bold text-slate-500">{courseDetail?.purchased} Students</span>
             </div>
 
             <div className="course-info-item">
@@ -363,14 +335,22 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                     type="text"
                     placeholder="Apply Coupon"
                     className="flex-1 bg-[#f5f5f5] px-4 h-full py-3 rounded-l-[5px] outline-none text-tertiary"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
                   />
                   <BtnWithIcon
-                    content="Apply"
+                    content={isApplying ? "Applying..." : "Apply"}
                     customClasses="!rounded-l-none !h-full"
+                    onClick={orderHandlerCouponApply}
+                    disabled={isApplying}
                   />
                 </div>
                 <BtnWithIcon
-                  content={`Buy Now ${courseDetail?.price}$`}
+                  content={`Buy Now ${
+                    couponDiscount > 0
+                      ? "$" + (courseDetail?.price - (courseDetail?.price * couponDiscount) / 100).toFixed(2)
+                      : "$" + courseDetail?.price
+                  }`}
                   customClasses="w-full mt-4"
                   onClick={orderHandler}
                 />
@@ -394,17 +374,15 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
           <Box className="modal-content-wrapper">
             {stripePromise && clientSecret && (
               <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <CheckOutForm
-                  setOpenModal={setOpenModal}
-                  courseDetail={courseDetail}
-                />
+                <CheckOutForm setOpenModal={setOpenModal} courseDetail={courseDetail} />
               </Elements>
             )}
           </Box>
         </Modal>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CourseDetail;
+export default CourseDetail
+

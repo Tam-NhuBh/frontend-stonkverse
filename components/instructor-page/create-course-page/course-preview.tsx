@@ -173,7 +173,7 @@ const CoursePreviewInstructor: FC<Props> = ({
                 <BiCommentDetail className="dark:text-secondary -mt-[2px]" />
                 Reviews
               </span>
-              <span className="font-bold text-slate-500">0 Review</span>
+              <span className="font-bold text-slate-500">0 Reviews</span>
             </div>
 
             <div className="course-info-item">
@@ -181,16 +181,16 @@ const CoursePreviewInstructor: FC<Props> = ({
                 <BiStar className="dark:text-secondary -mt-1" />
                 Rating
               </span>
-              <span className="font-bold text-slate-500 ">4.5 Scores</span>
+              <span className="font-bold text-slate-500 ">0 Scores</span>
             </div>
 
-            <div className="course-info-item">
+            {/* <div className="course-info-item">
               <span className="flex gap-1 items-center">
                 <MdLiveTv className="dark:text-secondary -mt-1" />
                 Live Class
               </span>
               <span className="font-bold text-slate-500">No</span>
-            </div>
+            </div> */}
 
             {/* <div className="course-info-item">
               <span className="flex gap-1 items-center">
@@ -222,31 +222,31 @@ const CoursePreviewInstructor: FC<Props> = ({
               </span>
             </div>
 
-            <div className="course-info-item">
+            {/* <div className="course-info-item">
               <span className="flex gap-1 items-center">
                 <MdOutlineSource className="dark:text-secondary -mt-1" />
                 Resource
               </span>
               <span className="font-bold text-slate-500">1 Downloadable</span>
-            </div>
+            </div> */}
 
             <div className="course-info-item">
               <span className="flex gap-1 items-center">
                 <PiStudentBold className="dark:text-secondary -mt-1" />
                 Students
               </span>
-              <span className="font-bold text-slate-500">2 Students</span>
+              <span className="font-bold text-slate-500">0</span>
             </div>
 
-            <div className="course-info-item">
+            {/* <div className="course-info-item">
               <span className="flex gap-1 items-center">
                 <MdKey className="dark:text-secondary -mt-1" />
                 Access
               </span>
               <span className="font-bold text-slate-500">Lifetime</span>
-            </div>
+            </div> */}
 
-            <p className="underline text-center mt-4 mb-2">Apply coupon</p>
+            {/* <p className="underline text-center mt-4 mb-2">Apply coupon</p>
             <div className="flex items-center h-[45px]">
               <input
                 type="text"
@@ -261,8 +261,8 @@ const CoursePreviewInstructor: FC<Props> = ({
             <BtnWithIcon content="Buy Now" customClasses="w-full mt-4" />
 
             <p className="text-slate-500 dark:text-dark_text text-sm mt-6 mb-4 text-center">
-              {/* 30-Day Money-Back Guarantee */}
-            </p>
+              30-Day Money-Back Guarantee
+            </p> */}
           </div>
         </div>
       </div>

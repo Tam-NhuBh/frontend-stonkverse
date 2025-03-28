@@ -87,16 +87,16 @@ export default function CreateFinalTest() {
                   <div
                     key={step.number}
                     className={`flex flex-col items-center relative z-10 ${
-                      active === step.number - 1 ? "text-blue-500" : "text-gray-400"
+                      active === step.number - 1 ? "text-[#3e4396]" : "text-[#384766]"
                     }`}
                   >
                     <div
                       className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
                         active === step.number - 1
-                          ? "bg-blue-500 text-white"
+                          ? "bg-[#3e4396] text-dark_text"
                           : active > step.number - 1
-                            ? "bg-blue-200 text-blue-700"
-                            : "bg-gray-200 text-gray-500"
+                            ? "bg-[#3e4396] text-dark_text"
+                            : "bg-[#384766] text-dark_text"
                       }`}
                     >
                       {active > step.number - 1 ? <Check className="h-5 w-5" /> : step.number}
@@ -107,7 +107,7 @@ export default function CreateFinalTest() {
               </div>
               <div className="absolute top-5 left-0 right-0 h-0.5 bg-gray-200 -z-10">
                 <div
-                  className="h-full bg-blue-500 transition-all duration-300"
+                  className="h-full bg-[#3e4396] transition-all duration-300"
                   style={{ width: `${(active / (steps.length - 1)) * 100}%` }}
                 ></div>
               </div>
