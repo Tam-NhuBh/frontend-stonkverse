@@ -78,7 +78,7 @@ const CoursePreview: FC<Props> = ({
             </div>
 
             <div className="flex items-center gap-1">
-              <DotSpan /> <span>{courseDetail?.purchased}</span>{" "}
+              <DotSpan /> <span>{courseDetail?.purchased || 0}</span>{" "}
               <span className="text-slate-500">Students</span>
             </div>
 
@@ -127,12 +127,12 @@ const CoursePreview: FC<Props> = ({
                 color=""
                 className="-mt-1 !text-[#b4690e] dark:!text-[#faaf00]"
               />
-              <span>{courseData?.ratings} course rating</span>
+              <span>{courseData?.ratings || 0} course rating</span>
             </p>
 
             <DotSpan />
 
-            <p className="font-bold text-xl">{courseDetail?.reviews?.length} reviews</p>
+            <p className="font-bold text-xl">{courseDetail?.reviews?.length || 0} reviews</p>
           </div>
 
           {/* <div className="grid grid-cols-2 gap-6">
@@ -184,7 +184,7 @@ const CoursePreview: FC<Props> = ({
                 <BiCommentDetail className="dark:text-secondary -mt-[2px]" />
                 Reviews
               </span>
-              <span className="font-bold text-slate-500">{courseDetail?.reviews?.length} Reviews</span>
+              <span className="font-bold text-slate-500">{courseDetail?.reviews?.length || 0} Reviews</span>
             </div>
 
             <div className="course-info-item">
@@ -192,7 +192,7 @@ const CoursePreview: FC<Props> = ({
                 <BiStar className="dark:text-secondary -mt-1" />
                 Rating
               </span>
-              <span className="font-bold text-slate-500 ">{courseDetail?.ratings} Scores</span>
+              <span className="font-bold text-slate-500 ">{courseDetail?.ratings || 0} Scores</span>
             </div>
 
             {/* <div className="course-info-item">
@@ -246,7 +246,7 @@ const CoursePreview: FC<Props> = ({
                 <PiStudentBold className="dark:text-secondary -mt-1" />
                 Students
               </span>
-              <span className="font-bold text-slate-500">{courseDetail?.purchased}</span>
+              <span className="font-bold text-slate-500">{courseDetail?.purchased || 0}</span>
             </div>
 
             <div className="course-info-item">

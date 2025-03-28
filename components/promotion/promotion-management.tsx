@@ -347,8 +347,8 @@ const PromotionManagement: FC<Props> = ({
           </div>
 
           <div className="mt-6 flex justify-between">
-            <BtnWithIcon content="CLOSE" onClick={onClose} />
-            <BtnWithIcon content="ADD PROMOTION" onClick={onAddPromotion} />
+            <BtnWithIcon content="Close" onClick={onClose} />
+            <BtnWithIcon content="Add promotion" onClick={onAddPromotion} />
           </div>
         </Box>
       </Modal>
@@ -362,11 +362,11 @@ const PromotionManagement: FC<Props> = ({
           <h4 className="form-title"> Are you sure to delete this promotion?</h4>
           <div className="mt-4 w-[70%] flex justify-between mx-auto pb-4">
             <BtnWithIcon
-              content="CANCEL"
+              content="Cancel"
               onClick={() => setDeletePromotionModal(false)}
             />
             <BtnWithIcon
-              content="DELETE"
+              content="Delete"
               onClick={handleDeletePromotion}
             />
           </div>

@@ -372,9 +372,9 @@ const PromotionList: FC = () => {
               </div>
 
               <div className="mt-6 flex justify-between">
-                <BtnWithIcon content="CANCEL" onClick={() => setPromotionModal(false)} />
+                <BtnWithIcon content="Cancel" onClick={() => setPromotionModal(false)} />
                 <BtnWithLoading
-                  content="CREATE PROMOTION"
+                  content="Create promotion"
                   customClasses="!bg-green-700 !w-fit"
                   type="submit"
                   isLoading={isCreatingPromotion}

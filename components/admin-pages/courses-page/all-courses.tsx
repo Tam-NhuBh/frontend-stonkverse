@@ -8,13 +8,14 @@ import {
 import { Box, Button, Modal } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { FC, useEffect, useState } from "react";
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiFillDelete, AiOutlineDelete } from "react-icons/ai";
 import { FiEdit } from "react-icons/fi";
 import DataTable from "../data-table";
 import BtnWithIcon from "@/components/btn-with-icon";
 import BtnWithLoading from "@/components/btn-with-loading";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { FaEdit } from "react-icons/fa";
 
 interface Props { }
 
@@ -54,14 +55,14 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
       flex: 0.2,
       renderCell: (params: any) => {
         return (
-          <>
+          <div className="flex items-center justify-center w-full">
             <Link href={`/admin/edit-course/${params.row.id}`}>
-              <FiEdit
-                size={17}
-                className="dark:text-dark_text text-slate-700 mr-6"
-              />
+              <FaEdit
+                size={18}
+                style={{ cursor: "pointer" }}
+                className="text-[#475569] dark:text-[#3E4396]" />
             </Link>
-          </>
+          </div>
         );
       },
     },
@@ -71,22 +72,23 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
       flex: 0.2,
       renderCell: (params: any) => {
         return (
-          <>
+          <div className="flex items-center justify-center w-full">
             <Button
               onClick={() => {
                 setDeleteModal(true);
                 setCurrentCourseId(params.row.id);
               }}
             >
-              <AiOutlineDelete
+              <AiFillDelete
                 size={20}
-                className="dark:text-dark_text text-slate-700 mr-4"
+                style={{ cursor: "pointer" }}
+                className="text-[#475569] dark:text-[#3E4396]"
               />
             </Button>
-          </>
+          </div>
         );
       },
-    },
+    }
   ];
 
   let rows = [];
