@@ -24,7 +24,7 @@ interface Props {
   setActive: Dispatch<SetStateAction<number>>;
   courseData: any;
   courseContentData: any;
-  createCourseHandler: () => void;
+  createCourseHandler?: () => void;
 }
 
 const CoursePreviewInstructor: FC<Props> = ({

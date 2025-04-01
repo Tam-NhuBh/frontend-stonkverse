@@ -8,8 +8,7 @@ import {
 import { Box, Button, Modal } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { FC, useEffect, useState } from "react";
-import { AiFillDelete, AiOutlineDelete } from "react-icons/ai";
-import { FiEdit } from "react-icons/fi";
+import { AiFillDelete } from "react-icons/ai";
 import DataTable from "../data-table";
 import BtnWithIcon from "@/components/btn-with-icon";
 import BtnWithLoading from "@/components/btn-with-loading";

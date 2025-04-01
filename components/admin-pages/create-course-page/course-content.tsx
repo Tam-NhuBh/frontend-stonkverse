@@ -39,51 +39,119 @@ const CourseContent: FC<Props> = ({
     setIsCollapsed(updatedCollapsed)
   }
 
-  const handleRemoveLink = (index: number, linkIndex: number) => {
-    const updatedData = [...courseContentData]
-    updatedData[index].links.splice(linkIndex, 1)
-    setCourseContentData(updatedData)
-  }
-
   const handleAddLink = (index: number) => {
-    const updatedData = [...courseContentData]
-    updatedData[index].links.push({ title: "", url: "" })
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          links: [...item.links, { title: "", url: "" }],
+        }
+      }
+      return item
+    })
     setCourseContentData(updatedData)
   }
 
-  const handleRemoveQuiz = (index: number, quizIndex: number) => {
-    const updatedData = [...courseContentData]
-    updatedData[index].quiz.splice(quizIndex, 1)
+  const handleRemoveLink = (index: number, linkIndex: number) => {
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          links: item.links.filter((_, idx) => idx !== linkIndex),
+        }
+      }
+      return item
+    })
     setCourseContentData(updatedData)
   }
 
   const handleAddQuiz = (index: number) => {
-    const updatedData = [...courseContentData]
-    updatedData[index].quiz.push({ title: "", correctAnswer: [], mockAnswer: [] })
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          quiz: [...item.quiz, { title: "", correctAnswer: [], mockAnswer: [] }],
+        }
+      }
+      return item
+    })
+    setCourseContentData(updatedData)
+  }
+
+  const handleRemoveQuiz = (index: number, quizIndex: number) => {
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          quiz: item.quiz.filter((_, idx) => idx !== quizIndex),
+        }
+      }
+      return item
+    })
     setCourseContentData(updatedData)
   }
 
   const handleCorrectAnswerChange = (index: number, quizIndex: number, answerIndex: number, value: string) => {
-    const updatedData = [...courseContentData]
-    updatedData[index].quiz[quizIndex].correctAnswer[answerIndex] = value
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        const updatedQuiz = [...item.quiz]
+        const updatedCorrectAnswers = [...updatedQuiz[quizIndex].correctAnswer]
+        updatedCorrectAnswers[answerIndex] = value
+        updatedQuiz[quizIndex] = {
+          ...updatedQuiz[quizIndex],
+          correctAnswer: updatedCorrectAnswers,
+        }
+        return { ...item, quiz: updatedQuiz }
+      }
+      return item
+    })
     setCourseContentData(updatedData)
   }
 
   const handleChooseAnswerChange = (index: number, quizIndex: number, answerIndex: number, value: string) => {
-    const updatedData = [...courseContentData]
-    updatedData[index].quiz[quizIndex].mockAnswer[answerIndex] = value
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        const updatedQuiz = [...item.quiz]
+        const updatedMockAnswers = [...updatedQuiz[quizIndex].mockAnswer]
+        updatedMockAnswers[answerIndex] = value
+        updatedQuiz[quizIndex] = {
+          ...updatedQuiz[quizIndex],
+          mockAnswer: updatedMockAnswers,
+        }
+        return { ...item, quiz: updatedQuiz }
+      }
+      return item
+    })
     setCourseContentData(updatedData)
   }
 
   const handleAddCorrectAnswer = (index: number, quizIndex: number) => {
-    const updatedData = [...courseContentData]
-    updatedData[index].quiz[quizIndex].correctAnswer.push("")
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        const updatedQuiz = [...item.quiz]
+        updatedQuiz[quizIndex] = {
+          ...updatedQuiz[quizIndex],
+          correctAnswer: [...updatedQuiz[quizIndex].correctAnswer, ""],
+        }
+        return { ...item, quiz: updatedQuiz }
+      }
+      return item
+    })
     setCourseContentData(updatedData)
   }
 
   const handleAddChooseAnswer = (index: number, quizIndex: number) => {
-    const updatedData = [...courseContentData]
-    updatedData[index].quiz[quizIndex].mockAnswer.push("")
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        const updatedQuiz = [...item.quiz]
+        updatedQuiz[quizIndex] = {
+          ...updatedQuiz[quizIndex],
+          mockAnswer: [...updatedQuiz[quizIndex].mockAnswer, ""],
+        }
+        return { ...item, quiz: updatedQuiz }
+      }
+      return item
+    })
     setCourseContentData(updatedData)
   }
 
@@ -294,8 +362,9 @@ const CourseContent: FC<Props> = ({
                         placeholder="Project plan ..."
                         value={item.title}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData]
-                          updatedData[index].title = e.target.value
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index ? { ...item, title: e.target.value } : item,
+                          )
                           setCourseContentData(updatedData)
                         }}
                       />
@@ -306,8 +375,9 @@ const CourseContent: FC<Props> = ({
                         placeholder="https://..."
                         value={item.videoUrl}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData]
-                          updatedData[index].videoUrl = e.target.value
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index ? { ...item, videoUrl: e.target.value } : item,
+                          )
                           setCourseContentData(updatedData)
                         }}
                       />
@@ -319,8 +389,9 @@ const CourseContent: FC<Props> = ({
                         placeholder="10"
                         value={item.videoLength}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData]
-                          updatedData[index].videoLength = Number(e.target.value)
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index ? { ...item, videoLength: Number(e.target.value) } : item,
+                          )
                           setCourseContentData(updatedData)
                         }}
                       />
@@ -333,8 +404,9 @@ const CourseContent: FC<Props> = ({
                         placeholder="Write something about this video"
                         value={item.description}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData]
-                          updatedData[index].description = e.target.value
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index ? { ...item, description: e.target.value } : item,
+                          )
                           setCourseContentData(updatedData)
                         }}
                       />
@@ -363,8 +435,17 @@ const CourseContent: FC<Props> = ({
                             placeholder="Source Code ... (Link Title)"
                             value={link.title}
                             onChange={(e) => {
-                              const updatedData = [...courseContentData]
-                              updatedData[index].links[linkIndex].title = e.target.value
+                              const updatedData = courseContentData.map((item, i) => {
+                                if (i === index) {
+                                  const updatedLinks = [...item.links]
+                                  updatedLinks[linkIndex] = {
+                                    ...updatedLinks[linkIndex],
+                                    title: e.target.value,
+                                  }
+                                  return { ...item, links: updatedLinks }
+                                }
+                                return item
+                              })
                               setCourseContentData(updatedData)
                             }}
                           />
@@ -375,8 +456,17 @@ const CourseContent: FC<Props> = ({
                             placeholder="Source Code URL... (Link URL)"
                             value={link.url}
                             onChange={(e) => {
-                              const updatedData = [...courseContentData]
-                              updatedData[index].links[linkIndex].url = e.target.value
+                              const updatedData = courseContentData.map((item, i) => {
+                                if (i === index) {
+                                  const updatedLinks = [...item.links]
+                                  updatedLinks[linkIndex] = {
+                                    ...updatedLinks[linkIndex],
+                                    url: e.target.value,
+                                  }
+                                  return { ...item, links: updatedLinks }
+                                }
+                                return item
+                              })
                               setCourseContentData(updatedData)
                             }}
                           />
@@ -400,8 +490,17 @@ const CourseContent: FC<Props> = ({
                             label={`Quiz Title ${quizIndex + 1}`}
                             value={quizs.title}
                             onChange={(e) => {
-                              const updatedData = [...courseContentData]
-                              updatedData[index].quiz[quizIndex].title = e.target.value
+                              const updatedData = courseContentData.map((item, i) => {
+                                if (i === index) {
+                                  const updatedQuiz = [...item.quiz]
+                                  updatedQuiz[quizIndex] = {
+                                    ...updatedQuiz[quizIndex],
+                                    title: e.target.value,
+                                  }
+                                  return { ...item, quiz: updatedQuiz }
+                                }
+                                return item
+                              })
                               setCourseContentData(updatedData)
                             }}
                           />

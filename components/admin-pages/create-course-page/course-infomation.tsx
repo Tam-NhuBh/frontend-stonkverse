@@ -249,7 +249,19 @@ const CourseInfomation: FC<Props> = ({
     setValue("thumbnail", courseInfo.thumbnail);
     setValue("curriculum", courseInfo.curriculum);
 
-  }, [active]);
+  }, [active,
+    courseInfo.category,
+    courseInfo.curriculum,
+    courseInfo.demoUrl,
+    courseInfo.description,
+    courseInfo.estimatedPrice,
+    courseInfo.level,
+    courseInfo.name,
+    courseInfo.price,
+    courseInfo.tags,
+    courseInfo.thumbnail,
+    setValue,
+  ]);
 
   useEffect(() => {
     if (initialCourseInfo) {
@@ -319,11 +331,12 @@ const CourseInfomation: FC<Props> = ({
             placeholder="Stock, Marketing..."
           />
           <FormSelect
-            id="category"
-            label="Category"
-            register={register("category")}
-            errorMsg={errors.category?.message}
-            options={categories}
+           id="category"
+           label="Category"
+           options={categories}
+           errorMsg={errors.category?.message}
+           register={register("category")}
+           defaultValue={courseInfo.category || initialCourseInfo?.category}      
           />
         </div>
 
