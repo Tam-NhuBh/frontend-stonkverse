@@ -8,6 +8,7 @@ import {
   ArrowBackIos,
   ArrowForwardIos,
   Checklist,
+  ContactEmergencyOutlined,
   HomeOutlined,
   OndemandVideo,
   PeopleOutline,
@@ -73,6 +74,8 @@ const menuItems = [
   
   // Controllers section
   { title: "Assign Role", to: "/admin/team", icon: <PeopleOutline />, section: "Controllers" },
+  { title: "Instructor Panel", to: "/admin/instructor-panel", icon: <ContactEmergencyOutlined />, section: "Controllers" },
+
 ];
 
 const groupedMenuItems = menuItems.reduce((acc, item) => {

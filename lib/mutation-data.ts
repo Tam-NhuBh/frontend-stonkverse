@@ -192,6 +192,22 @@ export const deletePromotionById = async (id: string) => {
   }
 };
 
+export const getVerifyPromotion = async (IData: {
+  course: string;
+  code: string;
+}) => {
+  try {
+    const { data } = await axios.post(
+      `${process.env.NEXT_PUBLIC_SERVER_URL_V2}/promo/verify`,
+      IData
+    );
+console.log("data coupon:", data)
+    return data;
+  } catch (error: any) {
+    console.log("Fail to verify promotion:",error);
+  }
+};
+
 // instructor
 // export const createCourseIns = async (contactData: {
 //   email: string;

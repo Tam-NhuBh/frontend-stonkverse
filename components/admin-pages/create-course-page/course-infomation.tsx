@@ -85,7 +85,7 @@ const CourseInfomation: FC<Props> = ({
 
   const thumbnail = watch("thumbnail");
   const curriculum = watch("curriculum");
-
+  const selectedCategory = watch("category")
 
   const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -249,7 +249,19 @@ const CourseInfomation: FC<Props> = ({
     setValue("thumbnail", courseInfo.thumbnail);
     setValue("curriculum", courseInfo.curriculum);
 
-  }, [active]);
+  }, [active,
+    courseInfo.category,
+    courseInfo.curriculum,
+    courseInfo.demoUrl,
+    courseInfo.description,
+    courseInfo.estimatedPrice,
+    courseInfo.level,
+    courseInfo.name,
+    courseInfo.price,
+    courseInfo.tags,
+    courseInfo.thumbnail,
+    setValue,
+  ]);
 
   useEffect(() => {
     if (initialCourseInfo) {
@@ -319,11 +331,12 @@ const CourseInfomation: FC<Props> = ({
             placeholder="Stock, Marketing..."
           />
           <FormSelect
-            id="category"
-            label="Category"
-            options={categories}
-            errorMsg={errors.category?.message}
-            register={register("category")}
+           id="category"
+           label="Category"
+           options={categories}
+           errorMsg={errors.category?.message}
+           register={register("category")}
+           defaultValue={courseInfo.category || initialCourseInfo?.category}      
           />
         </div>
 

@@ -195,7 +195,7 @@ const FinalTestManagement: FC = () => {
             </div>
 
             <div className="flex-shrink-0">
-              <BtnWithIcon content="Create" onClick={handleCreateTest} customClasses="w-full uppercase" />
+              <BtnWithIcon content="Create" onClick={handleCreateTest} customClasses="w-full" />
             </div>
           </div>
         </div>
@@ -232,7 +232,6 @@ const FinalTestManagement: FC = () => {
             <BtnWithIcon
               content="Create Final Test"
               onClick={handleCreateTest}
-              customClasses="uppercase"
             />
           )}
         </div>
@@ -317,7 +316,6 @@ const FinalTestManagement: FC = () => {
             <div className="text-center p-8">
               <p className="mb-4">Edit functionality to be implemented</p>
               <BtnWithIcon content="Close"
-                customClasses="uppercase"
                 onClick={() => setEditTestModal(false)} />
             </div>
           </div>
@@ -330,12 +328,11 @@ const FinalTestManagement: FC = () => {
           <h4 className="form-title">Are you sure you want to delete this final test?</h4>
           <div className="mt-4 w-[70%] flex justify-between mx-auto pb-4">
             <BtnWithIcon content="Cancel"
-              customClasses="uppercase"
               onClick={() => setDeleteTestModal(false)} />
             <BtnWithLoading
               content="Delete"
               isLoading={isDeletingTest}
-              customClasses="!bg-red-700 !w-fit uppercase"
+              customClasses="!bg-red-700 !w-fit"
               type="button"
               onClick={handleDeleteTestConfirm}
             />

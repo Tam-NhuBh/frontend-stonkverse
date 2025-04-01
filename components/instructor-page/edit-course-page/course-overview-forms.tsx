@@ -5,9 +5,12 @@ import {
   useGetSingleCourseQuery,
 } from "@/store/course/course-api";
 import toast from "react-hot-toast";
-import { redirect, useParams } from "next/navigation";
-import CourseInfomation from "../create-course-page/course-infomation";
+import {  useParams } from "next/navigation";
 import CourseInfomationInstructor from "../create-course-page/course-infomation";
+import CourseContentInstructor from "../create-course-page/course-content";
+import CoursePreviewInstructor from "../create-course-page/course-preview";
+import CourseOptionsInstructor from "../create-course-page/course-options";
+import CourseDataInstructor from "../create-course-page/course-data";
 
 
 interface Props {}
@@ -141,7 +144,7 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
             )}
 
             {active === 1 && (
-              <CourseData
+              <CourseDataInstructor
                 active={active}
                 setActive={setActive}
                 initialBenefits={data.benefits}
@@ -157,7 +160,7 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
             )}
 
             {active === 2 && (
-              <CourseContent
+              <CourseContentInstructor
                 active={active}
                 setActive={setActive}
                 courseContentData={courseContentData}
@@ -167,19 +170,18 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
             )}
 
             {active === 3 && (
-              <CoursePreview
+              <CoursePreviewInstructor
                 active={active}
                 setActive={setActive}
                 courseData={courseData}
                 courseContentData={courseContentData}
-                createCourseHandler={editCourseHandler}
               />
             )}
           </>
         )}
       </div>
       <div className="flex-1 fixed z-[-1] top-[80px] right-8">
-        <CourseOptions active={active} setActive={setActive} />
+        <CourseOptionsInstructor active={active} setActive={setActive} />
       </div>
     </div>
   );

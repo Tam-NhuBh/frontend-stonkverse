@@ -347,8 +347,8 @@ const PromotionManagement: FC<Props> = ({
           </div>
 
           <div className="mt-6 flex justify-between">
-            <BtnWithIcon content="CLOSE" onClick={onClose} />
-            <BtnWithIcon content="ADD PROMOTION" onClick={onAddPromotion} />
+            <BtnWithIcon content="Close" onClick={onClose} />
+            <BtnWithIcon content="Add promotion" onClick={onAddPromotion} />
           </div>
         </Box>
       </Modal>

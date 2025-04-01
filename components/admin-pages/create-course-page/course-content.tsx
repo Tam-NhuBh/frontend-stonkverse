@@ -1,20 +1,21 @@
-import { Dispatch, FC, FormEvent, SetStateAction, useState } from "react";
-import { CourseContentDataType } from "./create-course-form";
-import { AiOutlineDelete, AiOutlinePlusCircle } from "react-icons/ai";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import FormInput from "@/components/form-input";
-import { BsLink45Deg } from "react-icons/bs";
-import toast from "react-hot-toast";
-import BtnWithIcon from "@/components/btn-with-icon";
-import BottomNavigator from "./bottom-navigator";
-import { title } from "process";
+"use client"
+
+import { type Dispatch, type FC, type FormEvent, type SetStateAction, useState } from "react"
+import type { CourseContentDataType } from "./create-course-form"
+import { AiOutlineDelete, AiOutlinePlusCircle } from "react-icons/ai"
+import { MdOutlineKeyboardArrowDown } from "react-icons/md"
+import FormInput from "@/components/form-input"
+import { BsLink45Deg } from "react-icons/bs"
+import toast from "react-hot-toast"
+import BtnWithIcon from "@/components/btn-with-icon"
+import BottomNavigator from "./bottom-navigator"
 
 interface Props {
-  active: number;
-  setActive: Dispatch<SetStateAction<number>>;
-  courseContentData: CourseContentDataType;
-  setCourseContentData: Dispatch<SetStateAction<CourseContentDataType>>;
-  submitCourseHandler: () => void;
+  active: number
+  setActive: Dispatch<SetStateAction<number>>
+  courseContentData: CourseContentDataType
+  setCourseContentData: Dispatch<SetStateAction<CourseContentDataType>>
+  submitCourseHandler: () => void
 }
 
 const CourseContent: FC<Props> = ({
@@ -24,69 +25,135 @@ const CourseContent: FC<Props> = ({
   setCourseContentData,
   submitCourseHandler,
 }): JSX.Element => {
-  const [isCollapsed, setIsCollapsed] = useState(
-    Array(courseContentData.length).fill(false)
-  );
+  const [isCollapsed, setIsCollapsed] = useState(Array(courseContentData.length).fill(false))
 
-  const [activeSection, setActiveSection] = useState(1);
+  const [activeSection, setActiveSection] = useState(1)
 
   const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-  };
+    e.preventDefault()
+  }
 
   const handleCollapseToggle = (index: number) => {
-    const updatedCollapsed = [...isCollapsed];
-    updatedCollapsed[index] = !updatedCollapsed[index];
-    setIsCollapsed(updatedCollapsed);
-  };
-
-  const handleRemoveLink = (index: number, linkIndex: number) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].links.splice(linkIndex, 1);
-    setCourseContentData(updatedData);
-  };
+    const updatedCollapsed = [...isCollapsed]
+    updatedCollapsed[index] = !updatedCollapsed[index]
+    setIsCollapsed(updatedCollapsed)
+  }
 
   const handleAddLink = (index: number) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].links.push({ title: "", url: "" });
-    setCourseContentData(updatedData);
-  };
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          links: [...item.links, { title: "", url: "" }],
+        }
+      }
+      return item
+    })
+    setCourseContentData(updatedData)
+  }
 
-  const handleRemoveQuiz = (index: number, quizIndex: number) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].quiz.splice(quizIndex, 1);
-    setCourseContentData(updatedData);
-  };
+  const handleRemoveLink = (index: number, linkIndex: number) => {
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          links: item.links.filter((_, idx) => idx !== linkIndex),
+        }
+      }
+      return item
+    })
+    setCourseContentData(updatedData)
+  }
 
   const handleAddQuiz = (index: number) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].quiz.push({ title: "", correctAnswer: [], mockAnswer: [] });
-    setCourseContentData(updatedData);
-  };
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          quiz: [...item.quiz, { title: "", correctAnswer: [], mockAnswer: [] }],
+        }
+      }
+      return item
+    })
+    setCourseContentData(updatedData)
+  }
+
+  const handleRemoveQuiz = (index: number, quizIndex: number) => {
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          quiz: item.quiz.filter((_, idx) => idx !== quizIndex),
+        }
+      }
+      return item
+    })
+    setCourseContentData(updatedData)
+  }
 
   const handleCorrectAnswerChange = (index: number, quizIndex: number, answerIndex: number, value: string) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].quiz[quizIndex].correctAnswer[answerIndex] = value;
-    setCourseContentData(updatedData);
-  };
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        const updatedQuiz = [...item.quiz]
+        const updatedCorrectAnswers = [...updatedQuiz[quizIndex].correctAnswer]
+        updatedCorrectAnswers[answerIndex] = value
+        updatedQuiz[quizIndex] = {
+          ...updatedQuiz[quizIndex],
+          correctAnswer: updatedCorrectAnswers,
+        }
+        return { ...item, quiz: updatedQuiz }
+      }
+      return item
+    })
+    setCourseContentData(updatedData)
+  }
 
   const handleChooseAnswerChange = (index: number, quizIndex: number, answerIndex: number, value: string) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].quiz[quizIndex].mockAnswer[answerIndex] = value;
-    setCourseContentData(updatedData);
-  };
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        const updatedQuiz = [...item.quiz]
+        const updatedMockAnswers = [...updatedQuiz[quizIndex].mockAnswer]
+        updatedMockAnswers[answerIndex] = value
+        updatedQuiz[quizIndex] = {
+          ...updatedQuiz[quizIndex],
+          mockAnswer: updatedMockAnswers,
+        }
+        return { ...item, quiz: updatedQuiz }
+      }
+      return item
+    })
+    setCourseContentData(updatedData)
+  }
 
   const handleAddCorrectAnswer = (index: number, quizIndex: number) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].quiz[quizIndex].correctAnswer.push("");
-    setCourseContentData(updatedData);
-  };
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        const updatedQuiz = [...item.quiz]
+        updatedQuiz[quizIndex] = {
+          ...updatedQuiz[quizIndex],
+          correctAnswer: [...updatedQuiz[quizIndex].correctAnswer, ""],
+        }
+        return { ...item, quiz: updatedQuiz }
+      }
+      return item
+    })
+    setCourseContentData(updatedData)
+  }
 
   const handleAddChooseAnswer = (index: number, quizIndex: number) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].quiz[quizIndex].mockAnswer.push("");
-    setCourseContentData(updatedData);
-  };
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        const updatedQuiz = [...item.quiz]
+        updatedQuiz[quizIndex] = {
+          ...updatedQuiz[quizIndex],
+          mockAnswer: [...updatedQuiz[quizIndex].mockAnswer, ""],
+        }
+        return { ...item, quiz: updatedQuiz }
+      }
+      return item
+    })
+    setCourseContentData(updatedData)
+  }
 
   // const handleAnswerChange = (sectionIndex: number, questionIndex: number, option: string) => {
   //   const updatedAnswers = [...userAnswers];
@@ -109,7 +176,6 @@ const CourseContent: FC<Props> = ({
   //   toast(`Your score is ${score} out of ${courseContentData.flatMap(section => section.quiz).length}`);
   // };
 
-
   const newContentHandler = (item: any) => {
     if (
       item.title === "" ||
@@ -119,23 +185,20 @@ const CourseContent: FC<Props> = ({
       item.links[0].title === "" ||
       item.links[0].url === ""
     ) {
-      toast.error("Please fill all the fields");
+      toast.error("Please fill all the fields")
     } else if (
       item.quiz.length > 0 &&
-      (item.quiz[0].title === "" ||
-        item.quiz[0].correctAnswer.length === 0 ||
-        item.quiz[0].mockAnswer.length === 0)
+      (item.quiz[0].title === "" || item.quiz[0].correctAnswer.length === 0 || item.quiz[0].mockAnswer.length === 0)
     ) {
-      toast.error("Please fill in all quiz fields or remove the quiz");
+      toast.error("Please fill in all quiz fields or remove the quiz")
     } else {
-      let newVideoSection = "";
+      let newVideoSection = ""
 
       if (courseContentData.length > 0) {
-        const lastVideoSection =
-          courseContentData[courseContentData.length - 1].videoSection;
+        const lastVideoSection = courseContentData[courseContentData.length - 1].videoSection
 
         if (lastVideoSection) {
-          newVideoSection = lastVideoSection;
+          newVideoSection = lastVideoSection
         }
       }
 
@@ -146,16 +209,12 @@ const CourseContent: FC<Props> = ({
         videoSection: newVideoSection,
         videoLength: 0,
         links: [{ title: "", url: "" }],
-        quiz: []
+        quiz: [],
+      }
 
-      };
-
-      setCourseContentData([
-        ...courseContentData,
-        newContent,
-      ] as CourseContentDataType);
+      setCourseContentData([...courseContentData, newContent] as CourseContentDataType)
     }
-  };
+  }
 
   const addNewSection = () => {
     if (
@@ -166,36 +225,32 @@ const CourseContent: FC<Props> = ({
       courseContentData[courseContentData.length - 1].links[0].title === "" ||
       courseContentData[courseContentData.length - 1].links[0].url === ""
     ) {
-      toast.error("Please fill all the fields first!");
+      toast.error("Please fill all the fields first!")
     } else if (
       courseContentData[courseContentData.length - 1].quiz.length > 0 &&
       (courseContentData[courseContentData.length - 1].quiz[0].title === "" ||
         courseContentData[courseContentData.length - 1].quiz[0].correctAnswer.length === 0 ||
         courseContentData[courseContentData.length - 1].quiz[0].mockAnswer.length === 0)
     ) {
-      toast.error("Please fill in all quiz fields or remove the quiz");
+      toast.error("Please fill in all quiz fields or remove the quiz")
     } else {
-      setActiveSection(activeSection + 1);
+      setActiveSection(activeSection + 1)
       const newContent = {
         videoUrl: "",
         title: "",
         description: "",
         videoLength: 0,
-        videoSection: `${activeSection}`,
+        videoSection: `Section ${activeSection}`,
         links: [{ title: "", url: "" }],
-        quiz: []
-
-      };
-      setCourseContentData([
-        ...courseContentData,
-        newContent,
-      ] as CourseContentDataType);
+        quiz: [],
+      }
+      setCourseContentData([...courseContentData, newContent] as CourseContentDataType)
     }
-  };
+  }
 
   const backHandler = () => {
-    setActive(active - 1);
-  };
+    setActive(active - 1)
+  }
 
   const optionsHandler = () => {
     if (
@@ -206,28 +261,42 @@ const CourseContent: FC<Props> = ({
       courseContentData[courseContentData.length - 1].links[0].title === "" ||
       courseContentData[courseContentData.length - 1].links[0].url === ""
     ) {
-      toast.error("Please fill in all information");
+      toast.error("Please fill in all information")
     } else if (
       courseContentData[courseContentData.length - 1].quiz.length > 0 &&
       (courseContentData[courseContentData.length - 1].quiz[0].title === "" ||
         courseContentData[courseContentData.length - 1].quiz[0].correctAnswer.length === 0 ||
         courseContentData[courseContentData.length - 1].quiz[0].mockAnswer.length === 0)
     ) {
-      toast.error("Please fill in all quiz fields or remove the quiz");
+      toast.error("Please fill in all quiz fields or remove the quiz")
     } else {
-      setActive(active + 1);
-      submitCourseHandler();
+      setActive(active + 1)
+      submitCourseHandler()
     }
-  };
+  }
+
+  const handleSectionChange = (index: number, newSectionName: string) => {
+    const currentSection = courseContentData[index].videoSection
+
+    const newData = courseContentData.map((item) => {
+      const newItem = JSON.parse(JSON.stringify(item))
+
+      if (newItem.videoSection === currentSection) {
+        newItem.videoSection = newSectionName
+      }
+
+      return newItem
+    })
+
+    setCourseContentData(newData)
+  }
 
   return (
     <>
       <div className="w-[80%] mx-auto mt-8 pb-6 border shadow-md dark:border-slate-700">
         <form onSubmit={handleSubmit}>
           {courseContentData?.map((item: any, index) => {
-            const showSectionInput =
-              index === 0 ||
-              item.videoSection !== courseContentData[index - 1].videoSection;
+            const showSectionInput = index === 0 || item.videoSection !== courseContentData[index - 1].videoSection
 
             return (
               <div key={index} className="w-full pb-4">
@@ -235,14 +304,10 @@ const CourseContent: FC<Props> = ({
                   <div className="relative">
                     <input
                       type="text"
-                      readOnly
-                      className="w-full cursor-pointer outline-slate-900 bg-gradient-to-r from-[#098b99] to-[#057fa8] text-dark_text text-2xl py-3 pl-6"
-                      onChange={(e) => {
-                        const updatedData = [...courseContentData];
-                        updatedData[index].videoSection = e.target.value;
-                        setCourseContentData(updatedData);
-                      }}
+                      className="w-full outline-slate-900 bg-gradient-to-r from-[#098b99] to-[#057fa8] text-dark_text text-2xl py-3 pl-6"
+                      onChange={(e) => handleSectionChange(index, e.target.value)}
                       value={item.videoSection}
+                      placeholder="Section Title"
                     />
                   </div>
                 )}
@@ -253,20 +318,19 @@ const CourseContent: FC<Props> = ({
                       {index + 1}. {item.title || "Untitled"}
                     </p>
                   ) : (
-                    <p className="text-lg font-semibold text-tertiary dark:text-dark_text">
-                      Video Details
-                    </p>
+                    <p className="text-lg font-semibold text-tertiary dark:text-dark_text">Video Details</p>
                   )}
 
                   <div className="flex items-center">
                     <div
-                      className={`dark:text-dark_text mr-4 flex items-center gap-1 text-tertiary ${index > 0 ? "cursor-pointer" : "cursor-no-drop"
-                        }`}
+                      className={`dark:text-dark_text mr-4 flex items-center gap-1 text-tertiary ${
+                        index > 0 ? "cursor-pointer" : "cursor-no-drop"
+                      }`}
                       onClick={() => {
                         if (index > 0) {
-                          const updatedData = [...courseContentData];
-                          updatedData.splice(index, 1);
-                          setCourseContentData(updatedData);
+                          const updatedData = [...courseContentData]
+                          updatedData.splice(index, 1)
+                          setCourseContentData(updatedData)
                         }
                       }}
                     >
@@ -282,9 +346,7 @@ const CourseContent: FC<Props> = ({
                       <MdOutlineKeyboardArrowDown
                         fontSize="large"
                         style={{
-                          transform: isCollapsed[index]
-                            ? "rotate(180deg)"
-                            : "rotate(0deg)",
+                          transform: isCollapsed[index] ? "rotate(180deg)" : "rotate(0deg)",
                         }}
                       />
                     </div>
@@ -300,9 +362,10 @@ const CourseContent: FC<Props> = ({
                         placeholder="Project plan ..."
                         value={item.title}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData];
-                          updatedData[index].title = e.target.value;
-                          setCourseContentData(updatedData);
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index ? { ...item, title: e.target.value } : item,
+                          )
+                          setCourseContentData(updatedData)
                         }}
                       />
 
@@ -312,9 +375,10 @@ const CourseContent: FC<Props> = ({
                         placeholder="https://..."
                         value={item.videoUrl}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData];
-                          updatedData[index].videoUrl = e.target.value;
-                          setCourseContentData(updatedData);
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index ? { ...item, videoUrl: e.target.value } : item,
+                          )
+                          setCourseContentData(updatedData)
                         }}
                       />
 
@@ -325,9 +389,10 @@ const CourseContent: FC<Props> = ({
                         placeholder="10"
                         value={item.videoLength}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData];
-                          updatedData[index].videoLength = Number(e.target.value);
-                          setCourseContentData(updatedData);
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index ? { ...item, videoLength: Number(e.target.value) } : item,
+                          )
+                          setCourseContentData(updatedData)
                         }}
                       />
 
@@ -339,35 +404,28 @@ const CourseContent: FC<Props> = ({
                         placeholder="Write something about this video"
                         value={item.description}
                         onChange={(e) => {
-                          const updatedData = [...courseContentData];
-                          updatedData[index].description = e.target.value;
-                          setCourseContentData(updatedData);
+                          const updatedData = courseContentData.map((item, i) =>
+                            i === index ? { ...item, description: e.target.value } : item,
+                          )
+                          setCourseContentData(updatedData)
                         }}
                       />
 
                       {item.links.map((link: any, linkIndex: number) => (
                         <div key={linkIndex} className="mb-3 block">
                           <div className="w-full flex items-center justify-between mb-1">
-                            <label className="form-input-label">
-                              Link {linkIndex + 1}
-                            </label>
+                            <label className="form-input-label">Link {linkIndex + 1}</label>
 
                             <div
-                              className={`${linkIndex === 0
-                                ? "cursor-no-drop"
-                                : "cursor-pointer"
-                                } text-tertiary dark:text-dark_text flex items-center gap-1`}
+                              className={`${
+                                linkIndex === 0 ? "cursor-no-drop" : "cursor-pointer"
+                              } text-tertiary dark:text-dark_text flex items-center gap-1`}
                               onClick={() => {
-                                if (linkIndex !== 0) handleRemoveLink(index, linkIndex);
+                                if (linkIndex !== 0) handleRemoveLink(index, linkIndex)
                               }}
                             >
-                              <span className="underline text-sm">
-                                Delete Link
-                              </span>
-                              <AiOutlineDelete
-                                size={18}
-                                className="-mt-[3px]"
-                              />
+                              <span className="underline text-sm">Delete Link</span>
+                              <AiOutlineDelete size={18} className="-mt-[3px]" />
                             </div>
                           </div>
 
@@ -377,9 +435,18 @@ const CourseContent: FC<Props> = ({
                             placeholder="Source Code ... (Link Title)"
                             value={link.title}
                             onChange={(e) => {
-                              const updatedData = [...courseContentData];
-                              updatedData[index].links[linkIndex].title = e.target.value;
-                              setCourseContentData(updatedData);
+                              const updatedData = courseContentData.map((item, i) => {
+                                if (i === index) {
+                                  const updatedLinks = [...item.links]
+                                  updatedLinks[linkIndex] = {
+                                    ...updatedLinks[linkIndex],
+                                    title: e.target.value,
+                                  }
+                                  return { ...item, links: updatedLinks }
+                                }
+                                return item
+                              })
+                              setCourseContentData(updatedData)
                             }}
                           />
 
@@ -389,9 +456,18 @@ const CourseContent: FC<Props> = ({
                             placeholder="Source Code URL... (Link URL)"
                             value={link.url}
                             onChange={(e) => {
-                              const updatedData = [...courseContentData];
-                              updatedData[index].links[linkIndex].url = e.target.value;
-                              setCourseContentData(updatedData);
+                              const updatedData = courseContentData.map((item, i) => {
+                                if (i === index) {
+                                  const updatedLinks = [...item.links]
+                                  updatedLinks[linkIndex] = {
+                                    ...updatedLinks[linkIndex],
+                                    url: e.target.value,
+                                  }
+                                  return { ...item, links: updatedLinks }
+                                }
+                                return item
+                              })
+                              setCourseContentData(updatedData)
                             }}
                           />
                         </div>
@@ -414,9 +490,18 @@ const CourseContent: FC<Props> = ({
                             label={`Quiz Title ${quizIndex + 1}`}
                             value={quizs.title}
                             onChange={(e) => {
-                              const updatedData = [...courseContentData];
-                              updatedData[index].quiz[quizIndex].title = e.target.value;
-                              setCourseContentData(updatedData);
+                              const updatedData = courseContentData.map((item, i) => {
+                                if (i === index) {
+                                  const updatedQuiz = [...item.quiz]
+                                  updatedQuiz[quizIndex] = {
+                                    ...updatedQuiz[quizIndex],
+                                    title: e.target.value,
+                                  }
+                                  return { ...item, quiz: updatedQuiz }
+                                }
+                                return item
+                              })
+                              setCourseContentData(updatedData)
                             }}
                           />
 
@@ -471,10 +556,7 @@ const CourseContent: FC<Props> = ({
                           onClick={() => handleAddQuiz(index)}
                         />
                       </div>
-
-
                     </div>
-
 
                     {index === courseContentData.length - 1 && (
                       <BtnWithIcon
@@ -488,7 +570,7 @@ const CourseContent: FC<Props> = ({
                   </>
                 )}
               </div>
-            );
+            )
           })}
 
           <BtnWithIcon
@@ -498,17 +580,12 @@ const CourseContent: FC<Props> = ({
             iconSize={20}
             content="Add New Section"
           />
-
         </form>
       </div>
 
-      <BottomNavigator
-        backHandler={backHandler}
-        nextHandler={optionsHandler}
-        customClasses="w-[80%] my-12 mx-auto"
-      />
-
+      <BottomNavigator backHandler={backHandler} nextHandler={optionsHandler} customClasses="w-[80%] my-12 mx-auto" />
     </>
-  );
-};
-export default CourseContent;
+  )
+}
+export default CourseContent
+
