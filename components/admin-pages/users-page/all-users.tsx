@@ -81,7 +81,7 @@ const AllUsers: FC<Props> = (props): JSX.Element => {
   }
 
   return (
-    <div className="mt-8 w-[90%] mx-auto ">
+    <div className="mt-3 w-[90%] mx-auto ">
       <DataTable rows={rows} columns={columns} isLoading={isLoading} />
     
     </div>

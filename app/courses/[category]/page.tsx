@@ -16,11 +16,13 @@ const page: NextPage<Props> = async ({ params }) => {
   const data = await getCourseByCategory(params.category);
   const courses: IFetchedCourse[] = data?.courses;
   const categories: ICategory[] = await getAllCategories();
+  console.log("in data:", data)
+  console.log("in categories:", categories)
 
   return (
     <>
       <Heading
-        title={`${data?.category} Courses | E-Learning`}
+        title={`${data?.category} Courses | Stock E-Learning`}
       />
       <div className="min-h-screen">
         <Header />
@@ -33,7 +35,7 @@ const page: NextPage<Props> = async ({ params }) => {
           </div>
         </div>
   
-        <div className="container mt-16 sm:mt-20 md:mt-28 mb-14">
+        <div className="container mt-5 mb-14">
           <div>
             <p className="font-semibold text-tertiary dark:text-dark_text text-center mb-6 text-lg">
               We found{" "}

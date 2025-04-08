@@ -13,6 +13,7 @@ export interface ICategory {
 
 const Categories: FC<Props> = async (props): Promise<JSX.Element> => {
   const categories = (await getAllCategories()) as ICategory[];
+  console.log("count cate api:", categories)
 
   return (
     <section className="my-14">
@@ -26,7 +27,7 @@ const Categories: FC<Props> = async (props): Promise<JSX.Element> => {
           {categories?.map((category, index) => (
             <CategoryCard
               category={category}
-              key={category._id.toString()}
+              key={category?._id.toString()}
               order={index + 1}
             />
           ))}

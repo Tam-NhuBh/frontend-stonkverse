@@ -471,8 +471,6 @@ const CourseContentInstructor: FC<Props> = ({
                           onClick={() => handleAddQuiz(index)}
                         />
                       </div>
-
-
                     </div>
 
 

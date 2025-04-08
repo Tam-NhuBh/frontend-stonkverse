@@ -1,18 +1,19 @@
 "use client";
 
 import { FC, useEffect, useState } from "react";
-import CourseInfomationInstructor from "./course-infomation";
-import CourseOptionsInstructor from "./course-options";
-import CourseDataInstructor from "./course-data";
-import CourseContentInstructor from "./course-content";
-import CoursePreviewInstructor from "./course-preview";
+import CourseInfomation from "./course-infomation";
+import CourseOptions from "./course-options";
+import CourseData from "./course-data";
+import CourseContent from "./course-content";
+import CoursePreview from "./course-preview";
 import { useCreateCourseMutation } from "@/store/course/course-api";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
+import useUserInfo from "@/hooks/useUserInfo";
 
 interface Props { }
 
-export type CourseInfoValuesInstructor = {
+export type CourseInfoValues = {
   name: string;
   description: string;
   category: string;
@@ -25,7 +26,7 @@ export type CourseInfoValuesInstructor = {
   curriculum: string
 };
 
-export const initialCourseInfoInstructor = {
+export const initialCourseInfo = {
   name: "",
   description: "",
   category: "",
@@ -38,7 +39,7 @@ export const initialCourseInfoInstructor = {
   curriculum: ""
 };
 
-const initialCourseContentDataInstructor = [
+const initialCourseContentData = [
   {
     videoUrl: "",
     title: "",
@@ -51,7 +52,7 @@ const initialCourseContentDataInstructor = [
   },
 ];
 
-export type CourseContentDataTypeInstructor = {
+export type CourseContentDataType = {
   videoUrl: string;
   title: string;
   description: string;
@@ -71,15 +72,16 @@ export type CourseContentDataTypeInstructor = {
 
 const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
   const [active, setActive] = useState(0);
+  const user = useUserInfo();
 
-  const [courseInfo, setCourseInfo] = useState(initialCourseInfoInstructor);
+  const [courseInfo, setCourseInfo] = useState(initialCourseInfo);
 
   const [benefits, setBenefits] = useState([{ title: "" }]);
   const [prerequisites, setPrerequisites] = useState([{ title: "" }]);
   const [forWho, setForWho] = useState([{ title: "" }]);
 
   const [courseContentData, setCourseContentData] = useState(
-    initialCourseContentDataInstructor
+    initialCourseContentData
   );
 
   const [courseData, setCourseData] = useState({});
@@ -92,13 +94,15 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
       prerequisites,
       forWho,
       courseData: courseContentData,
+      createdBy: user._id, 
+
     };
 
     setCourseData(data);
   };
 
   const [createCourse, { isLoading, isSuccess, error }] =
-    useCreateCourseMutation(); //XEM LẠI API
+    useCreateCourseMutation();
 
   const createCourseHandler = async () => {
     const data = courseData;
@@ -125,7 +129,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
     <div className="flex">
       <div className="w-[80%]">
         {active === 0 && (
-          <CourseInfomationInstructor
+          <CourseInfomation
             active={active}
             setActive={setActive}
             courseInfo={courseInfo}
@@ -133,9 +137,17 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
           />
         )}
 
-       
+        {/* {active === 1 && (
+          <CourseCurriculumn
+            active={active}
+            setActive={setActive}
+            courseInfo={courseInfo}
+            setCourseInfo={setCourseInfo}
+          />
+        )} */}
+        
         {active === 1 && (
-          <CourseDataInstructor
+          <CourseData
             active={active}
             setActive={setActive}
             benefits={benefits}
@@ -148,7 +160,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
         )}
 
         {active === 2 && (
-          <CourseContentInstructor
+          <CourseContent
             active={active}
             setActive={setActive}
             courseContentData={courseContentData}
@@ -158,7 +170,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
         )}
 
         {active === 3 && (
-          <CoursePreviewInstructor
+          <CoursePreview
             active={active}
             setActive={setActive}
             courseData={courseData}
@@ -168,7 +180,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
         )}
       </div>
       <div className="flex-1 fixed z-[-1] top-[80px] right-8">
-        <CourseOptionsInstructor active={active} setActive={setActive} />
+        <CourseOptions active={active} setActive={setActive} />
       </div>
     </div>
   );

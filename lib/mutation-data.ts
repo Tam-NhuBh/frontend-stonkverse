@@ -1,5 +1,6 @@
 import axios from "axios";
 import axiosClientV2 from "./api-client-v2";
+import axiosClient from "./api-client-v1";
 
 export const createPaymentIntent = async (amount: number) => {
   try {
@@ -173,7 +174,6 @@ export const createPromotion = async (params: IPromotion) => {
         withCredentials: true,
       }
     );
-    console.log("data create:", data);
     return data;
   } catch (error) {
     console.log("Fail to create promotion:",error);
@@ -185,7 +185,6 @@ export const deletePromotionById = async (id: string) => {
     const data: IPromotion = await axiosClientV2.delete(
       `/admin/promotion/${id}`,
     );
-    console.log("data delete:", data);
     return data;
   } catch (error) {
     console.log("Fail to delete promotion:",error);
@@ -201,7 +200,6 @@ export const getVerifyPromotion = async (IData: {
       `${process.env.NEXT_PUBLIC_SERVER_URL_V2}/promo/verify`,
       IData
     );
-console.log("data coupon:", data)
     return data;
   } catch (error: any) {
     console.log("Fail to verify promotion:",error);
@@ -209,20 +207,28 @@ console.log("data coupon:", data)
 };
 
 // instructor
-// export const createCourseIns = async (contactData: {
-//   email: string;
-//   problem: string;
-//   explain: string;
-// }) => {
-//   try {
-//     const { data } = await axios.post(
-//       `${process.env.NEXT_PUBLIC_SERVER_URL}/contact`,
-//       contactData
-//     );
+export const approveCourse = async (id: string) => {
+  try {
+    const data = await axiosClient.put(
+      `/admin/courses/${id}/approve`,
+      { id },
+      { withCredentials: true }
+    );
+    return data;
+  } catch (error) {
+    console.log("Fail to approve course:", error);
+  }
+};
 
-//     return data;
-//   } catch (error: any) {
-//     console.log(error.response.data.message);
-//   }
-// };
-
+export const rejectCourse = async (id: string) => {
+  try {
+    const data = await axiosClient.put(
+      `/admin/courses/${id}/reject`,
+      { id },
+      { withCredentials: true }
+    );
+    return data;
+  } catch (error: any) {
+    console.log(error.response.data.message);
+  }
+};

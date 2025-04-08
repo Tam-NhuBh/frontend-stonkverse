@@ -20,13 +20,14 @@ import {
 } from "@mui/icons-material";
 import GroupsIcon from "@mui/icons-material/Groups";
 
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, Badge } from "@mui/material";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
 import { MenuItem, Menu, ProSidebar } from "react-pro-sidebar";
 import { usePathname } from "next/navigation"; // Thêm hook này để lấy đường dẫn hiện tại
-import { TicketsPlaneIcon } from "lucide-react";
+import { TicketCheckIcon, TicketIcon, TicketPercent, TicketPlus, PlaneIcon as TicketsPlaneIcon } from 'lucide-react';
+import { BsTicketPerforated } from "react-icons/bs";
 
 interface itemProps {
   title: string;
@@ -34,16 +35,38 @@ interface itemProps {
   icon: JSX.Element;
   selected: string;
   setSelected: Dispatch<SetStateAction<string>>;
+  badgeCount?: number;
 }
 
-const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected }) => {
+const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected, badgeCount }) => {
   return (
     <MenuItem
       active={selected === title}
       onClick={() => setSelected(title)}
-      icon={icon}
+      icon={
+        badgeCount && badgeCount > 0 ? (
+          <Badge 
+            badgeContent={badgeCount} 
+            color="error" 
+            sx={{ 
+              "& .MuiBadge-badge": {
+                fontSize: "10px",
+                height: "18px",
+                minWidth: "18px",
+                padding: "0 4px"
+              }
+            }}
+          >
+            {icon}
+          </Badge>
+        ) : (
+          icon
+        )
+      }
     >
-      <Typography className="!text-[15px] !font-poppins">{title}</Typography>
+      <Typography className="!text-[15px] !font-poppins">
+        {title}
+      </Typography>
       <Link href={to} />
     </MenuItem>
   );
@@ -54,38 +77,7 @@ interface Props {
   setIsCollapsed: Dispatch<SetStateAction<boolean>>;
 }
 
-const menuItems = [
-  { title: "Dashboard", to: "/admin", icon: <HomeOutlined />, section: "Stock E-Learning" },
-  { title: "Live Website", to: "/", icon: <Public />, section: "Stock E-Learning" },
-  
-  // Data section
-  { title: "Users", to: "/admin/users", icon: <GroupsIcon />, section: "Data" },
-  { title: "Contacts", to: "/admin/contacts", icon: <Web />, section: "Data" },
-  
-  // Content section
-  { title: "Create Course", to: "/admin/create-course", icon: <VideoCall />, section: "Content" },
-  { title: "Live Courses", to: "/admin/courses", icon: <OndemandVideo />, section: "Content" },
-  { title: "Promotion", to: "/admin/promotion", icon: <TicketsPlaneIcon /> , section: "Content" },
-  { title: "Create Final Test", to: "/admin/final-test", icon: <Checklist /> , section: "Content" },
-  
-  // Customization section
-  { title: "FAQ", to: "/admin/faq", icon: <Quiz />, section: "Customization" },
-  { title: "Categories", to: "/admin/categories", icon: <Wysiwyg />, section: "Customization" },
-  
-  // Controllers section
-  { title: "Assign Role", to: "/admin/team", icon: <PeopleOutline />, section: "Controllers" },
-  { title: "Instructor Panel", to: "/admin/instructor-panel", icon: <ContactEmergencyOutlined />, section: "Controllers" },
-
-];
-
-const groupedMenuItems = menuItems.reduce((acc, item) => {
-  if (!acc[item.section]) {
-    acc[item.section] = [];
-  }
-  acc[item.section].push(item);
-  return acc;
-}, {} as Record<string, typeof menuItems>);
-
+// Section order - keep this outside the component
 const sectionOrder = [
   "Stock E-Learning",
   "Data",
@@ -104,6 +96,11 @@ const AdminSidebar: FC<Props> = ({
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
   const pathname = usePathname();
+  
+  // Static mock data for pending approvals
+  const [pendingCoursesCount] = useState(3);
+  const [pendingUsersCount] = useState(4);
+  const totalPendingCount = pendingCoursesCount + pendingUsersCount;
 
   useEffect(() => {
     setMounted(true);
@@ -118,13 +115,43 @@ const AdminSidebar: FC<Props> = ({
     }
   }, [pathname, mounted]);
 
+  const menuItems = [
+    { title: "Dashboard", to: "/admin", icon: <HomeOutlined />, section: "Stock E-Learning" },
+    { title: "Live Website", to: "/", icon: <Public />, section: "Stock E-Learning" },
+    
+    // Data section
+    { title: "Users", to: "/admin/users", icon: <GroupsIcon />, section: "Data" },
+    { title: "Contacts", to: "/admin/contacts", icon: <Web />, section: "Data" },
+    
+    // Content section
+    { title: "Create Course", to: "/admin/create-course", icon: <VideoCall />, section: "Content" },
+    { title: "Live Courses", to: "/admin/courses", icon: <OndemandVideo />, section: "Content" },
+    { title: "Promotion", to: "/admin/promotion", icon: <TicketPercent /> , section: "Content" },
+    { title: "Create Final Test", to: "/admin/final-test", icon: <Checklist /> , section: "Content" },
+    
+    // Customization section
+    { title: "FAQ", to: "/admin/faq", icon: <Quiz />, section: "Customization" },
+    { title: "Categories", to: "/admin/categories", icon: <Wysiwyg />, section: "Customization" },
+    
+    // Controllers section
+    { title: "Assign Role", to: "/admin/team", icon: <PeopleOutline />, section: "Controllers" },
+
+    { title: "Instructor Panel", to: "/admin/instructor-panel", icon: <ContactEmergencyOutlined />, section: "Controllers",
+      badgeCount: totalPendingCount
+    },
+  ];
+
   const findMatchingMenuItem = (currentPath: string) => {
     const exactMatch = menuItems.find(item => item.to === currentPath);
     if (exactMatch) {
       return exactMatch;
     }
     
-   const sortedItems = [...menuItems].sort((a, b) => b.to.length - a.to.length);
+    if (currentPath.includes("/admin/edit-course")) {
+      return menuItems.find((item) => item.title === "Live Courses")
+    }
+    
+    const sortedItems = [...menuItems].sort((a, b) => b.to.length - a.to.length);
     
     for (const item of sortedItems) {
       if (item.to !== "/" && currentPath.startsWith(item.to)) {
@@ -132,8 +159,16 @@ const AdminSidebar: FC<Props> = ({
       }
     }
     
-   return menuItems[0]; 
+    return menuItems[0]; 
   };
+
+  const groupedMenuItems = menuItems.reduce((acc, item) => {
+    if (!acc[item.section]) {
+      acc[item.section] = [];
+    }
+    acc[item.section].push(item);
+    return acc;
+  }, {} as Record<string, typeof menuItems>);
 
   if (!mounted) return null;
 
@@ -260,6 +295,7 @@ const AdminSidebar: FC<Props> = ({
                       icon={item.icon}
                       selected={selected}
                       setSelected={setSelected}
+                      badgeCount={item.badgeCount}
                     />
                   ))}
                 </div>

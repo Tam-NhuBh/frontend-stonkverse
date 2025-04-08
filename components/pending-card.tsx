@@ -12,12 +12,12 @@ interface Props {
   course: IFetchedCourse;
 }
 
-const CourseCard: FC<Props> = ({ course }): JSX.Element => {
+const PendingCard: FC<Props> = ({ course }): JSX.Element => {
   console.log("courseData:", course)
   return (
     <div className="rounded-[5px] shadow-md dark:border-none dark:bg-slate-500 bg-white dark:bg-opacity-20 custom-hover cursor-pointer flex flex-col h-full">
       <Link
-        href={`/course/${course._id}`}
+        href={`/admin/edit-course/${course._id}`}
         className="block relative w-full aspect-video"
       >
         <NextImage
@@ -70,4 +70,4 @@ const CourseCard: FC<Props> = ({ course }): JSX.Element => {
   );
 };
 
-export default CourseCard;
+export default PendingCard;

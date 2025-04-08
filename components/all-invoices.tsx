@@ -5,7 +5,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useTheme } from "next-themes";
 import { useGetAllOrdersQuery } from "@/store/order/order-api";
 import { useGetAllUsersQuery } from "@/store/user/user-api";
-import { useGetAllCoursesQuery } from "@/store/course/course-api";
+import { useGetAllCoursesAdminQuery } from "@/store/course/course-api";
 import { AiOutlineMail } from "react-icons/ai";
 import LoadingSpinner from "./loading-spinner";
 import { Box } from "@mui/material";
@@ -18,7 +18,7 @@ const AllInvoices: FC<Props> = ({ isDashboard }): JSX.Element => {
   const { theme } = useTheme();
   const { isLoading, data } = useGetAllOrdersQuery({});
   const { data: usersData } = useGetAllUsersQuery({});
-  const { data: coursesData } = useGetAllCoursesQuery({});
+  const { data: coursesData } = useGetAllCoursesAdminQuery({});
   const [ordersData, setOrdersData] = useState<any>([]);
 
   const { data: fetchedOrders, isLoading: ordersLoading } =

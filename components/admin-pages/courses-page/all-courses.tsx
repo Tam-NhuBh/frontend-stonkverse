@@ -3,7 +3,7 @@
 import { formatShortDate } from "@/lib/format-data";
 import {
   useDeleteCourseMutation,
-  useGetAllCoursesQuery,
+  useGetAllCoursesAdminQuery,
 } from "@/store/course/course-api";
 import { Box, Button, Modal } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
@@ -19,7 +19,7 @@ import { FaEdit } from "react-icons/fa";
 interface Props { }
 
 const AllCourses: FC<Props> = (props): JSX.Element => {
-  const { isLoading, data, refetch } = useGetAllCoursesQuery(
+  const { isLoading, data, refetch } = useGetAllCoursesAdminQuery(
     {},
     { refetchOnMountOrArgChange: true }
   );
@@ -48,6 +48,38 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
       headerName: "Created At",
       flex: 0.5,
     },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 0.6,
+      renderCell: (params: any) => {
+        const status = params.row.status;
+        let label = "";
+        let colorClass = "";
+    
+        if (status === "APPROVED") {
+          label = "Approved";
+          colorClass = "bg-green-100 text-green-800";
+        } else if (status === "PENDING_REVIEW") {
+          label = "Pending Review";
+          colorClass = "bg-yellow-100 text-yellow-800";
+        } else if (status === "REJECTED") {
+          label = "Rejected";
+          colorClass = "bg-red-100 text-red-800";
+        } else {
+          label = "Unknown";
+          colorClass = "bg-gray-100 text-gray-800";
+        }
+    
+        return (
+          <span
+            className={`text-xs px-3 py-1 rounded-full font-medium ${colorClass}`}
+          >
+            {label}
+          </span>
+        );
+      },
+    },      
     {
       field: "",
       headerName: "Edit",
@@ -99,6 +131,8 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
       ratings: item.ratings,
       purchased: item.purchased,
       created_at: formatShortDate(item.createdAt),
+      status: item.status,
+
     }));
   }
 
@@ -127,7 +161,7 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
   }, [isSuccess, deleteCourseError]);
 
   return (
-    <div className="mt-8 w-[90%] mx-auto">
+    <div className="mt-3 w-[90%] mx-auto">
       <div className="w-full overflow-x-auto overflow-y-auto">
         <DataTable rows={rows} columns={columns} isLoading={isLoading} />
       </div>
