@@ -21,6 +21,7 @@ import axios from "axios";
 import { CourseInfoValues } from "./create-course-form";
 import ContainNextImage from "@/components/contain-next-image";
 import toast from "react-hot-toast";
+import { getAllCategories } from "@/lib/fetch-data";
 
 
 interface Props {
@@ -58,34 +59,40 @@ const CourseInfomation: FC<Props> = ({
   const [dragging, setDragging] = useState(false);
   const [draggingPDF, setDraggingPDF] = useState(false);
 
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
   const courseInfoForm = useForm<CourseInfoValues>({
     defaultValues: initialCourseInfo,
     resolver: yupResolver(courseInfoSchema),
   });
 
-  const getAllCategories = async () => {
-    const { data } = await axios(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Categories`
-    );
-    const fetchCategories = data?.layout.categories.map(
-      (item: { title: string }) => item.title
-    );
-
-    setCategories(fetchCategories);
-  };
-
   useEffect(() => {
-    getAllCategories();
-  }, []);
+    const fetchCategories = async () => {
+      try {
+        const data = await getAllCategories()
+        if (data && Array.isArray(data)) {
+          // Extract just the title property from each category object
+          const categoryTitles = data.map(category => category.title)
+          setCategories(categoryTitles)
+        } else if (data && data.layout && Array.isArray(data.layout.categories)) {
+          const fetchedCategories = data.layout.categories.map((item: { title: string }) => item.title)
+          setCategories(fetchedCategories)
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error)
+        toast.error("Failed to load categories")
+      }
+    }
+
+    fetchCategories()
+  }, [])
+
 
   const { register, handleSubmit, formState, setValue, watch } = courseInfoForm;
   const { errors } = formState;
 
   const thumbnail = watch("thumbnail");
   const curriculum = watch("curriculum");
-  const selectedCategory = watch("category")
 
   const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -126,13 +133,11 @@ const CourseInfomation: FC<Props> = ({
 
   const onSubmit = async (data: CourseInfoValues) => {
     setActive(active + 1);
-    console.log(data);
 
     const file = await blobUrlToBase64(data.curriculum);
 
     data.curriculum = file;
     setCourseInfo(data);
-
   };
 
   const dragOverHandler = (e: DragEvent<HTMLLabelElement>) => {
@@ -248,20 +253,7 @@ const CourseInfomation: FC<Props> = ({
     setValue("demoUrl", courseInfo.demoUrl);
     setValue("thumbnail", courseInfo.thumbnail);
     setValue("curriculum", courseInfo.curriculum);
-
-  }, [active,
-    courseInfo.category,
-    courseInfo.curriculum,
-    courseInfo.demoUrl,
-    courseInfo.description,
-    courseInfo.estimatedPrice,
-    courseInfo.level,
-    courseInfo.name,
-    courseInfo.price,
-    courseInfo.tags,
-    courseInfo.thumbnail,
-    setValue,
-  ]);
+  }, [active]);
 
   useEffect(() => {
     if (initialCourseInfo) {
@@ -275,7 +267,6 @@ const CourseInfomation: FC<Props> = ({
       setValue("demoUrl", initialCourseInfo.demoUrl);
       setValue("thumbnail", initialCourseInfo?.thumbnail?.url);
       setValue("curriculum", initialCourseInfo?.curriculum?.url);
-
     }
   }, [initialCourseInfo]);
 
@@ -304,21 +295,19 @@ const CourseInfomation: FC<Props> = ({
           <FormInput
             type="number"
             id="price"
-            label="Dicounted Price"
+            label="Price"
             register={register("price")}
             errorMsg={errors.price?.message}
             placeholder="29"
-
           />
 
           <FormInput
             type="number"
             id="estimatedPrice"
-            label="Price"
+            label="Estimated Price (Optional)"
             register={register("estimatedPrice")}
             errorMsg={errors.estimatedPrice?.message}
             placeholder="79"
-
           />
         </div>
 
@@ -331,20 +320,20 @@ const CourseInfomation: FC<Props> = ({
             placeholder="Stock, Marketing..."
           />
           <FormSelect
-           id="category"
-           label="Category"
-           options={categories}
-           errorMsg={errors.category?.message}
-           register={register("category")}
-           defaultValue={courseInfo.category || initialCourseInfo?.category}      
+            id="category"
+            label="Category"
+            options={categories}
+            errorMsg={errors.category?.message}
+            register={register("category")}
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <FormSelect
-            options={level}
-            id={"level"}
+            id="level"
             label="Course Level"
+            options={level}
+
             register={register("level")}
             errorMsg={errors.level?.message}
           />

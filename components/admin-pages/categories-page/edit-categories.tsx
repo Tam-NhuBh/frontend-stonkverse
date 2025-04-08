@@ -44,7 +44,7 @@ const EditCategories: FC<Props> = ({
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Update Categories Successfully!");
+      toast.success("Update categories successfully!");
     }
 
     if (error) {

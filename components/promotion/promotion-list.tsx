@@ -8,7 +8,7 @@ import { AddCircle, Visibility } from "@mui/icons-material"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as Yup from "yup"
-import { useGetAllCoursesQuery, useDeleteCourseMutation } from "@/store/course/course-api"
+import { useGetAllCoursesAdminQuery, useDeleteCourseMutation } from "@/store/course/course-api"
 
 // Components
 import DataTable from "@/components/admin-pages/data-table"
@@ -74,7 +74,7 @@ const PromotionList: FC = () => {
     isLoading: isCoursesLoading,
     data: coursesData,
     refetch: refetchCourses,
-  } = useGetAllCoursesQuery({}, { refetchOnMountOrArgChange: true })
+  } = useGetAllCoursesAdminQuery({}, { refetchOnMountOrArgChange: true })
 
   const [deleteCourse, { isLoading: deleteCourseLoading, isSuccess: deleteCourseSuccess, error: deleteCourseError }] =
     useDeleteCourseMutation()
@@ -279,7 +279,7 @@ const PromotionList: FC = () => {
     }
   }, [deleteCourseSuccess, deleteCourseError, refetchCourses])
   return (
-    <div className="mt-8 w-[90%] mx-auto">
+    <div className="mt-3 w-[90%] mx-auto">
       {/* <div className="mb-4">
         <h2 className="text-xl font-semibold">Course Management</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400">Select a course to view and manage its promotions</p>

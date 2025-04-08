@@ -3,7 +3,7 @@
 import { type FC, useEffect, useState } from "react"
 import { toast } from "react-hot-toast"
 import { Modal, Box } from "@mui/material"
-import { useGetAllCoursesQuery } from "@/store/course/course-api"
+import { useGetAllCoursesAdminQuery } from "@/store/course/course-api"
 import BtnWithIcon from "@/components/btn-with-icon"
 import BtnWithLoading from "@/components/btn-with-loading"
 import CreateFinalTest from "./create-final-test"
@@ -40,7 +40,7 @@ const FinalTestManagement: FC = () => {
     isLoading: isCoursesLoading,
     data: coursesData,
     refetch: refetchCourses,
-  } = useGetAllCoursesQuery({}, { refetchOnMountOrArgChange: true })
+  } = useGetAllCoursesAdminQuery({}, { refetchOnMountOrArgChange: true })
 
   const [createTestModal, setCreateTestModal] = useState(false)
   const [editTestModal, setEditTestModal] = useState(false)

@@ -2,6 +2,7 @@ import axios from "axios";
 import { cache } from "react";
 import axiosClientV2 from "./api-client-v2";
 import axiosClient from "./api-client-v1";
+import Categories from '../components/home-page/categories';
 
 
 export const getAllCoursesData = async () => {
@@ -21,7 +22,6 @@ export const getAllCategories = async () => {
     const { data } = await axios(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/get-layout/Categories`
     );
-
     return data.layout.categories;
   } catch (error) {
     console.log(error);
@@ -216,20 +216,28 @@ export const getPromotionByID = async (id: string) => {
     const data: IPromotion = await axiosClientV2(
       `/admin/promotion/${id}`,
     );
-    console.log("data pro:", data);
     return data;
   } catch (error) {
     console.log("Fetch promotion data fail:",error);
   }
 };
 
-
 export const getPromotionsByCourse = async (courseId: string) => {
   try {
     const data: IPromotion = await axiosClientV2(`/admin/promotion/course/${courseId}`)
-    console.log("promotions for course:", data)
     return data
   } catch (error) {
     console.log("Fetch promotions data fail:", error)
   }
 }
+
+export const getAllPendingCourse = async () => {
+  try {
+    const { data } = await axios(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/admin/courses/pending-review`
+    );
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};

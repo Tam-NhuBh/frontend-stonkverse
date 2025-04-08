@@ -3,7 +3,7 @@
 import { formatShortDate } from "@/lib/format-data";
 import {
   useDeleteCourseMutation,
-  useGetAllCoursesQuery,
+  useGetAllCoursesAdminQuery,
 } from "@/store/course/course-api";
 import { Box, Button, Modal } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
@@ -21,7 +21,7 @@ import { EyeIcon } from "lucide-react";
 interface Props { }
 
 const AllCourses: FC<Props> = (props): JSX.Element => {
-  const { isLoading, data, refetch } = useGetAllCoursesQuery(
+  const { isLoading, data, refetch } = useGetAllCoursesAdminQuery(
     {},
     { refetchOnMountOrArgChange: true }
   );
@@ -114,7 +114,7 @@ const AllCourses: FC<Props> = (props): JSX.Element => {
   }, [isSuccess, deleteCourseError]);
 
   return (
-    <div className="mt-8 w-[90%] mx-auto">
+    <div className="mt-3 w-[90%] mx-auto">
       <div className="w-full overflow-x-auto overflow-y-auto">
         <DataTable rows={rows} columns={columns} isLoading={isLoading} />
       </div>

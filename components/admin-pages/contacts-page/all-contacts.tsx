@@ -104,7 +104,7 @@ const AllContacts: FC<Props> = (props): JSX.Element => {
   }, [isSuccess, deleteContactError]);
 
   return (
-    <div className="mt-8 w-[90%] mx-auto">
+    <div className="mt-3 w-[90%] mx-auto">
       <div className="w-full overflow-x-auto overflow-y-auto">
         <DataTable rows={rows} columns={columns} isLoading={isLoading} />
       </div>

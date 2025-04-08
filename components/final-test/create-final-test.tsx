@@ -6,12 +6,18 @@ import FinalTestOverview from "./final-test-overview"
 import FinalTestInfomation from "./final-test-infomation"
 import Settings from "./final-test-settings"
 
-// Define your types here (simplified for example)
 export interface TestInfoValues {
   name: string
   description: string
-  withSections: boolean
   logo?: string
+  withSections?: boolean
+  questions?: {
+    title: string
+    type: "single" | "multiple" | "fillBlank" | "image"
+    correctAnswer: string[]
+    options: string[]
+    imageUrl?: string
+  }[]
 }
 
 export interface TestSettingsValues {
@@ -41,6 +47,7 @@ export default function CreateFinalTest() {
     name: "",
     description: "",
     withSections: false,
+
   })
   const [testSettings, setTestSettings] = useState<TestSettingsValues>({
     duration: {
