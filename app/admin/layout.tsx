@@ -15,19 +15,40 @@ const AdminLayout: FC<Props> = ({ children }): JSX.Element | null => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const isAdmin = useIsAdmin();
   const router = useRouter();
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
     if (isAdmin !== undefined) {
       if (!isAdmin) {
-        router.replace("/"); 
+        router.replace("/");
       }
-      setLoading(false); 
+      setLoading(false);
     }
   }, [isAdmin]);
 
-  if (loading) return <NoContentYet description="" />
-  ; 
+  useEffect(() => {
+    setIsMounted(true)
+
+    if (isAdmin !== undefined) {
+      if (!isAdmin) {
+        router.replace("/")
+      }
+    }
+  }, [isAdmin, router])
+
+  if (!isMounted) {
+    return null
+  }
+
+  if (isAdmin === false) {
+    return <NoContentYet description={""}  />
+  }
+
+  if (isAdmin === undefined) {
+    return <NoContentYet description={""} />
+  }
+    
   return (
     <div className="flex min-h-screen">
       <div className={`${!isCollapsed ? "w-[20%]" : "w-[5%]"}`}>
@@ -37,7 +58,9 @@ const AdminLayout: FC<Props> = ({ children }): JSX.Element | null => {
       <div className="flex-1 flex flex-col">
         <AdminHeader />
         <hr className=" w-30% center"></hr>
-        <div className="flex-1">{children}</div>
+        <main>
+          <div className="flex-1">{children}</div>
+        </main>
       </div>
     </div>
   );

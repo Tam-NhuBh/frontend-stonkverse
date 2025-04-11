@@ -8,7 +8,6 @@ import { IFaq } from "./admin/faq/page";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import Heading from "@/components/heading";
-import { pageConstants } from "@/constants";
 import ChatBotClient from "@/components/layout/chatbot-client";
 import Categories from "@/components/home-page/categories";
 

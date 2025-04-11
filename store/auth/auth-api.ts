@@ -48,12 +48,16 @@ export const authApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
+          const user = result.data.user;
+
           dispatch(
             userLogin({
               user: result.data.user,
               token: result.data.accessToken,
             })
           );
+          localStorage.setItem("user", user);
+
         } catch (error: any) {
           console.log(error);
         }
@@ -71,12 +75,16 @@ export const authApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
+          const user = result.data.user;
+
           dispatch(
             userLogin({
               token: result.data.activationToken,
               user: result.data.user,
             })
           );
+          localStorage.setItem("user", user);
+
         } catch (error: any) {
           console.log(error);
         }
@@ -92,8 +100,9 @@ export const authApi = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
-          const result = await queryFulfilled;
+          await queryFulfilled;
           dispatch(userLogout());
+          localStorage.removeItem("user");
         } catch (error: any) {
           console.log(error);
         }

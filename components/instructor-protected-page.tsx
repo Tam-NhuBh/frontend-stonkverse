@@ -1,7 +1,9 @@
-import { redirect } from "next/navigation";
-import { FC, ReactNode } from "react";
-import Heading from "./heading";
+'use client'
+
+import { FC, ReactNode, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import useIsInstructor from "@/hooks/useIsInstructor";
+import Heading from "./heading";
 
 interface Props {
   children: ReactNode;
@@ -10,15 +12,22 @@ interface Props {
 
 const InstructorProtectedPage: FC<Props> = ({ children, title }) => {
   const isInstructor = useIsInstructor();
+  const router = useRouter();
 
-  return isInstructor ? (
-    <>
-      <Heading title={title} />
-      {children}
-    </>
-  ) : (
-    redirect("/")
-  );
+  useEffect(() => {
+    if (isInstructor === false) {
+      router.replace('/');
+    }
+  }, [isInstructor, router]);
+
+  if (isInstructor === undefined) {
+    return null;
+  }
+
+  return isInstructor ? <>
+    <Heading title={title} />
+    {children}
+  </> : null;
 };
 
 export default InstructorProtectedPage;

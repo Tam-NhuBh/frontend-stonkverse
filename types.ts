@@ -114,4 +114,6 @@ export interface ICourse {
   courseData: ICourseData[];
   ratings?: number;
   purchased?: number;
+  status: 'APPROVED' | 'REJECTED' | 'PENDING_REVIEW';
+
 }
