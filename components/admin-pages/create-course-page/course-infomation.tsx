@@ -17,7 +17,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import BottomNavigator from "./bottom-navigator";
 import FormSelect from "@/components/form-select";
-import axios from "axios";
 import { CourseInfoValues } from "./create-course-form";
 import ContainNextImage from "@/components/contain-next-image";
 import toast from "react-hot-toast";
@@ -71,7 +70,6 @@ const CourseInfomation: FC<Props> = ({
       try {
         const data = await getAllCategories()
         if (data && Array.isArray(data)) {
-          // Extract just the title property from each category object
           const categoryTitles = data.map(category => category.title)
           setCategories(categoryTitles)
         } else if (data && data.layout && Array.isArray(data.layout.categories)) {
@@ -324,7 +322,8 @@ const CourseInfomation: FC<Props> = ({
             label="Category"
             options={categories}
             errorMsg={errors.category?.message}
-            register={register("category")}
+            value={watch("category")}
+            onChange={(e) => setValue("category", e.target.value)}
           />
         </div>
 
@@ -333,7 +332,6 @@ const CourseInfomation: FC<Props> = ({
             id="level"
             label="Course Level"
             options={level}
-
             register={register("level")}
             errorMsg={errors.level?.message}
           />

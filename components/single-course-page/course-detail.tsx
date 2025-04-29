@@ -55,7 +55,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
 
   const discountPercentagePrice = discountPercentage.toFixed(0) || 0
 
-  const courseLength: number = courseDetail?.courseData?.reduce((acc: number, cur: ICourseData) => {
+  const courseLength: number = courseDetail?.courseData.reduce((acc: number, cur: ICourseData) => {
     return acc + cur.videoLength
   }, 0)
 
@@ -173,7 +173,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
 
           <h2 className="mt-8 font-bold text-xl mb-3">What you&apos;ll learn In This Course</h2>
           <ul className="list-disc text-slate-500 dark:text-dark_text space-y-2">
-            {courseDetail?.benefits?.map((benefit: { title: string }, index: number) => (
+            {courseDetail?.benefits.map((benefit: { title: string }, index: number) => (
               <li key={index} className="ml-4">
                 {benefit?.title}
               </li>
@@ -208,7 +208,7 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
             <div className="grid grid-cols-2 gap-6 max-[722px]:grid-cols-1">
               {formattedReviews.map((review: IReview, index) => (
                 <Comment
-                  key={review?._id?.toString()}
+                  key={review?._id.toString()}
                   name={review?.user?.name}
                   avatar={review?.user?.avatar?.url}
                   content={review?.comment}

@@ -15,6 +15,8 @@ interface Props {
   courseContentData: CourseContentDataTypeInstructor;
   setCourseContentData: Dispatch<SetStateAction<CourseContentDataTypeInstructor>>;
   submitCourseHandler: () => void;
+  showBottomNav?: boolean,
+
 }
 
 const CourseContentInstructor: FC<Props> = ({
@@ -23,6 +25,8 @@ const CourseContentInstructor: FC<Props> = ({
   courseContentData,
   setCourseContentData,
   submitCourseHandler,
+  showBottomNav = true,
+
 }): JSX.Element => {
   const [isCollapsed, setIsCollapsed] = useState(
     Array(courseContentData.length).fill(false)
@@ -52,9 +56,15 @@ const CourseContentInstructor: FC<Props> = ({
     setCourseContentData(updatedData);
   };
 
-  const handleRemoveQuiz = (index: number, quizIndex: number) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].quiz.splice(quizIndex, 1);
+  const handleRemoveQuiz = (videoIndex: number, quizIndex: number) => {
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === videoIndex) {
+        const updatedQuiz = [...item.quiz];
+        updatedQuiz.splice(quizIndex, 1);
+        return { ...item, quiz: updatedQuiz };
+      }
+      return item;
+    });
     setCourseContentData(updatedData);
   };
 
@@ -408,7 +418,17 @@ const CourseContentInstructor: FC<Props> = ({
                       </div>
 
                       {item.quiz.map((quizs: any, quizIndex: number) => (
-                        <div key={quizIndex} className="px-4 mb-4">
+                        <div key={quizIndex} className="mb-4">
+                          
+                          <div className="flex justify-between items-center mb-1">
+                            <label className="form-input-label">{`Quiz Title ${quizIndex + 1}`}</label>
+                            <AiOutlineDelete
+                              className="cursor-pointer dark:text-dark_text text-red-500 hover:text-red-700 transition-colors duration-200"
+                              onClick={() => handleRemoveQuiz(index, quizIndex)}
+                              size={18}
+                            />
+                          </div>  
+                          
                           <FormInput
                             id={`quiz-title-${quizIndex}`}
                             label={`Quiz Title ${quizIndex + 1}`}
@@ -430,7 +450,7 @@ const CourseContentInstructor: FC<Props> = ({
                             />
                           ))}
 
-                          <div className="px-4 mb-4">
+                          <div className="mb-4">
                             <BtnWithIcon
                               customClasses="mx-auto text-dark_text !bg-slate-700 w-fit !rounded-sm"
                               onClick={() => handleAddCorrectAnswer(index, quizIndex)}
@@ -449,7 +469,7 @@ const CourseContentInstructor: FC<Props> = ({
                             />
                           ))}
 
-                          <div className="px-4 mb-4">
+                          <div className="mb-4">
                             <BtnWithIcon
                               content="Add Multiple-Choice Option"
                               icon={AiOutlinePlusCircle}
@@ -464,7 +484,7 @@ const CourseContentInstructor: FC<Props> = ({
                         </div>
                       ))}
 
-                      <div className="px-4 mb-4">
+                      <div className="mb-4">
                         <BtnWithIcon
                           content="Add Quiz"
                           icon={AiOutlinePlusCircle}
@@ -476,7 +496,7 @@ const CourseContentInstructor: FC<Props> = ({
 
                     {index === courseContentData.length - 1 && (
                       <BtnWithIcon
-                        customClasses="mx-auto text-dark_text !bg-slate-700 w-fit !rounded-sm !mt-6"
+                        customClasses="mx-6 text-dark_text !bg-slate-700 w-fit !rounded-sm !mt-6"
                         onClick={() => newContentHandler(item)}
                         icon={AiOutlinePlusCircle}
                         iconSize={20}
@@ -490,7 +510,7 @@ const CourseContentInstructor: FC<Props> = ({
           })}
 
           <BtnWithIcon
-            customClasses="mx-auto text-dark_text !bg-slate-700 w-fit !rounded-sm"
+            customClasses="mx-6 text-dark_text !bg-slate-700 w-fit !rounded-sm"
             onClick={addNewSection}
             icon={AiOutlinePlusCircle}
             iconSize={20}
@@ -499,13 +519,13 @@ const CourseContentInstructor: FC<Props> = ({
 
         </form>
       </div>
-
-      <BottomNavigator
-        backHandler={backHandler}
-        nextHandler={optionsHandler}
-        customClasses="w-[80%] my-12 mx-auto"
-      />
-
+      {showBottomNav && (
+        <BottomNavigator
+          backHandler={backHandler}
+          nextHandler={optionsHandler}
+          customClasses="w-[80%] my-12 mx-auto"
+        />
+      )}
     </>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 
+import PromotionList from "@/components/admin-pages/promotion/promotion-list";
 import AdminProtectedPage from "@/components/admin-protected-page";
-import PromotionList from "@/components/promotion/promotion-list";
 import { useMount } from "@/hooks/useMount";
 import { NextPage } from "next";
 

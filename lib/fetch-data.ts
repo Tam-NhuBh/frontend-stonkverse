@@ -203,12 +203,12 @@ export const getQuizQuestions = async (courseId: string) => {
 };
 
 type IPromotion = {
-  code: string;
-  course: string;
-  expDate: Date;
-  percentOff: number;
-  usageLimit: number;
-  usageCount: number;
+  code: string
+  course: string
+  expDate: Date
+  percentOff: number
+  usageLimit: number
+  usageCount: number
 };
 
 export const getPromotionByID = async (id: string) => {
@@ -222,12 +222,25 @@ export const getPromotionByID = async (id: string) => {
   }
 };
 
-export const getPromotionsByCourse = async (courseId: string) => {
+export const getPromotionsByCourse = async (id: string) => {
   try {
-    const data: IPromotion = await axiosClientV2(`/admin/promotion/course/${courseId}`)
+    const data: IPromotion = await axiosClientV2.get(
+      `/admin/promotion/course/${id}`,
+    );
+    console.log("test data get promotion by course:", data)
     return data
   } catch (error) {
-    console.log("Fetch promotions data fail:", error)
+    console.log("Fetch promotion by course is false:", error)
+  }
+}
+
+export const getPromotionsByUserCourse = async (id: string) => {
+  try {
+    const data: IPromotion = await axiosClientV2(`/admin/promotion/user-course/${id}`)
+    console.log("vào api rồi:", data)
+    return data
+  } catch (error) {
+    console.log("Fetch promotion by user course is false:", error)
   }
 }
 
@@ -241,3 +254,4 @@ export const getAllPendingCourse = async () => {
     console.log(error);
   }
 };
+

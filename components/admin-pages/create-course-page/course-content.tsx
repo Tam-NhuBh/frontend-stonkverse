@@ -78,18 +78,18 @@ const CourseContent: FC<Props> = ({
     setCourseContentData(updatedData)
   }
 
-  const handleRemoveQuiz = (index: number, quizIndex: number) => {
+  const handleRemoveQuiz = (videoIndex: number, quizIndex: number) => {
     const updatedData = courseContentData.map((item, i) => {
-      if (i === index) {
-        return {
-          ...item,
-          quiz: item.quiz.filter((_, idx) => idx !== quizIndex),
-        }
+      if (i === videoIndex) {
+        const updatedQuiz = [...item.quiz];
+        updatedQuiz.splice(quizIndex, 1);
+        return { ...item, quiz: updatedQuiz };
       }
-      return item
-    })
-    setCourseContentData(updatedData)
-  }
+      return item;
+    });
+    setCourseContentData(updatedData);
+  };
+
 
   const handleCorrectAnswerChange = (index: number, quizIndex: number, answerIndex: number, value: string) => {
     const updatedData = courseContentData.map((item, i) => {
@@ -323,9 +323,8 @@ const CourseContent: FC<Props> = ({
 
                   <div className="flex items-center">
                     <div
-                      className={`dark:text-dark_text mr-4 flex items-center gap-1 text-tertiary ${
-                        index > 0 ? "cursor-pointer" : "cursor-no-drop"
-                      }`}
+                      className={`dark:text-dark_text mr-4 flex items-center gap-1 text-tertiary ${index > 0 ? "cursor-pointer" : "cursor-no-drop"
+                        }`}
                       onClick={() => {
                         if (index > 0) {
                           const updatedData = [...courseContentData]
@@ -417,9 +416,8 @@ const CourseContent: FC<Props> = ({
                             <label className="form-input-label">Link {linkIndex + 1}</label>
 
                             <div
-                              className={`${
-                                linkIndex === 0 ? "cursor-no-drop" : "cursor-pointer"
-                              } text-tertiary dark:text-dark_text flex items-center gap-1`}
+                              className={`${linkIndex === 0 ? "cursor-no-drop" : "cursor-pointer"
+                                } text-tertiary dark:text-dark_text flex items-center gap-1`}
                               onClick={() => {
                                 if (linkIndex !== 0) handleRemoveLink(index, linkIndex)
                               }}
@@ -484,10 +482,18 @@ const CourseContent: FC<Props> = ({
                       </div>
 
                       {item.quiz.map((quizs: any, quizIndex: number) => (
-                        <div key={quizIndex} className="px-4 mb-4">
+                        <div key={quizIndex} className="mb-4">
+                          <div className="flex justify-between items-center mb-1">
+                            <label className="form-input-label">{`Quiz Title ${quizIndex + 1}`}</label>
+                            <AiOutlineDelete
+                              className="cursor-pointer dark:text-dark_text text-red-500 hover:text-red-700 transition-colors duration-200"
+                              onClick={() => handleRemoveQuiz(index, quizIndex)}
+                              size={18}
+                            />
+                          </div>                            
                           <FormInput
                             id={`quiz-title-${quizIndex}`}
-                            label={`Quiz Title ${quizIndex + 1}`}
+                            label=""
                             value={quizs.title}
                             onChange={(e) => {
                               const updatedData = courseContentData.map((item, i) => {
@@ -505,6 +511,7 @@ const CourseContent: FC<Props> = ({
                             }}
                           />
 
+
                           {quizs.correctAnswer.map((answer: string, answerIndex: number) => (
                             <FormInput
                               id={`correct-answer-${answerIndex}`}
@@ -515,7 +522,7 @@ const CourseContent: FC<Props> = ({
                             />
                           ))}
 
-                          <div className="px-4 mb-4">
+                          <div className="mb-4">
                             <BtnWithIcon
                               customClasses="mx-auto text-dark_text !bg-slate-700 w-fit !rounded-sm"
                               onClick={() => handleAddCorrectAnswer(index, quizIndex)}
@@ -534,7 +541,7 @@ const CourseContent: FC<Props> = ({
                             />
                           ))}
 
-                          <div className="px-4 mb-4">
+                          <div className="mb-4">
                             <BtnWithIcon
                               content="Add Multiple-Choice Option"
                               icon={AiOutlinePlusCircle}
@@ -542,14 +549,10 @@ const CourseContent: FC<Props> = ({
                             />
                           </div>
 
-                          <AiOutlineDelete
-                            className="cursor-pointer dark:text-dark_text mt-4"
-                            onClick={() => handleRemoveQuiz(index, quizIndex)}
-                          />
                         </div>
                       ))}
 
-                      <div className="px-4 mb-4">
+                      <div className="mb-4">
                         <BtnWithIcon
                           content="Add Quiz"
                           icon={AiOutlinePlusCircle}
@@ -560,7 +563,7 @@ const CourseContent: FC<Props> = ({
 
                     {index === courseContentData.length - 1 && (
                       <BtnWithIcon
-                        customClasses="mx-auto text-dark_text !bg-slate-700 w-fit !rounded-sm !mt-6"
+                        customClasses="mx-6 text-dark_text !bg-slate-700 w-fit !rounded-sm !mt-6"
                         onClick={() => newContentHandler(item)}
                         icon={AiOutlinePlusCircle}
                         iconSize={20}
@@ -574,7 +577,7 @@ const CourseContent: FC<Props> = ({
           })}
 
           <BtnWithIcon
-            customClasses="mx-auto text-dark_text !bg-slate-700 w-fit !rounded-sm"
+            customClasses="mx-6 text-dark_text !bg-slate-700 w-fit !rounded-sm"
             onClick={addNewSection}
             icon={AiOutlinePlusCircle}
             iconSize={20}

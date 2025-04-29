@@ -20,6 +20,8 @@ interface Props {
   initialForWho?: IValue;
   forWho: IValue;
   setForWho: Dispatch<SetStateAction<IValue>>;
+  showBottomNav?: boolean;
+
 }
 
 type CourseDataValues = {
@@ -64,6 +66,7 @@ const CourseDataInstructor: FC<Props> = ({
   initialBenefits,
   initialPrerequisites,
   initialForWho,
+  showBottomNav = true,
 }): JSX.Element => {
   const form = useForm<CourseDataValues>({
     defaultValues: {
@@ -239,8 +242,9 @@ const CourseDataInstructor: FC<Props> = ({
           <AddCircle /> Add more
         </button>
       </div>
-
-      <BottomNavigator backHandler={backHandler} />
+      {showBottomNav && (
+        <BottomNavigator backHandler={backHandler} />
+      )}
     </form>
   );
 };

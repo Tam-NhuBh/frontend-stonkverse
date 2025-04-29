@@ -34,6 +34,8 @@ export const authApi = apiSlice.injectEndpoints({
         url: "activate-user",
         method: "POST",
         body: { activation_token, activation_code },
+        credentials: "include" as const,
+
       }),
     }),
 
@@ -56,8 +58,6 @@ export const authApi = apiSlice.injectEndpoints({
               token: result.data.accessToken,
             })
           );
-          localStorage.setItem("user", user);
-
         } catch (error: any) {
           console.log(error);
         }
@@ -75,15 +75,12 @@ export const authApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
-          const user = result.data.user;
-
           dispatch(
             userLogin({
               token: result.data.activationToken,
               user: result.data.user,
             })
           );
-          localStorage.setItem("user", user);
 
         } catch (error: any) {
           console.log(error);
@@ -102,7 +99,6 @@ export const authApi = apiSlice.injectEndpoints({
         try {
           await queryFulfilled;
           dispatch(userLogout());
-          localStorage.removeItem("user");
         } catch (error: any) {
           console.log(error);
         }

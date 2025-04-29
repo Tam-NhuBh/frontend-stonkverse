@@ -81,7 +81,10 @@ const Login: FC<Props> = ({ setRoute, setOpenModal, refetch }): JSX.Element => {
           register={register("email")}
           errorMsg={errors.email?.message}
           placeholder="Example@gmail.com"
+          onChange={(e) => form.setValue("email", e.target.value, { shouldValidate: true })}
         />
+
+
 
         <div className="relative">
           <FormInput
@@ -91,6 +94,7 @@ const Login: FC<Props> = ({ setRoute, setOpenModal, refetch }): JSX.Element => {
             register={register("password")}
             errorMsg={errors.password?.message}
             placeholder="At least 6 characters"
+            onChange={(e) => form.setValue("password", e.target.value, { shouldValidate: true })}
           />
           <div
             className="absolute right-3 top-9 cursor-pointer"

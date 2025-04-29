@@ -25,6 +25,7 @@ interface Props {
   courseData: any;
   courseContentData: any;
   createCourseHandler?: () => void;
+  showBottomNav?: boolean,
 }
 
 const CoursePreviewInstructor: FC<Props> = ({
@@ -33,6 +34,7 @@ const CoursePreviewInstructor: FC<Props> = ({
   courseData,
   courseContentData,
   createCourseHandler,
+  showBottomNav = true,
 }): JSX.Element => {
   const discountPercentage =
     ((courseData?.estimatedPrice - courseData?.price) /
@@ -54,7 +56,7 @@ const CoursePreviewInstructor: FC<Props> = ({
   );
 
   return (
-    <div className="w-[85%] mx-auto mt-8 my-12">
+    <div className="w-[80%] mx-auto mt-8 my-12">
       <div className="w-full flex gap-8">
         <div className="w-[60%]">
           <h1 className="text-tertiary dark:text-dark_text text-2xl font-bold">
@@ -65,7 +67,7 @@ const CoursePreviewInstructor: FC<Props> = ({
             <div className="dark:bg-secondary/70 bg-tertiary/70 text-dark_text w-fit px-2 py-1 rounded-[5px]">
               {courseData?.tags}
             </div>
-
+{/* XẺ */}
             <div className="flex items-center gap-1">
               <DotSpan /> <span>3</span>{" "}
               <span className="text-slate-500">Students</span>
@@ -192,7 +194,7 @@ const CoursePreviewInstructor: FC<Props> = ({
               <span className="font-bold text-slate-500">No</span>
             </div> */}
 
-            {/* <div className="course-info-item">
+            <div className="course-info-item">
               <span className="flex gap-1 items-center">
                 <BiBarChartAlt2 className="dark:text-secondary -mt-1" />
                 Category
@@ -200,7 +202,7 @@ const CoursePreviewInstructor: FC<Props> = ({
               <span className="font-bold text-slate-500">
                 {courseData.category}
               </span>
-            </div> */}
+            </div>
 
             <div className="course-info-item">
               <span className="flex gap-1 items-center">
@@ -266,12 +268,13 @@ const CoursePreviewInstructor: FC<Props> = ({
           </div>
         </div>
       </div>
-
-      <BottomNavigator
-        backHandler={backHandler}
-        nextHandler={createCourseHandler}
-        isCreate
-      />
+      {showBottomNav && (
+        <BottomNavigator
+          backHandler={backHandler}
+          nextHandler={createCourseHandler}
+          isCreate
+        />
+      )}
     </div>
   );
 };

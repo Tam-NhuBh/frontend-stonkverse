@@ -9,7 +9,6 @@ interface Props {
 }
 
 const CategoryCard: FC<Props> = ({ category, order }): JSX.Element => {
-  console.log("count cate:", category.courses.length)
   return (
     <div className="custom-shadow rounded-[5px] overflow-hidden flex items-center w-full hover:-translate-y-1 transition duration-500 bg-white dark:bg-slate-500 dark:bg-opacity-20">
       <Link

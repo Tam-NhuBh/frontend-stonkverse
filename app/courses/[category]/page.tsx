@@ -16,8 +16,8 @@ const page: NextPage<Props> = async ({ params }) => {
   const data = await getCourseByCategory(params.category);
   const courses: IFetchedCourse[] = data?.courses;
   const categories: ICategory[] = await getAllCategories();
-  console.log("in data:", data)
-  console.log("in categories:", categories)
+  // console.log("in data:", data)
+  // console.log("in categories:", categories)
 
   return (
     <>

@@ -39,7 +39,7 @@ const PendingCourses = () => {
         setPendingCourses([])
       }
     } catch (error) {
-      console.error("Error fetching pending courses:", error)
+      // console.error("Error fetching pending courses:", error)
       toast.error("Failed to load pending courses")
       setPendingCourses([])
     } finally {
@@ -67,19 +67,7 @@ const PendingCourses = () => {
 
       if (response) {
         toast.success("Course has been approved successfully")
-        setPendingCourses((prev) =>
-          prev.filter((course) =>
-            typeof course._id === "object" && course._id !== null
-              ? course._id.toString() !== courseId
-              : String(course._id) !== courseId,
-          ),
-        )
-
-        setProcessingStates((prev) => {
-          const newState = { ...prev }
-          delete newState[courseId]
-          return newState
-        })
+        fetchPendingCourses() 
       } else {
         toast.error("Failed to approve course")
         setProcessingStates((prev) => ({
@@ -90,6 +78,7 @@ const PendingCourses = () => {
     } catch (error) {
       console.error("Error approving course:", error)
       toast.error("Failed to approve course")
+
       setProcessingStates((prev) => ({
         ...prev,
         [courseId]: { ...prev[courseId], isApproving: false },
@@ -108,14 +97,7 @@ const PendingCourses = () => {
 
       if (response) {
         toast.success("Course has been rejected successfully")
-        setPendingCourses((prev) =>
-          prev.filter((course) =>
-            typeof course._id === "object" && course._id !== null
-              ? course._id.toString() !== courseId
-              : String(course._id) !== courseId,
-          ),
-        )
-
+        fetchPendingCourses() 
         setProcessingStates((prev) => {
           const newState = { ...prev }
           delete newState[courseId]
@@ -233,7 +215,7 @@ const PendingCourses = () => {
           </div>
         </div>
 
-        <div className="dark:bg-slate-800 bg-[#F5F5F5] rounded-sm p-6">
+        <div className="p-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {pendingCourses.map((course) => {
               const courseId =
@@ -248,7 +230,7 @@ const PendingCourses = () => {
               return (
                 <div
                   key={courseId}
-                  className="relative group bg-white dark:bg-slate-700 rounded-sm overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 flex flex-col h-full"
+                  className="relative group bg-white dark:bg-slate-800 rounded-sm overflow-hidden shadow-md hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 flex flex-col h-full"
                 >
                   <div className="flex-grow p-4">
                     <PendingCard key={course?._id.toString()} course={course} />
@@ -316,4 +298,3 @@ const PendingCourses = () => {
 }
 
 export default PendingCourses
-

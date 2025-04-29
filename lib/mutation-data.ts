@@ -1,6 +1,7 @@
 import axios from "axios";
 import axiosClientV2 from "./api-client-v2";
 import axiosClient from "./api-client-v1";
+import { ICourse } from "@/types";
 
 export const createPaymentIntent = async (amount: number) => {
   try {
@@ -170,10 +171,9 @@ export const createPromotion = async (params: IPromotion) => {
     const data: IPromotion = await axiosClientV2.post(
       `/admin/promotion`,
       params,
-      {
-        withCredentials: true,
-      }
     );
+    // console.log("promotion:",data);
+
     return data;
   } catch (error) {
     console.log("Fail to create promotion:",error);
@@ -212,11 +212,11 @@ export const approveCourse = async (id: string) => {
     const data = await axiosClient.put(
       `/admin/courses/${id}/approve`,
       { id },
-      { withCredentials: true }
     );
     return data;
   } catch (error) {
     console.log("Fail to approve course:", error);
+    return false;
   }
 };
 
@@ -225,10 +225,22 @@ export const rejectCourse = async (id: string) => {
     const data = await axiosClient.put(
       `/admin/courses/${id}/reject`,
       { id },
-      { withCredentials: true }
     );
     return data;
   } catch (error: any) {
     console.log(error.response.data.message);
+    return false;
+
+  }
+};
+
+export const getCourseByInstructor = async (id: string) => {
+  try {
+    const data: ICourse = await axiosClient.get(
+      `/get-course-by-instructor/${id}`,
+    );
+    return data;
+  } catch (error: any) {
+    console.log(error.response.message);
   }
 };

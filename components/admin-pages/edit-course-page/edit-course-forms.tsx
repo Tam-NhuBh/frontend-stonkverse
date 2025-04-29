@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, useEffect, useState } from "react"
-import { useEditCourseMutation, useGetSingleCourseQuery } from "@/store/course/course-api"
+import { useEditCourseMutation, useGetSingleCourseAdminQuery } from "@/store/course/course-api"
 import toast from "react-hot-toast"
 import { redirect, useParams } from "next/navigation"
 import CourseInfomation from "../create-course-page/course-infomation"
@@ -76,7 +76,7 @@ const EditCourseForms: FC<Props> = (props): JSX.Element => {
     isLoading: fetchInitialDataLoading,
     data,
     refetch,
-  } = useGetSingleCourseQuery(id, { refetchOnMountOrArgChange: true })
+  } = useGetSingleCourseAdminQuery(id, { refetchOnMountOrArgChange: true })
 
   const [active, setActive] = useState(0)
 

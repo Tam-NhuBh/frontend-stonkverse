@@ -26,8 +26,8 @@ import Link from "next/link";
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
 import { MenuItem, Menu, ProSidebar } from "react-pro-sidebar";
 import { usePathname } from "next/navigation"; // Thêm hook này để lấy đường dẫn hiện tại
-import { TicketCheckIcon, TicketIcon, TicketPercent, TicketPlus, PlaneIcon as TicketsPlaneIcon } from 'lucide-react';
-import { BsTicketPerforated } from "react-icons/bs";
+import { TicketPercent } from 'lucide-react';
+import { usePendingCount } from "@/hooks/usePendingCount";
 
 interface itemProps {
   title: string;
@@ -77,7 +77,6 @@ interface Props {
   setIsCollapsed: Dispatch<SetStateAction<boolean>>;
 }
 
-// Section order - keep this outside the component
 const sectionOrder = [
   "Stock E-Learning",
   "Data",
@@ -96,11 +95,8 @@ const AdminSidebar: FC<Props> = ({
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
   const pathname = usePathname();
-  
-  // Static mock data for pending approvals
-  const [pendingCoursesCount] = useState(3);
-  const [pendingUsersCount] = useState(4);
-  const totalPendingCount = pendingCoursesCount + pendingUsersCount;
+
+  const { totalPendingCount, isLoading } = usePendingCount()
 
   useEffect(() => {
     setMounted(true);
@@ -137,7 +133,7 @@ const AdminSidebar: FC<Props> = ({
     { title: "Assign Role", to: "/admin/team", icon: <PeopleOutline />, section: "Controllers" },
 
     { title: "Instructor Panel", to: "/admin/instructor-panel", icon: <ContactEmergencyOutlined />, section: "Controllers",
-      badgeCount: totalPendingCount
+      badgeCount: isLoading ? undefined : totalPendingCount,
     },
   ];
 
@@ -171,10 +167,6 @@ const AdminSidebar: FC<Props> = ({
   }, {} as Record<string, typeof menuItems>);
 
   if (!mounted) return null;
-
-  const logoutHandler = () => {
-    setLogout(true);
-  };
 
   return (
     <Box
