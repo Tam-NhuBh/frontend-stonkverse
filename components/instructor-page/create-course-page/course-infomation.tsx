@@ -16,12 +16,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormSelect from "@/components/form-select";
 import axios from "axios";
-import { CourseInfoValuesInstructor } from "./create-course-form";
 import ContainNextImage from "@/components/contain-next-image";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import BottomNavigator from "@/components/admin-pages/create-course-page/bottom-navigator";
-
+import { CourseInfoValuesInstructor } from "@/types";
 
 interface Props {
   active: number;
@@ -29,6 +28,7 @@ interface Props {
   courseInfo: CourseInfoValuesInstructor;
   initialCourseInfo?: any;
   setCourseInfo: Dispatch<SetStateAction<CourseInfoValuesInstructor>>;
+  showBottomNav?: boolean;
 }
 
 const courseInfoSchema = Yup.object({
@@ -54,6 +54,7 @@ const CourseInfomationInstructor: FC<Props> = ({
   setCourseInfo,
   initialCourseInfo,
   courseInfo,
+  showBottomNav = true
 }): JSX.Element => {
   const [dragging, setDragging] = useState(false);
   const [draggingPDF, setDraggingPDF] = useState(false);
@@ -77,9 +78,9 @@ const CourseInfomationInstructor: FC<Props> = ({
   };
 
   useEffect(() => {
+    console.log("Categories useEffect running");
     getAllCategories();
   }, []);
-
   const { register, handleSubmit, formState, setValue, watch } = courseInfoForm;
   const { errors } = formState;
 
@@ -323,7 +324,8 @@ const CourseInfomationInstructor: FC<Props> = ({
             label="Category"
             options={categories}
             errorMsg={errors.category?.message}
-            register={register("category")}
+            value={watch("category")}
+            onChange={(e) => setValue("category", e.target.value)}
           />
         </div>
 
@@ -336,13 +338,13 @@ const CourseInfomationInstructor: FC<Props> = ({
             errorMsg={errors.level?.message}
           />
 
-            <FormInput
-              id="demoUrl"
-              label="Demo URL"
-              register={register("demoUrl")}
-              errorMsg={errors.demoUrl?.message}
-              placeholder="URL"
-            />
+          <FormInput
+            id="demoUrl"
+            label="Demo URL"
+            register={register("demoUrl")}
+            errorMsg={errors.demoUrl?.message}
+            placeholder="URL"
+          />
         </div>
         <label htmlFor="thumbnail" className="form-input-label">
           Course Thumbnail
@@ -410,7 +412,9 @@ const CourseInfomationInstructor: FC<Props> = ({
           hidden
           onChange={(e) => handleUploadPDF(e)}
         />
-        <BottomNavigator onlyNext customClasses="mt-4" />
+        {showBottomNav && (
+          <BottomNavigator onlyNext customClasses="mt-4" />
+        )}
       </form>
     </div>
   );

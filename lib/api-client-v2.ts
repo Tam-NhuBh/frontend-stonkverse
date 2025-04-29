@@ -11,21 +11,14 @@ const axiosClientV2 = axios.create({
 });
 
 axiosClientV2.interceptors.request.use(
-  async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-      config.headers.set("Authorization", `Bearer ${accessToken}`);
-    }
-
-    return config; 
+  (config) => {
+    return config
   },
   (error) => {
-    return Promise.reject(error);
-  }
+    return Promise.reject(error)
+  },
 );
 
-// Add response interceptor
 axiosClientV2.interceptors.response.use(
   (response: AxiosResponse): any => {
     return response.data; 

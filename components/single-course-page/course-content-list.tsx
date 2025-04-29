@@ -21,7 +21,7 @@ const CourseContentList: FC<Props> = ({ list, courseLength }): JSX.Element => {
     <div>
       <CourseVideosAccordion
         videosBySection={videosBySection}
-        countLectures={list.length}
+        countLectures={list?.length}
         courseLength={courseLength}
       />
     </div>

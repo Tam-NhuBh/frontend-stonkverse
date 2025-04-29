@@ -1,23 +1,22 @@
 "use client";
 
+import AccessCourse from "@/components/instructor-page/access-course-page/page";
 import InstructorProtectedPage from "@/components/instructor-protected-page";
-import PromotionList from "@/components/promotion/promotion-list";
-import PromotionPage from "@/components/promotion/promotion-list";
 import { useMount } from "@/hooks/useMount";
 import { NextPage } from "next";
 
 interface Props {}
 
-const Promotion: NextPage<Props> = () => {
+const EditCoursePage: NextPage<Props> = () => {
   const hasMounted = useMount();
 
   if (!hasMounted) return null;
 
   return (
     <InstructorProtectedPage>
-      <PromotionList />
+      <AccessCourse />
     </InstructorProtectedPage>
   );
 };
 
-export default Promotion;
+export default EditCoursePage;

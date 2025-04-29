@@ -15,7 +15,7 @@ interface Props {
 const PendingCard: FC<Props> = ({ course }): JSX.Element => {
   console.log("courseData:", course)
   return (
-    <div className="rounded-[5px] shadow-md dark:border-none dark:bg-slate-500 bg-white dark:bg-opacity-20 custom-hover cursor-pointer flex flex-col h-full">
+    <div className="rounded-[5px] shadow-md dark:border-none dark:bg-slate-900 bg-white custom-hover cursor-pointer flex flex-col h-full">
       <Link
         href={`/admin/edit-course/${course._id}`}
         className="block relative w-full aspect-video"
@@ -40,13 +40,13 @@ const PendingCard: FC<Props> = ({ course }): JSX.Element => {
             size="small"
             customClasses="mt-1" />
 
-          <span className="flex text-sm items-center gap-1 font-normal text-tertiary dark:text-dark_text">
+          <span className="flex text-sm items-center gap-1 font-normal text-tertiary dark:text-dark_text truncate">
             <MdOutlinePeopleAlt className="-mt-[2px]" size={16} />/
             <span className="text-base">{course.purchased}</span> Students
           </span>
         </Link>
 
-        <div className="flex justify-between my-2 max-[320px]:block mt-auto">
+        <div className="flex justify-between my-2 max-[320px]:block mt-auto truncate">
           <div className="flex items-center">
             <span className="mr-2 font-bold text-2xl text-gradient">
               {course.price === 0 ? "Free" : "$" + course.price + ".00"}

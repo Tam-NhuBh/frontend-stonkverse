@@ -114,4 +114,18 @@ export interface ICourse {
   courseData: ICourseData[];
   ratings?: number;
   purchased?: number;
+  status: 'APPROVED' | 'REJECTED' | 'PENDING_REVIEW';
 }
+
+export interface CourseInfoValuesInstructor {
+  name: string;
+  description: string;
+  category: string;
+  price: string;
+  estimatedPrice: string;
+  tags: string;
+  level: string;
+  demoUrl: string;
+  thumbnail: string;
+  curriculum: string
+};

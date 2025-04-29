@@ -17,6 +17,13 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getAllCoursesInstructor: builder.query({
+      query: () => ({
+        url: `get-courses-overview`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
     deleteCourse: builder.mutation({
       query: (id) => ({
         url: `delete-course/${id}`,
@@ -24,7 +31,7 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
-    getSingleCourse: builder.query({
+    getSingleCourseAdmin: builder.query({
       query: (id) => ({
         url: `get-course-by-admin/${id}`,
         method: "GET",
@@ -61,14 +68,23 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getPromotionByCourse: builder.query({
+      query: (courseId: string) => ({
+        url: `admin/promotion/user-course/${courseId}`,
+        method: "GET",
+
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
 export const {
   useCreateCourseMutation,
   useGetAllCoursesAdminQuery,
+  useGetAllCoursesInstructorQuery,
   useDeleteCourseMutation,
-  useGetSingleCourseQuery,
+  useGetSingleCourseAdminQuery,
   useEditCourseMutation,
   useGetCourseContentQuery,
   useUpdateLessonCompletionMutation,

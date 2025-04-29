@@ -1,15 +1,15 @@
 "use client";
 
 import { FC, useEffect, useState } from "react";
-import CourseInfomation from "./course-infomation";
-import CourseOptions from "./course-options";
-import CourseData from "./course-data";
-import CourseContent from "./course-content";
-import CoursePreview from "./course-preview";
 import { useCreateCourseMutation } from "@/store/course/course-api";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
 import useUserInfo from "@/hooks/useUserInfo";
+import CourseDataInstructor from "./course-data";
+import CourseContentInstructor from "./course-content";
+import CoursePreviewInstructor from "./course-preview";
+import CourseOptionsInstructor from "./course-options";
+import CourseInfomationInstructor from "./course-infomation";
 
 interface Props { }
 
@@ -52,7 +52,7 @@ const initialCourseContentData = [
   },
 ];
 
-export type CourseContentDataType = {
+export type CourseContentDataTypeInstructor = {
   videoUrl: string;
   title: string;
   description: string;
@@ -129,7 +129,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
     <div className="flex">
       <div className="w-[80%]">
         {active === 0 && (
-          <CourseInfomation
+          <CourseInfomationInstructor
             active={active}
             setActive={setActive}
             courseInfo={courseInfo}
@@ -147,7 +147,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
         )} */}
         
         {active === 1 && (
-          <CourseData
+          <CourseDataInstructor
             active={active}
             setActive={setActive}
             benefits={benefits}
@@ -160,7 +160,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
         )}
 
         {active === 2 && (
-          <CourseContent
+          <CourseContentInstructor
             active={active}
             setActive={setActive}
             courseContentData={courseContentData}
@@ -170,7 +170,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
         )}
 
         {active === 3 && (
-          <CoursePreview
+          <CoursePreviewInstructor
             active={active}
             setActive={setActive}
             courseData={courseData}
@@ -180,7 +180,7 @@ const CreateCourseFormInstructor: FC<Props> = (props): JSX.Element => {
         )}
       </div>
       <div className="flex-1 fixed z-[-1] top-[80px] right-8">
-        <CourseOptions active={active} setActive={setActive} />
+        <CourseOptionsInstructor active={active} setActive={setActive} />
       </div>
     </div>
   );

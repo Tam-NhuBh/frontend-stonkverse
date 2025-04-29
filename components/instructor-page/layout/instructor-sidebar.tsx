@@ -55,7 +55,6 @@ const menuItems = [
   { title: "Live Website", to: "/", icon: <Public /> },
   { title: "Create Course", to: "/instructor/create-course", icon: <VideoCall /> },
   { title: "Course Overview", to: "/instructor/courses", icon: <OndemandVideo /> },
-  { title: "Promotion", to: "/instructor/promotion", icon: <TicketsPlaneIcon /> },
   { title: "Create Final Test", to: "/instructor/final-test", icon: <Checklist /> },
   { title: "Users", to: "/instructor/users", icon: <GroupsIcon /> },
 ];

@@ -3,7 +3,6 @@
 import DashboardHero from "@/components/admin-pages/dashboard-page/dashboard-hero";
 import Heading from "@/components/heading";
 import { NextPage } from "next";
-import ProtectedPage from "@/components/protected-page";
 import { useMount } from "@/hooks/useMount";
 import AdminProtectedPage from "@/components/admin-protected-page";
 

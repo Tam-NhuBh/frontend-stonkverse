@@ -16,12 +16,12 @@ export default function AdminProtectedPage({ children, title }: Props) {
     if (isAdmin !== undefined) {
       setChecked(true);
       if (!isAdmin) {
-        router.replace("/"); // Chuyển hướng nếu không phải admin
+        router.replace("/"); 
       }
     }
   }, [isAdmin]);
 
-  if (!checked) return null; // Ngăn giao diện render trước khi kiểm tra quyền
+  if (!checked) return null;
 
   return <>{children}</>;
 }

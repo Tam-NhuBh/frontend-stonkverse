@@ -1,7 +1,7 @@
 "use client";
 
 import AllCourses from "@/components/instructor-page/courses-page/all-courses";
-import ProtectedPage from "@/components/protected-page";
+import InstructorProtectedPage from "@/components/instructor-protected-page";
 import { useMount } from "@/hooks/useMount";
 import { NextPage } from "next";
 
@@ -13,9 +13,9 @@ const AllCoursesPage: NextPage<Props> = () => {
   if (!hasMounted) return null;
 
   return (
-    <ProtectedPage>
+    <InstructorProtectedPage>
       <AllCourses />
-    </ProtectedPage>
+    </InstructorProtectedPage>
   );
 };
 

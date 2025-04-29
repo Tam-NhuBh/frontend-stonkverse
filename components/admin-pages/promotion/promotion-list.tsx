@@ -18,6 +18,7 @@ import FormInput from "@/components/form-input"
 import PromotionModal from "./promotion-management"
 import { createPromotion, deletePromotionById } from "@/lib/mutation-data"
 import { getPromotionsByCourse } from "@/lib/fetch-data"
+import useUserInfo from "@/hooks/useUserInfo"
 
 interface Course {
   _id: string
@@ -65,7 +66,7 @@ const generatePromotionCode = () => `PROMO${Math.random().toString(36).substring
 
 const getDefaultExpiryDate = () => {
   const nextYear = new Date()
-  nextYear.setFullYear(nextYear.getFullYear() + 1)
+  // nextYear.setFullYear(nextYear.getFullYear() + 1)
   return nextYear.toISOString().split("T")[0]
 }
 
@@ -74,10 +75,11 @@ const PromotionList: FC = () => {
     isLoading: isCoursesLoading,
     data: coursesData,
     refetch: refetchCourses,
-  } = useGetAllCoursesAdminQuery({}, { refetchOnMountOrArgChange: true })
+  } = useGetAllCoursesAdminQuery({})
 
   const [deleteCourse, { isLoading: deleteCourseLoading, isSuccess: deleteCourseSuccess, error: deleteCourseError }] =
     useDeleteCourseMutation()
+
 
   const [deleteModal, setDeleteModal] = useState(false)
   const [promotionModal, setPromotionModal] = useState(false)
@@ -95,7 +97,6 @@ const PromotionList: FC = () => {
     setIsLoadingPromotions(true)
     try {
       const result = await getPromotionsByCourse(courseID)
-      console.log(courseID)
       if (!result) {
         setPromotionsData([])
       } else if (Array.isArray(result)) {
@@ -187,7 +188,7 @@ const PromotionList: FC = () => {
       title: item.name,
       ratings: item.ratings,
       purchased: item.purchased,
-    })) || [];
+    })) || []
 
   const handleViewPromotions = (courseId: string, courseName: string) => {
     setCurrentCourseId(courseId)
@@ -202,8 +203,8 @@ const PromotionList: FC = () => {
     reset({
       code: generatePromotionCode(),
       expDate: getDefaultExpiryDate(),
-      percentOff: 20,
-      usageLimit: 5,
+      percentOff: 0,
+      usageLimit: 0,
     })
 
     setPromotionModal(true)
@@ -213,28 +214,31 @@ const PromotionList: FC = () => {
     setIsCreatingPromotion(true)
     try {
       const promotionData: IPromotion = {
-        ...formData,
+        code: formData.code,
         course: currentCourseId,
         expDate: new Date(formData.expDate),
+        percentOff: formData.percentOff,
+        usageLimit: formData.usageLimit,
         usageCount: 0,
       }
+      const response = await createPromotion(promotionData)
 
-      await createPromotion(promotionData)
+      if (response) {
+        toast.success("Promotion created successfully!")
+        await fetchPromotions(currentCourseId)
 
-      toast.success("Promotion created successfully!")
+        reset({
+          code: generatePromotionCode(),
+          expDate: getDefaultExpiryDate(),
+          percentOff: 0,
+          usageLimit: 0,
+        })
 
-      fetchPromotions(currentCourseId)
-
-      reset({
-        code: generatePromotionCode(),
-        expDate: getDefaultExpiryDate(),
-        percentOff: 20,
-        usageLimit: 5,
-      })
-
-      setPromotionModal(false)
-    } catch (error) {
-      toast.error("Failed to create promotion")
+        setPromotionModal(false)
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Failed to create promotion."
+      toast.error(errorMessage)
     } finally {
       setIsCreatingPromotion(false)
     }
@@ -245,9 +249,9 @@ const PromotionList: FC = () => {
     try {
       await deletePromotionById(promotionId)
       toast.success("Promotion deleted successfully!")
-      fetchPromotions(currentCourseId)
-    } catch (error) {
-      toast.error("Failed to delete promotion")
+      await fetchPromotions(currentCourseId)
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to delete promotion.")
     } finally {
       setIsDeletingPromotion(false)
     }
@@ -287,7 +291,7 @@ const PromotionList: FC = () => {
       <div className="w-full overflow-x-auto overflow-y-auto">
         <DataTable rows={rows} columns={columns} isLoading={isCoursesLoading} />
       </div>
-      
+
       {/* View Promotions Modal */}
       <PromotionModal
         open={viewPromotionsModal}
@@ -327,7 +331,9 @@ const PromotionList: FC = () => {
             overflowY: "auto",
           }}
         >
-          <h4 className="flex justify-center item-center mb-4 text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Create Promotion for Course</h4>
+          <h4 className="flex justify-center item-center mb-4 text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+            Create Promotion for Course
+          </h4>
           <div className="mt-2 mb-4 text-center bg-gray-300 dark:text-gray-700 p-5">
             <span className="font-medium">Course: </span>
             <span>{currentCourseName}</span>

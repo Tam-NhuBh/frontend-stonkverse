@@ -10,12 +10,11 @@ import LectureTabContent from "./lecture-tab-content"
 import type { ICourseData, IQuestionQuiz } from "@/types"
 import toast from "react-hot-toast"
 import { getAnswersQuiz } from "@/lib/fetch-data"
-import { AiOutlineReload, AiOutlinePlayCircle } from "react-icons/ai"
 import { useUpdateLessonCompletionMutation, useGetLessonCompletionQuery } from "@/store/course/course-api"
 import { IoMdClose } from "react-icons/io"
-import { Flame, Recycle, Stars } from "lucide-react"
-import { QuestionAnswer, QuestionAnswerOutlined, QuestionAnswerRounded, QuestionMark } from "@mui/icons-material"
+import { Bot, BotIcon, Flame } from "lucide-react"
 import { BsQuestionCircleFill } from "react-icons/bs"
+import AIInstructor from "../ai"
 
 interface Props {
   courseId: string
@@ -36,6 +35,7 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
   const [quizSubmitted, setQuizSubmitted] = useState(false)
   const [currentQuizId, setCurrentQuizId] = useState<string>("")
   const [completedVideos, setCompletedVideos] = useState<string[]>([])
+  const [showAIInstructor, setShowAIInstructor] = useState(false)
   const [updateLessonCompletion] = useUpdateLessonCompletionMutation()
   const { data: lessonCompletionData } = useGetLessonCompletionQuery(courseId)
 
@@ -150,10 +150,8 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
         return updatedCompleted
       })
       setQuizSubmitted(true)
-      // Don't close the modal here - it will be closed by the user
       setCompletedVideos((prev) => [...prev, courseData?.[activeVideo]?._id.toString()])
       if (nextVideoTriggered) {
-        // Wait for user to close the modal before moving to next video
         setNextVideoTriggered(false)
       }
     } catch (error) {
@@ -163,11 +161,14 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
 
   const handleCloseQuizModal = () => {
     setShowQuizModal(false)
-    // If next video was triggered, move to next video after closing the modal
     if (nextVideoTriggered) {
       setActiveVideo((prevIndex) => Math.min(prevIndex + 1, courseData.length - 1))
       setNextVideoTriggered(false)
     }
+  }
+
+  const toggleAIInstructor = () => {
+    setShowAIInstructor((prev) => !prev)
   }
 
   return (
@@ -189,46 +190,60 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
 
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-2xl font-semibold dark:text-dark_text mb-0">{courseData?.[activeVideo]?.title}</h1>
-              {currentVideoHasQuiz && (
-                <>
-                  {quizCompleted[activeVideo] ? (
-                    <div className="relative group">
-                      <button
-                        onClick={handleRetakeQuiz}
-                        className="relative overflow-hidden px-6 py-2 rounded-full bg-gradient-to-br from-orange-600 to-yellow-500 text-white font-medium transition-all duration-300 shadow-lg hover:shadow-orange-500/30 hover:scale-105"
-                      >
-                        <div className="absolute inset-0 bg-white/20 rounded-full blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-                        <span className="relative flex items-center gap-2">
-                          <Flame
-                            size={20}
-                            className="text-yellow-300"
-                            strokeWidth={2.5}
-                          />
-                          <span>Retake Quiz</span>
-                        </span>
-                      </button>
-                    </div>
-                  ) : (
-                    <div>
-                      <button
-                        onClick={handleTakeQuiz}
-                        className="relative overflow-hidden px-6 py-2 rounded-full bg-gradient-to-br from-blue-500 to-teal-400 text-white font-medium transition-all duration-300 shadow-lg hover:shadow-blue-500/30 hover:scale-105"
-                      >
-                        <div className="absolute inset-0 bg-white/20 rounded-full blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-                        <span className="relative flex items-center gap-2">
-                          <BsQuestionCircleFill
-                            size={20}                 
-                          />
-                          <span>Take Quiz</span>
-                        </span>
-                      </button>
-                      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-500/10 to-teal-400/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                    </div>
+              <div className="flex gap-3">
+                {currentVideoHasQuiz && (
+                  <>
+                    {quizCompleted[activeVideo] ? (
+                      <div className="relative group">
+                        <button
+                          onClick={handleRetakeQuiz}
+                          className="relative overflow-hidden px-6 py-2 rounded-sm bg-gradient-to-br from-orange-600 to-yellow-500 text-white font-medium transition-all duration-300 shadow-lg hover:shadow-orange-500/30 hover:scale-105"
+                        >
+                          <div className="absolute inset-0 bg-white/20 rounded-full blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                          <span className="relative flex items-center gap-2">
+                            <Flame size={20} className="text-yellow-300" strokeWidth={2.5} />
+                            <span>Retake Quiz</span>
+                          </span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="relative group">
+                        <button
+                          onClick={handleTakeQuiz}
+                          className="relative overflow-hidden px-6 py-2 rounded-sm bg-gradient-to-br from-blue-500 to-teal-400 text-white font-medium transition-all duration-300 shadow-lg hover:shadow-blue-500/30 hover:scale-105"
+                        >
+                          <div className="absolute inset-0 bg-white/20 rounded-full blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                          <span className="relative flex items-center gap-2">
+                            <BsQuestionCircleFill size={20} />
+                            <span>Take Quiz</span>
+                          </span>
+                        </button>
+                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-500/10 to-teal-400/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                      </div>
+                    )}
+                  </>
+                )}
 
-                  )}
-                </>
-              )}
+                {/* AI Instructor Button */}
+                <button
+                  onClick={toggleAIInstructor}
+                  className="relative overflow-hidden px-6 py-2 rounded-sm bg-[linear-gradient(90deg,_#4d88c4_2.34%,_#0da5b5_100.78%)] text-white font-medium transition-all duration-300 shadow-lg hover:[#0da5b5] hover:scale-105"
+                >
+                  <div className="absolute inset-0 bg-white/20 rounded-full blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                  <span className="relative flex items-center gap-2">
+                    <Bot size={20} />
+                    <span>{showAIInstructor ? "Close AI" : "AI Instructor"}</span>
+                  </span>
+                </button>
+              </div>
             </div>
+
+            {/* AI Instructor Component */}
+            {showAIInstructor && (
+              <div className="mb-6">
+                <AIInstructor courseId={courseId} sessionId={1} />
+              </div>
+            )}
 
             <LectureTabContent
               courseId={courseId}
@@ -244,7 +259,6 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
           </div>
         </div>
       </>
-
 
       {showQuizModal && currentVideoHasQuiz && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-[9998] px-2">
@@ -270,7 +284,6 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
             </div>
           </div>
         </div>
-
       )}
 
       <div
@@ -290,7 +303,6 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
         />
       </div>
 
-
       {!openSidebar && (
         <div
           className="fixed right-0 top-[30%] bg-slate-900 z-[60] text-white cursor-pointer py-1.5 rounded-l-full pl-1 pr-2 flex items-center space-x-2 max-[1100px]:hidden"
@@ -306,4 +318,3 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
 }
 
 export default CourseContentMedia
-

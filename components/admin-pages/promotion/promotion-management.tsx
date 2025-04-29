@@ -6,9 +6,9 @@ import { type FC, useState, useEffect } from "react"
 import { AiOutlineDelete } from "react-icons/ai"
 import toast from "react-hot-toast"
 import { AddCircle, ContentCopy, DeleteOutlineOutlined } from "@mui/icons-material"
-import BtnWithIcon from "../btn-with-icon"
 import DataTable from "@/components/admin-pages/data-table"
 import { DeleteIcon } from "lucide-react"
+import BtnWithIcon from "@/components/btn-with-icon"
 
 interface Props {
   open: boolean
