@@ -49,7 +49,6 @@ interface Props {
   setIsCollapsed: Dispatch<SetStateAction<boolean>>;
 }
 
-// Định nghĩa các menu item một lần duy nhất
 const menuItems = [
   { title: "Dashboard", to: "/instructor", icon: <HomeOutlined /> },
   { title: "Live Website", to: "/", icon: <Public /> },
@@ -67,7 +66,7 @@ const InstructorSidebar: FC<Props> = ({
   const [selected, setSelected] = useState("Dashboard");
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
-  const pathname = usePathname(); 
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
@@ -87,15 +86,15 @@ const InstructorSidebar: FC<Props> = ({
     if (exactMatch) {
       return exactMatch;
     }
-    
+
     const sortedItems = [...menuItems].sort((a, b) => b.to.length - a.to.length);
-    
+
     for (const item of sortedItems) {
       if (item.to !== "/" && currentPath.startsWith(item.to)) {
         return item;
       }
     }
-    
+
     return menuItems[0];
   };
 
@@ -197,7 +196,6 @@ const InstructorSidebar: FC<Props> = ({
               {!isCollapsed && "Stock E-learning"}
             </Typography>
 
-            {/* Render 2 menu item đầu tiên */}
             {menuItems.slice(0, 2).map((item) => (
               <Item
                 key={item.title}
@@ -217,8 +215,7 @@ const InstructorSidebar: FC<Props> = ({
               {!isCollapsed && "Content"}
             </Typography>
 
-            {/* Render 4 menu item tiếp theo */}
-            {menuItems.slice(2, 6).map((item) => (
+            {menuItems.slice(2, 5).map((item) => (
               <Item
                 key={item.title}
                 title={item.title}
@@ -237,8 +234,7 @@ const InstructorSidebar: FC<Props> = ({
               {!isCollapsed && "Controller"}
             </Typography>
 
-            {/* Render menu item cuối cùng */}
-            {menuItems.slice(6).map((item) => (
+            {menuItems.slice(5).map((item) => (
               <Item
                 key={item.title}
                 title={item.title}

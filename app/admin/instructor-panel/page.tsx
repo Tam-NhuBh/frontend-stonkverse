@@ -18,9 +18,9 @@ const AdminPanel: NextPage<Props> = () => {
 
   return (
     <ProtectedPage>
-      <div className="w-[90%] mx-auto mt-6">
+      <div className="w-full mx-auto mt-6">
         {/* Tabs */}
-        <div className="flex space-x-4 mb-6">
+        {/* <div className="flex space-x-4 mb-6">
           <button
             className={`px-4 py-2 rounded ${activeTab === "course" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-slate-700"}`}
             onClick={() => setActiveTab("course")}
@@ -34,10 +34,10 @@ const AdminPanel: NextPage<Props> = () => {
           >
             finaltest Courses
           </button>
-        </div>
-
-        {activeTab === "course" && <PendingCourses />}
-        {activeTab === "finaltest" && <FinalTestManagement />}
+        </div> */}
+        <PendingCourses/>
+        {/* {activeTab === "course" && <PendingCourses />} */}
+        {/* {activeTab === "finaltest" && <FinalTestManagement />} */}
       </div>
     </ProtectedPage>
   )

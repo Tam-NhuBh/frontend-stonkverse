@@ -19,7 +19,7 @@ interface Props {
   courseDetail: IFetchedCourse;
 }
 
-const CheckOutForm: FC<Props> = ({ courseDetail }): JSX.Element => {
+const CheckOutForm: FC<Props> = ({ courseDetail, setOpenModal }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState("");

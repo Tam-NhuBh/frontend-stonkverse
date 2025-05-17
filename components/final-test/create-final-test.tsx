@@ -1,73 +1,46 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Check } from "lucide-react"
-import FinalTestOverview from "./final-test-overview"
-import FinalTestInfomation from "./final-test-infomation"
-import Settings from "./final-test-settings"
+import { toast } from "react-hot-toast"
+import TestSettings from "./final-test-settings"
+import TestOverview from "./final-test-overview"
+import type { ITitleFinalTest, TestSettings as TestSettingsType } from "@/types"
+import TestInformation from "./final-test-infomation"
+import { createFinalTest, editFinalTest } from "@/lib/mutation-data"
+import { ITest } from "./final-test-management"
 
-export interface TestInfoValues {
-  name: string
-  description: string
-  logo?: string
-  withSections?: boolean
-  questions?: {
-    title: string
-    type: "single" | "multiple" | "fillBlank" | "image"
-    correctAnswer: string[]
-    options: string[]
-    imageUrl?: string
-  }[]
+interface Props {
+  courseId: string;
+  onClose: () => void;
+  onSuccess: () => void;
+  initialData?: ITest | null;
 }
 
-export interface TestSettingsValues {
-  duration: {
-    days: number
-    hours: number
-    minutes: number
-    seconds: number
-  }
-  pageLayout: string
-  gradingDisplay: string
-  enableProctoring: boolean
-  displaySettings: {
-    requireInstructions: boolean
-    showInstructions: boolean
-    showDuration: boolean
-    showPassingMark: boolean
-    showQuestionCount: boolean
-  }
-  instructions?: string
-  completionMessage?: string
-}
+const CreateFinalTest = ({ courseId, onClose, onSuccess, initialData }: Props) => {
+  const [activeStep, setActiveStep] = useState(0)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [finalTests, setFinalTests] = useState<ITitleFinalTest[]>([])
 
-export default function CreateFinalTest() {
-  const [active, setActive] = useState(0)
-  const [testInfo, setTestInfo] = useState<TestInfoValues>({
-    name: "",
-    description: "",
-    withSections: false,
-
-  })
-  const [testSettings, setTestSettings] = useState<TestSettingsValues>({
-    duration: {
-      days: 0,
-      hours: 1,
-      minutes: 0,
-      seconds: 0,
-    },
-    pageLayout: "one",
+  const [testSettings, setTestSettings] = useState<TestSettingsType>({
+    testDuration: { days: 0, hours: 1, minutes: 0, seconds: 0 },
+    numberOfQuestions: 10,
+    pageLayout: "all",
     gradingDisplay: "score",
     enableProctoring: false,
+    quizWeight: 20,
+    finalTestWeight: 80,
+    passingGrade: 50,
     displaySettings: {
-      requireInstructions: false,
+      requireInstructions: true,
       showInstructions: true,
       showDuration: true,
       showPassingMark: true,
       showQuestionCount: true,
     },
+    instructionsMessage: "",
+    completionMessage: "",
   })
-  const [testData, setTestData] = useState({})
 
   const steps = [
     { number: 1, name: "Test Information" },
@@ -75,12 +48,73 @@ export default function CreateFinalTest() {
     { number: 3, name: "Test Overview" },
   ]
 
-  const submitHandler = () => {
-    console.log("Test submitted")
-  }
+  useEffect(() => {
+    if (initialData) {
+      setFinalTests([
+        {
+          title: initialData.title,
+          description: initialData.description,
+          correctAnswer: [],
+          mockAnswer: [],
+          maxScore: 10,
+          answers: [],
+          type: "single"
+        },
+      ])
+      setTestSettings((prev) => ({
+        ...prev,
+        testDuration: initialData.testDuration,
+        numberOfQuestions: initialData.numberOfQuestions || 10,
+      }))
+    }
+  }, [initialData])
 
-  const createTestHandler = () => {
-    console.log("Test created")
+  const handleNext = () => setActiveStep((prev) => prev + 1)
+  const handleBack = () => setActiveStep((prev) => prev - 1)
+
+  const handleSubmit = async () => {
+    if (!finalTests || finalTests.length === 0) {
+      toast.error("Please add at least one question")
+      return
+    }
+
+    if (!courseId) {
+      toast.error("Course ID is missing")
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+
+      if (initialData?.id) {
+        await editFinalTest(initialData.id, {
+          finalTest: finalTests,
+          settings: {
+            ...testSettings,
+            course: courseId,
+          },
+        })
+        toast.success("Final test updated successfully!")
+      } else {
+        await createFinalTest(courseId, {
+          finalTest: finalTests,
+          settings: {
+            ...testSettings,
+            course: courseId,
+          },
+        })
+        toast.success("Final test created successfully!")
+      }
+
+      onClose()
+      onSuccess()
+    } catch (error: any) {
+      console.error("Error saving final test:", error)
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to save final test"
+      toast.error(errorMessage)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -93,63 +127,43 @@ export default function CreateFinalTest() {
                 {steps.map((step) => (
                   <div
                     key={step.number}
-                    className={`flex flex-col items-center relative z-10 ${
-                      active === step.number - 1 ? "text-[#3e4396]" : "text-[#384766]"
-                    }`}
+                    className={`flex flex-col items-center relative z-10 ${activeStep === step.number - 1 ? "text-[#3e4396]" : "text-[#384766]"}`}
                   >
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
-                        active === step.number - 1
-                          ? "bg-[#3e4396] text-dark_text"
-                          : active > step.number - 1
-                            ? "bg-[#3e4396] text-dark_text"
-                            : "bg-[#384766] text-dark_text"
-                      }`}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${activeStep >= step.number - 1 ? "bg-[#3e4396] text-white" : "bg-[#384766] text-white"}`}
                     >
-                      {active > step.number - 1 ? <Check className="h-5 w-5" /> : step.number}
+                      {activeStep > step.number - 1 ? <Check className="h-5 w-5" /> : step.number}
                     </div>
                     <div className="text-xs font-medium text-center">{step.name}</div>
                   </div>
                 ))}
               </div>
               <div className="absolute top-5 left-0 right-0 h-0.5 bg-gray-200 -z-10">
-                <div
-                  className="h-full bg-[#3e4396] transition-all duration-300"
-                  style={{ width: `${(active / (steps.length - 1)) * 100}%` }}
-                ></div>
+                <div className="h-full bg-[#3e4396] transition-all duration-300" style={{ width: `${(activeStep / (steps.length - 1)) * 100}%` }}></div>
               </div>
             </div>
           </div>
 
-          {/* Content - Same container as progress bar */}
           <div className="mb-12">
-            {active === 0 && (
-              <FinalTestInfomation
-                active={active}
-                setActive={setActive}
-                testInfo={testInfo}
-                setTestInfo={setTestInfo}
-              />
-            )}
+            {activeStep === 0 && <TestInformation finalTests={finalTests} setFinalTests={setFinalTests} onNext={handleNext} />}
 
-            {active === 1 && (
-              <Settings
-                active={active}
-                setActive={setActive}
+            {activeStep === 1 && (
+              <TestSettings
                 testSettings={testSettings}
                 setTestSettings={setTestSettings}
+                onNext={handleNext}
+                onBack={handleBack}
               />
             )}
 
-            {active === 2 && (
-              <FinalTestOverview
-                active={active}
-                setActive={setActive}
-                testData={testData}
-                testInfo={testInfo}
+            {activeStep === 2 && (
+              <TestOverview
+                finalTests={finalTests}
                 testSettings={testSettings}
-                submitTestHandler={submitHandler}
-                createTestHandler={createTestHandler}
+                onBack={handleBack}
+                onSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+                courseId={courseId}
               />
             )}
           </div>
@@ -159,3 +173,4 @@ export default function CreateFinalTest() {
   )
 }
 
+export default CreateFinalTest

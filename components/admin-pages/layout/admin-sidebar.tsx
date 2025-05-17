@@ -96,10 +96,10 @@ const AdminSidebar: FC<Props> = ({
   const { theme } = useTheme();
   const pathname = usePathname();
 
-  const { totalPendingCount, isLoading } = usePendingCount()
-
+const { totalPendingCount, isLoading, refetch } = usePendingCount()
   useEffect(() => {
     setMounted(true);
+    refetch()
   }, []);
 
   useEffect(() => {

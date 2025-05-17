@@ -1,17 +1,20 @@
-import React, { FC, Dispatch, SetStateAction, useEffect } from "react";
+"use client";
+
+import React, { FC, Dispatch, SetStateAction } from "react";
 import { AccordionWrapper } from "../accordion-materials";
 import { AccordionDetails, AccordionSummary } from "@mui/material";
 import { formatVideoLength } from "@/lib/format-data";
 import { MdOutlineOndemandVideo, MdQuiz, MdCheckCircle } from "react-icons/md";
 import { BiSolidChevronDown } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
+import { GiTrophy } from "react-icons/gi";
 import { ICourseData } from "@/types";
 import toast from "react-hot-toast";
-// import { getUserLearningProgress } from "@/lib/fetch-data";
 
 interface Props {
   courseId: string;
   courseData: ICourseData[];
+  finalTest?: any[]; // Thêm prop finalTest
   setOpenSidebar?: Dispatch<SetStateAction<boolean>>;
   setIconHover?: Dispatch<SetStateAction<boolean>>;
   activeVideo: number;
@@ -25,6 +28,7 @@ interface Props {
 const CourseLectureList: FC<Props> = ({
   courseId,
   courseData,
+  finalTest,
   setOpenSidebar,
   setIconHover,
   activeVideo,
@@ -65,21 +69,33 @@ const CourseLectureList: FC<Props> = ({
     }
   };
 
-  // useEffect(() => {
-  //   const fetchUserLearningProgress = async () => {
-  //     try {
-  //       const progress = await getUserLearningProgress(courseId);
-  //       if (progress && progress.learningProgress && progress.learningProgress.progress) {
-  //         setCompletedVideos(progress.learningProgress.progress);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching user learning progress:", error);
-  //       toast.error("An error occurred while fetching learning progress.");
-  //     }
-  //   };
+  // Kiểm tra xem người dùng đã hoàn thành tất cả video và quiz chưa
+  const allContentCompleted = completedVideos.length === courseData?.length && 
+                             courseData?.every((video, index) => !video.quiz?.length || quizCompleted[index]);
+  
+  // Xử lý khi click vào Final Test
+  const handleFinalTestClick = () => {
+    if (allContentCompleted) {
+      setActiveContentType("finalTest");
+    } else {
+      toast.error("Please complete all videos and quizzes before taking the final test");
+    }
+  };
 
-  //   fetchUserLearningProgress();
-  // }, [courseId, setCompletedVideos]);
+  // Kiểm tra xem có finalTest không và chuẩn bị dữ liệu
+  const hasFinalTest = finalTest && finalTest.length > 0;
+  
+  // Lấy thông tin từ finalTest nếu có
+  const finalTestTitle = hasFinalTest ? (finalTest[0]?.title || "Final Assessment") : "";
+  const finalTestDescription = hasFinalTest ? (finalTest[0]?.description || "Test your knowledge with this comprehensive final assessment") : "";
+  
+  // Lấy thông tin về số lượng câu hỏi và thời gian làm bài
+  const questionCount = hasFinalTest ? finalTest.length : 0;
+  const duration = hasFinalTest && finalTest[0]?.settings?.testDuration 
+    ? (finalTest[0].settings.testDuration.minutes || 0) + 
+      (finalTest[0].settings.testDuration.hours || 0) * 60 +
+      (finalTest[0].settings.testDuration.days || 0) * 24 * 60
+    : 30; // Mặc định 30 phút
 
   return (
     <div className="overflow-y-scroll max-h-[calc(100%-62px)] no-scrollbar">
@@ -113,12 +129,8 @@ const CourseLectureList: FC<Props> = ({
                   </span>
                 </div>
                 <span className="text-xs text-tertiary dark:text-dark_text">
-                  {section.videos.length} Lectures |{" "}
-                  {formatVideoLength(
-                    section.videos.reduce(
-                      (acc, cur) => acc + cur.videoLength,
-                      0
-                    )
+                  {section.videos.length} Lectures | {formatVideoLength(
+                    section.videos.reduce((acc, cur) => acc + cur.videoLength, 0)
                   )}
                 </span>
               </div>
@@ -130,14 +142,12 @@ const CourseLectureList: FC<Props> = ({
                     className={`cursor-pointer py-2 px-4 hover:bg-slate-200 dark:hover:bg-slate-900 transition flex items-center justify-between gap-2 ${video.order === activeVideo
                       ? "bg-slate-200 dark:bg-slate-900"
                       : "bg-white dark:bg-slate-600"
-                    }`}
+                      }`}
                     onClick={() => handleVideoClick(video.order)}
                   >
                     <div>
                       <p className="flex items-center">
-                        <span className="font-semibold">
-                          {video?.title}
-                        </span>
+                        <span className="font-semibold">{video?.title}</span>
                       </p>
                       <span className="text-xs flex items-center gap-1 mt-2">
                         {completedVideos?.includes(video._id.toString()) ? (
@@ -162,6 +172,68 @@ const CourseLectureList: FC<Props> = ({
             </AccordionDetails>
           </AccordionWrapper>
         ))}
+
+        {/* Final Test Accordion */}
+        {hasFinalTest && (
+          <AccordionWrapper
+            aria-controls="panel-final-test-content"
+            id="panel-final-test-header"
+            className="mt-2 border-t border-gray-200 dark:border-gray-700"
+          >
+            <AccordionSummary
+              expandIcon={<BiSolidChevronDown className="mt-1" />}
+              aria-controls="panel-final-test-content"
+              id="panel-final-test-header"
+              className="bg-gradient-to-r from-cyan-50 to-teal-50 dark:from-cyan-900/20 dark:to-teal-900/20"
+            >
+              <div className="relative w-full h-full">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2">
+                    <GiTrophy className="text-[#0da5b5] text-xl" />
+                    <span className="font-semibold text-gray-800 dark:text-gray-100">
+                      Final Assessment
+                    </span>
+                  </div>
+                </div>
+                <span className="text-xs text-tertiary dark:text-dark_text flex items-center gap-1">
+                  <MdQuiz className="text-[#0da5b5]" />
+                  {questionCount} Questions • {duration} minutes
+                </span>
+              </div>
+            </AccordionSummary>
+            <AccordionDetails className="bg-white dark:bg-slate-800">
+              <div
+                className={`cursor-pointer py-4 px-4 rounded-lg transition
+                  ${allContentCompleted 
+                    ? "bg-gradient-to-r from-blue-50 to-teal-50 dark:from-blue-900/10 dark:to-teal-900/10 hover:from-blue-100 hover:to-teal-100" 
+                    : "bg-gray-100 dark:bg-gray-700 opacity-75 cursor-not-allowed"
+                  }`}
+                onClick={handleFinalTestClick}
+              >
+                <div className="flex flex-col gap-2">
+                  <p className="font-semibold text-gray-800 dark:text-gray-100">{finalTestTitle}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{finalTestDescription}</p>
+                  
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-xs bg-[#0da5b5]/10 text-[#0da5b5] py-1 px-2 rounded-full">
+                      {duration} minutes
+                    </span>
+                    
+                    {allContentCompleted ? (
+                      <span className="text-xs bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400 py-1 px-2 rounded-full">
+                        Ready to take
+                      </span>
+                    ) : (
+                      <span className="text-xs bg-orange-100 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400 py-1 px-2 rounded-full">
+                        Complete all content first
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </AccordionDetails>
+          </AccordionWrapper>
+        )}
       </div>
     </div>
   );

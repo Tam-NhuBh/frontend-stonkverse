@@ -9,6 +9,7 @@ import { ICourseData } from "@/types";
 interface Props {
   id: string;
   courseData: ICourseData[];
+  finalTest?: any;
   courseDataLoading: boolean;
   refetch: any;
 }
@@ -16,6 +17,7 @@ interface Props {
 const PrivateCourseContent: FC<Props> = ({
   id,
   courseData,
+  finalTest,
   courseDataLoading,
   refetch,
 }): JSX.Element => {
@@ -35,6 +37,8 @@ const PrivateCourseContent: FC<Props> = ({
             <CourseContentMedia
               courseId={id}
               courseData={courseData}
+              finalTest={finalTest}
+
               activeVideo={activeVideo}
               setActiveVideo={setActiveVideo}
               refetch={refetch}

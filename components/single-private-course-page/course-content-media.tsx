@@ -19,12 +19,13 @@ import AIInstructor from "../ai"
 interface Props {
   courseId: string
   courseData: ICourseData[]
+  finalTest?: any
   activeVideo: number
   setActiveVideo: Dispatch<SetStateAction<number>>
   refetch: any
 }
 
-const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setActiveVideo, refetch }): JSX.Element => {
+const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, activeVideo, setActiveVideo, refetch }): JSX.Element => {
   const [showQuizModal, setShowQuizModal] = useState(false)
   const [quizCompleted, setQuizCompleted] = useState<boolean[]>(Array(courseData?.length).fill(false))
   const [openSidebar, setOpenSidebar] = useState(true)
@@ -93,7 +94,7 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
       if (allPreviousQuizzesCompleted) {
         setActiveVideo(videoIndex)
       } else {
-        toast.error("Please complete the current quiz before moving to another video.")
+        toast.error("Please complete the current quiz before moving to another video")
       }
     } else {
       setActiveVideo(videoIndex)
@@ -130,7 +131,7 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
         setCompletedVideos((prev) => [...prev, courseData?.[activeVideo]?._id.toString()])
         setActiveVideo((prevIndex) => Math.min(prevIndex + 1, courseData?.length - 1))
       } catch (error) {
-        toast.error("An error occurred while updating lesson completion.")
+        toast.error("An error occurred while updating lesson completion")
       }
     }
   }
@@ -155,7 +156,7 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
         setNextVideoTriggered(false)
       }
     } catch (error) {
-      toast.error("An error occurred while updating quiz completion.")
+      toast.error("An error occurred while updating quiz completion")
     }
   }
 
@@ -262,14 +263,18 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, activeVideo, setA
 
       {showQuizModal && currentVideoHasQuiz && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-[9998] px-2">
-          <div className="relative bg-white dark:bg-slate-900 p-1 rounded-lg w-full max-w-2xl pt-12 sm:pt-8">
-            {/* Close Button */}
-            <button
-              className="absolute top-2 right-2 text-gray-600 dark:text-gray-500 p-2 hover:text-red-600 dark:hover:text-red-600 hover:scale-110 duration-200 transition-transform z-10"
-              onClick={handleCloseQuizModal}
-            >
-              <IoMdClose size={24} />
-            </button>
+          <div className="relative bg-white dark:bg-slate-900 p-1 rounded-md w-full max-w-2xl">
+            <div className="flex items-center justify-between px-3 py-3 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-xl ml-4 text-gray-900 dark:text-gray-200 font-bold">Mini quiz</h3>
+
+              {/* Close Button */}
+              <button
+                className="text-gray-600 dark:text-gray-500 p-1.5 hover:text-red-600 dark:hover:text-red-600 hover:scale-110 duration-200 transition-transform z-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                onClick={handleCloseQuizModal}
+              >
+                <IoMdClose size={24} />
+              </button>
+            </div>
 
             {/* CourseQuiz Component */}
             <div className="overflow-y-auto max-h-[calc(100vh-4rem)] px-2">

@@ -171,21 +171,6 @@ const PendingCourses = () => {
           </div>
           <h3 className="text-lg font-semibold mb-2 text-tertiary dark:text-dark_text">No pending courses found</h3>
           <p className="text-gray-500 dark:text-gray-400 mb-4">All courses have been reviewed</p>
-
-          <div className="relative group inline-block">
-            <button
-              onClick={handleRefresh}
-              className="flex items-center justify-center w-10 h-10 bg-white dark:bg-slate-700 rounded-full text-sm font-medium text-tertiary dark:text-dark_text border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
-            >
-              <RefreshCw
-                size={20}
-                className={`text-tertiary dark:text-dark_text ${isRefreshing ? "animate-spin" : ""} group-hover:rotate-180 transition-transform duration-300`}
-              />
-            </button>
-            <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none">
-              Refresh list
-            </span>
-          </div>
         </div>
       </div>
     )

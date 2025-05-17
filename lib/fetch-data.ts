@@ -2,8 +2,6 @@ import axios from "axios";
 import { cache } from "react";
 import axiosClientV2 from "./api-client-v2";
 import axiosClient from "./api-client-v1";
-import Categories from '../components/home-page/categories';
-
 
 export const getAllCoursesData = async () => {
   try {
@@ -33,7 +31,7 @@ type IEmail = {
 };
 export const getAllEmail = async () => {
   try {
-    const data:IEmail = await axiosClient(
+    const data: IEmail = await axiosClient(
       `/get-email`
     );
     return data.email;
@@ -101,7 +99,6 @@ export const getCoursePublicDetails = cache(async (courseId: string) => {
     const { data } = await axios(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/get-course/${courseId}`
     );
-
     return data.course;
   } catch (error) {
     console.log(error);
@@ -143,7 +140,7 @@ export const getAnswersQuiz = async (contentId: string) => {
 
     // console.log("Fetched data:", data);
     return data;
-    
+
   } catch (error) {
     console.log(error);
   }
@@ -152,12 +149,12 @@ export const getAnswersQuiz = async (contentId: string) => {
 
 export const resetUserLearningProgress = async () => {
   try {
-    const response = await axios (
+    const response = await axios(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/reset-user-progress`
     );
 
     return response.data;
-  } catch (error:any) {
+  } catch (error: any) {
     throw new Error(error.response.data.message);
   }
 };
@@ -165,17 +162,17 @@ export const resetUserLearningProgress = async () => {
 
 export const getIndexStock = async () => {
   try {
-    const response = await axios (
+    const response = await axios(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/get-index`
     );
 
     return response.data;
-  } catch (error:any) {
+  } catch (error: any) {
     throw new Error(error.response.data.message);
   }
 };
 
-export const getCurrentUserProgress= async (courseIds: string[]) => {
+export const getCurrentUserProgress = async (courseIds: string[]) => {
   try {
     const { data } = await axios.post(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/get-user-progress`,
@@ -218,7 +215,7 @@ export const getPromotionByID = async (id: string) => {
     );
     return data;
   } catch (error) {
-    console.log("Fetch promotion data fail:",error);
+    console.log("Fetch promotion data fail:", error);
   }
 };
 
@@ -237,7 +234,6 @@ export const getPromotionsByCourse = async (id: string) => {
 export const getPromotionsByUserCourse = async (id: string) => {
   try {
     const data: IPromotion = await axiosClientV2(`/admin/promotion/user-course/${id}`)
-    console.log("vào api rồi:", data)
     return data
   } catch (error) {
     console.log("Fetch promotion by user course is false:", error)
@@ -255,3 +251,49 @@ export const getAllPendingCourse = async () => {
   }
 };
 
+export const getSettings = async (filter: { courseId?: string; courseDataId?: string }) => {
+  try {
+    const response = await axios(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/admin/setting`, { data: filter })
+    return response.data
+  } catch (error: any) {
+    console.error("Failed to fetch settings:", error.response?.data?.message || error.message)
+    throw error
+  }
+}
+
+export const getFinalTests = async (courseId: string) => {
+  try {
+    const response = await axiosClient(
+      `/final-test/${courseId}`
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch final tests:", error.response?.data?.message || error.message);
+    throw error;
+  }
+};
+
+export const getFinalTestsByID = async (id: string) => {
+  try {
+    const response = await axiosClient(
+      `/final-test-by-id/${id}`
+    );
+    console.log("get final:", response.data)
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch final tests:", error.response?.data?.message || error.message);
+    throw error;
+  }
+};
+
+export const getAllCourseFinalTest = async () => {
+  try {
+    const response = await axiosClient(
+      `/get-all-courses`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch final tests:", error.response?.data?.message || error.message);
+    throw error;
+  }
+};

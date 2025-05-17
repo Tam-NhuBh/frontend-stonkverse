@@ -269,7 +269,7 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions, quizId, onClose
           const isCorrect = questionScore === question.maxScore
 
           return (
-            <div key={question.id} className="bg-gray-100 dark:bg-slate-700 p-4 rounded-lg">
+            <div key={question.id} className="bg-gray-100 dark:bg-slate-700 p-4 rounded-md">
               <div className="flex justify-between items-center mb-2">
                 <p className="text-lg font-semibold">
                   Question {index + 1}: {question.title}
@@ -326,7 +326,7 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions, quizId, onClose
 
       <div className="flex space-x-4">
         <BtnWithIcon
-          content={hasSubmitted && isResubmitEnabled ? "Resubmit" : hasSubmitted ? "Enable resubmit" : "Submit"}
+          content={hasSubmitted && isResubmitEnabled ? "Resubmit" : hasSubmitted ? "Enable re-submit" : "Submit"}
           type="submit"
           onClick={hasSubmitted && !isResubmitEnabled ? handleEnableResubmit : handleSubmit}
           iconSize={25}
@@ -341,22 +341,21 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions, quizId, onClose
       {/* Result Modal */}
       {showResultModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="overflow-y-auto max-h-[calc(100vh-4rem)] px-2">
-
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-lg max-w-lg w-full">
-              <h3 className="text-xl font-semibold mb-3">Quiz Results</h3>
+          <div className="overflow-y-auto max-h-[calc(100vh-4rem)] px-2" style={{ width: '90%', maxWidth: '400px' }}>
+            <div className="bg-white dark:bg-slate-800 p-5 rounded-md w-full">
+              <h3 className="text-xl text-gray-900 dark:text-gray-200 font-bold mb-2">Quiz results</h3>
 
               {/*
-            <div className="mb-3">
-              <div className="text-md font-semibold flex items-center gap-2 mb-1">
-                <span>
-                  Your total score: {score}/{maxPossibleScore}
-                </span>
-                {score === maxPossibleScore ? <FaCheckCircle className="text-green-500" size={24} /> : null}
-              </div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{getFeedbackMessage(score, maxPossibleScore)}</p>
-            </div>
-            */}
+                <div className="mb-3">
+                  <div className="text-md font-semibold flex items-center gap-2 mb-1">
+                    <span>
+                      Your total score: {score}/{maxPossibleScore}
+                    </span>
+                    {score === maxPossibleScore ? <FaCheckCircle className="text-green-500" size={24} /> : null}
+                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{getFeedbackMessage(score, maxPossibleScore)}</p>
+                </div>
+                */}
 
               <div className="max-h-60 overflow-y-auto mb-4">
                 {questions.map((question, index) => {
@@ -364,7 +363,7 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions, quizId, onClose
                   return (
                     <div key={question.id} className="mb-2 p-2 border-b">
                       <div className="flex justify-between">
-                        <span className="font-medium">Question {index + 1}:</span>
+                        <span className="text-md text-gray-800 dark:text-gray-300 font-semibold ml-0.2">Question {index + 1}:</span>
                         <div className="flex items-center">
                           {isCorrect ? (
                             <FaCheckCircle className="ml-1 text-green-500" size={16} />
@@ -373,7 +372,7 @@ const CourseQuiz: FC<Props> = ({ courseId, contentId, questions, quizId, onClose
                           )}
                         </div>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">{question.title}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 ml-1.5">{question.title}</p>
                     </div>
                   )
                 })}

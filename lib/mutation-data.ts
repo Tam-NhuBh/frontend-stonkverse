@@ -1,7 +1,7 @@
 import axios from "axios";
-import axiosClientV2 from "./api-client-v2";
+import axiosClientV2 from './api-client-v2';
 import axiosClient from "./api-client-v1";
-import { ICourse } from "@/types";
+import { ICourse, ITitleFinalTest, TestSettings } from "@/types";
 
 export const createPaymentIntent = async (amount: number) => {
   try {
@@ -21,8 +21,8 @@ export const createPaymentIntent = async (amount: number) => {
 
 export const createOrder = async (courseId: string, payment_info: any) => {
   try {
-    const { data } = await axios.post(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/create-order`,
+    const { data } = await axiosClient.post(
+      `/create-order`,
       { courseId, payment_info },
       {
         withCredentials: true,
@@ -244,3 +244,66 @@ export const getCourseByInstructor = async (id: string) => {
     console.log(error.response.message);
   }
 };
+
+// Final test
+export const createFinalTest = async (
+  courseId: string,
+  data: {
+    finalTest: ITitleFinalTest[],
+    settings: TestSettings,
+  }
+) => {
+  try {
+    const response = await axiosClient.post(`/final-test/${courseId}`, data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to create final test:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const deleteFinalTest = async (id: string) => {
+  try {
+    console.log("id ft:",id)
+    const response = await axiosClient.delete(`/final-test/delete/${id}`)
+    return response.data
+  } catch (error: any) {
+    console.error("Failed to delete final test:", error.response?.data?.message || error.message)
+    throw error
+  }
+}
+
+export const editFinalTest = async (id: string, updatedData: any) => {
+  try {
+    const formattedData = {
+      finalTest: updatedData.finalTest || [],
+      settings: updatedData.settings || {}
+    };
+    
+    const response = await axiosClient.patch(`/final-test/edit/${id}`, formattedData);
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to edit final test:", error.response?.data?.message || error.message);
+    throw error;
+  }
+}
+
+export const createSetting = async (settingData: any) => {
+  try {
+    const response = await axiosClientV2.post("/admin/setting", settingData)
+    return response.data
+  } catch (error: any) {
+    console.error("Failed to create setting:", error.response?.data?.message || error.message)
+    throw error
+  }
+}
+
+export const updateSetting = async (id: string, data: any) => {
+  try {
+    const response = await axiosClientV2.patch(`/admin/setting/${id}`, data)
+    return response.data
+  } catch (error: any) {
+    console.error("Failed to update setting:", error.response?.data?.message || error.message)
+    throw error
+  }
+}
