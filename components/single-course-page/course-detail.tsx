@@ -190,7 +190,10 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
           </div>
 
           <div className="mb-10">
-            <CourseContentList list={courseDetail?.courseData} courseLength={courseLength} />
+            <CourseContentList list={courseDetail?.courseData} courseLength={courseLength}
+              finalTest={courseDetail?.finalTest}
+
+            />
           </div>
 
           <div className="flex items-center gap-3 mb-4">
@@ -346,11 +349,10 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                   />
                 </div>
                 <BtnWithIcon
-                  content={`Buy Now ${
-                    couponDiscount > 0
+                  content={`Buy Now ${couponDiscount > 0
                       ? "$" + (courseDetail?.price - (courseDetail?.price * couponDiscount) / 100).toFixed(2)
                       : "$" + courseDetail?.price
-                  }`}
+                    }`}
                   customClasses="w-full mt-4"
                   onClick={orderHandler}
                 />

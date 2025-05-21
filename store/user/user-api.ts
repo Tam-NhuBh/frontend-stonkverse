@@ -68,6 +68,14 @@ export const userApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+
+    getCourseUsers: builder.query({
+      query: () => ({
+        url: "my-courses/users",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -79,4 +87,5 @@ export const {
   useGetCourseUsersQuery,
   useUpdateUserRoleMutation,
   useDeleteUserMutation,
+    useGetCourseUsersQuery,
 } = userApi;

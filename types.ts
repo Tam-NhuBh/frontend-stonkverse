@@ -56,7 +56,7 @@ export interface ILink {
   url: string;
 }
 
-export interface IAnswerQuiz{
+export interface IAnswerQuiz {
   _id: Types.ObjectId;
   user: IUser;
   answer: string[];
@@ -71,7 +71,7 @@ export interface IQuestionQuiz {
   answers: IAnswerQuiz[];
   correctAnswer: string[],
   mockAnswer: string[],
-  maxScore:  number,
+  maxScore: number,
   createdAt: Date;
 }
 
@@ -88,6 +88,52 @@ export interface ICourseData {
   suggestion: string;
   questions: IQuestion[];
   quiz: IQuestionQuiz[];
+}
+
+export type QuestionType = "single" | "multiple" | "fillBlank";
+
+export interface IAnswerFinalTest {
+  answer: string[];
+  imageUrl?: string;
+  score: number;
+  createdAt?: Date;
+}
+
+export interface ITitleFinalTest {
+  id?: string;
+  title: string;
+  description?: string;
+  answers: IAnswerFinalTest[];
+  correctAnswer: string[];
+  mockAnswer: string[];
+  maxScore: number;
+  type: QuestionType;
+  createdAt?: Date;
+  imageUrl?: string;
+}
+
+export interface TestSettings {
+  course?: string;
+  testDuration: {
+    hours: number;
+    minutes: number;
+  };
+  numberOfQuestions: number;
+  pageLayout: string;
+  gradingDisplay: string;
+ 
+  instructionsMessage: string;
+  completionMessage: string;
+}
+
+export interface IFinalTest {
+  id?: string;
+  title: string;
+  description?: string;
+  tests: ITitleFinalTest[];
+  score: number;
+  createdAt?: Date;
+  settings: TestSettings;
 }
 
 export interface ICourse {
@@ -112,6 +158,7 @@ export interface ICourse {
   forWho: { title: string }[];
   reviews: IReview[];
   courseData: ICourseData[];
+  finalTest: IFinalTest[];
   ratings?: number;
   purchased?: number;
   status: 'APPROVED' | 'REJECTED' | 'PENDING_REVIEW';

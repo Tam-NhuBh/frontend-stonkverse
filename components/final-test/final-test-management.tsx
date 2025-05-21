@@ -3,36 +3,33 @@
 import { type FC, useEffect, useState } from "react"
 import { toast } from "react-hot-toast"
 import { Modal, Box } from "@mui/material"
-import { useGetAllCoursesAdminQuery } from "@/store/course/course-api"
+import { useGetAllCoursesQuery } from "@/store/course/course-api"
 import BtnWithIcon from "@/components/btn-with-icon"
-import BtnWithLoading from "@/components/btn-with-loading"
 import CreateFinalTest from "./create-final-test"
 import FinalTestCard from "../final-test-card"
 import Selector from "../layout/selector"
 import SearchBox from "../layout/search-box"
+import { getFinalTests, getFinalTestsByID } from "@/lib/fetch-data"
+import { deleteFinalTest } from "@/lib/mutation-data"
+import { AiOutlineClose } from "react-icons/ai"
+import type { ITitleFinalTest, QuestionType, TestSettings, IFinalTest, IAnswerFinalTest } from "@/types"
 
 interface ICourse {
   _id: string
   name: string
-  ratings: number
-  purchased: number
-  createdAt: string
 }
 
-interface ITest {
-  id?: string
-  name: string
+interface ITestCard {
+  id: string
+  title: string
   description: string
-  course: string
-  duration: {
-    days: number
+  testDuration: {
     hours: number
     minutes: number
-    seconds: number
   }
   withSections: boolean
   createdAt: string
-  questionsCount?: number
+  numberOfQuestions: number
 }
 
 const FinalTestManagement: FC = () => {
@@ -40,78 +37,63 @@ const FinalTestManagement: FC = () => {
     isLoading: isCoursesLoading,
     data: coursesData,
     refetch: refetchCourses,
-  } = useGetAllCoursesAdminQuery({}, { refetchOnMountOrArgChange: true })
-
+  } = useGetAllCoursesQuery({}, { refetchOnMountOrArgChange: true })
   const [createTestModal, setCreateTestModal] = useState(false)
   const [editTestModal, setEditTestModal] = useState(false)
   const [deleteTestModal, setDeleteTestModal] = useState(false)
   const [selectedCourseId, setSelectedCourseId] = useState("")
   const [selectedTestId, setSelectedTestId] = useState("")
-  const [testsData, setTestsData] = useState<ITest[]>([])
+  const [testsData, setTestsData] = useState<ITestCard[]>([])
   const [isLoadingTests, setIsLoadingTests] = useState(false)
   const [isDeletingTest, setIsDeletingTest] = useState(false)
+  const [isEditTest, setIsEditTest] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
+  const [editingTest, setEditingTest] = useState<IFinalTest | null>(null)
 
-  // Mock function to fetch tests - replace with actual API call
   const fetchTests = async (courseID: string) => {
     if (!courseID) return
-
     setIsLoadingTests(true)
     try {
-      // Replace with actual API call
-      // const result = await getTestsByCourse(courseID)
-      const mockTests = [
-        {
-          id: "test1",
-          name: "Midterm Examxzzzzzzzzzzzzzzzzzzzxzxsx",
-          description: "Comprehensive midterm assessment covering all topics from weeks 1-5.",
-          course: courseID,
-          duration: { days: 0, hours: 1, minutes: 30, seconds: 0 },
-          withSections: true,
-          createdAt: new Date().toISOString(),
-          questionsCount: 25,
-        },
-        {
-          id: "test2",
-          name: "Final Test",
-          description: "End of course evaluation to test understanding of all course materials.",
-          course: courseID,
-          duration: { days: 0, hours: 2, minutes: 0, seconds: 0 },
-          withSections: false,
-          createdAt: new Date().toISOString(),
-          questionsCount: 40,
-        },
-        {
-          id: "test3",
-          name: "Weekly Assessment #1",
-          description: "Quick assessment of week 1 materials.",
-          course: courseID,
-          duration: { days: 0, hours: 0, minutes: 45, seconds: 0 },
-          withSections: false,
-          createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-          questionsCount: 15,
-        },
-      ]
+      const result = await getFinalTests(courseID)
+      const mappedTests = (result.finalTests || []).map((test: any) => ({
+        id: test._id,
+        title: test.title,
+        description: test.description || "",
+        testDuration: test.settings?.testDuration
+          ? test.settings.testDuration
+          : {
+            hours: 0,
+            minutes: 0,
+          },
+        withSections: false,
+        createdAt: test.createdAt,
+        numberOfQuestions: test.settings?.numberOfQuestions || 0,
+      }))
 
-      setTestsData(mockTests)
+      setTestsData(mappedTests)
     } catch (error) {
-      toast.error("Failed to fetch tests")
+      toast.error("Failed to fetch final tests")
+      setTestsData([])
     } finally {
       setIsLoadingTests(false)
     }
   }
 
   useEffect(() => {
+    if (coursesData?.courses?.length > 0) {
+      if (!selectedCourseId) {
+        setSelectedCourseId(coursesData.courses[0]._id)
+      } else if (!coursesData.courses.some((course: ICourse) => course._id === selectedCourseId)) {
+        setSelectedCourseId(coursesData.courses[0]._id)
+      }
+    }
+  }, [coursesData])
+
+  useEffect(() => {
     if (selectedCourseId) {
       fetchTests(selectedCourseId)
     }
   }, [selectedCourseId])
-
-  useEffect(() => {
-    if (coursesData?.courses?.length > 0 && !selectedCourseId) {
-      setSelectedCourseId(coursesData.courses[0]._id)
-    }
-  }, [coursesData, selectedCourseId])
 
   const handleCreateTest = () => {
     if (!selectedCourseId) {
@@ -121,63 +103,107 @@ const FinalTestManagement: FC = () => {
     setCreateTestModal(true)
   }
 
-  const handleEditTest = (testId: string) => {
-    setSelectedTestId(testId)
-    setEditTestModal(true)
-  }
+  const handleEditTest = async (testId: string) => {
+    try {
+      setIsEditTest(true)
+      setSelectedTestId(testId)
 
+      const response = await getFinalTestsByID(testId)
+
+      const testData = response.data || response
+
+      if (!testData) {
+        throw new Error("Test data not found")
+      }
+
+      console.log("Extracted test data:", testData)
+
+      const finalTest: IFinalTest = {
+        id: testData._id,
+        title: testData.title,
+        description: testData.description || "",
+        tests: (testData.tests || []).map((test: any) => ({
+          id: test._id,
+          title: test.title,
+          description: test.description || "",
+          answers: test.answers || [],
+          correctAnswer: test.correctAnswer || [],
+          mockAnswer: test.mockAnswer || [],
+          maxScore: test.maxScore || 10,
+          type: test.type as QuestionType,
+          imageUrl: test.imageUrl || "",
+          createdAt: test.createdAt ? new Date(test.createdAt) : undefined,
+        })),
+        score: testData.score || 0,
+        createdAt: testData.createdAt ? new Date(testData.createdAt) : undefined,
+        settings: {
+          course: selectedCourseId,
+          testDuration: testData.settings?.testDuration
+            ? testData.settings.testDuration 
+            : { hours: 1, minutes: 0 },
+          numberOfQuestions: testData.settings?.numberOfQuestions || 10,
+          pageLayout: "all",
+          gradingDisplay: "score",
+          instructionsMessage: testData.settings?.instructionsMessage || "",
+          completionMessage: testData.settings?.completionMessage || "",
+        }
+      }
+
+      console.log("Final processed data:", finalTest)
+      setEditingTest(finalTest)
+      setEditTestModal(true)
+    } catch (err) {
+      console.error("Error in handleEditTest:", err)
+      toast.error("Failed to load test data")
+    } finally {
+      setIsEditTest(false)
+    }
+  }
   const handleDeleteTestConfirm = async () => {
     if (!selectedTestId) return
 
     setIsDeletingTest(true)
     try {
-      // Replace with actual API call
-      // await deleteTestById(selectedTestId)
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      toast.success("Test deleted successfully!")
+      await deleteFinalTest(selectedTestId)
+      toast.success("Final test deleted successfully!")
       setDeleteTestModal(false)
 
       if (selectedCourseId) {
         fetchTests(selectedCourseId)
       }
     } catch (error) {
-      toast.error("Failed to delete test")
+      toast.error("Failed to delete final test")
     } finally {
       setIsDeletingTest(false)
     }
   }
 
+  // Mở modal xác nhận xóa
   const handleDeleteTest = (testId: string) => {
     setSelectedTestId(testId)
     setDeleteTestModal(true)
   }
 
+  // Lấy tên course đã chọn
   const getSelectedCourseName = () => {
     if (!selectedCourseId || !coursesData?.courses) return "Select a course"
     const course = coursesData.courses.find((c: ICourse) => c._id === selectedCourseId)
     return course ? course.name : "Select a course"
   }
 
+  // Lọc danh sách tests theo từ khóa tìm kiếm
   const filteredTests = testsData.filter(
     (test) =>
-      test.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      test.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       test.description.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
   return (
     <div className="mt-8 w-full max-w-[1400px] px-4 mx-auto">
-      {/* <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">Test Management</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Create and manage Testzes for your courses</p>
-      </div> */}
-
-      {/* Course Selector and Controls */}
+      {/* Header với chọn khóa học và tìm kiếm */}
       <div className="mb-6 bg-[#475569] dark:bg-[#3E4396] rounded-sm border dark:border-gray-700 shadow-sm p-4">
         <div className="flex flex-col md:flex-row gap-4 items-stretch">
-          {/* Course Selector Component */}
+          {/* Course Component */}
           {coursesData?.courses && (
             <div className="w-full md:w-1/2">
               <Selector
@@ -191,11 +217,11 @@ const FinalTestManagement: FC = () => {
 
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-1/2">
             <div className="flex-grow">
-              <SearchBox value={searchTerm} onChange={setSearchTerm} placeholder="Searching..." />
+              <SearchBox value={searchTerm} onChange={setSearchTerm} placeholder="Search final tests..." />
             </div>
 
             <div className="flex-shrink-0">
-              <BtnWithIcon content="Create" onClick={handleCreateTest} customClasses="w-full" />
+              <BtnWithIcon content="Create Test" onClick={handleCreateTest} customClasses="w-full" />
             </div>
           </div>
         </div>
@@ -228,25 +254,20 @@ const FinalTestManagement: FC = () => {
           <p className="text-gray-500 dark:text-gray-400 mb-4">
             {searchTerm ? "Try adjusting your search terms" : "Create your first final test for this course"}
           </p>
-          {!searchTerm && (
-            <BtnWithIcon
-              content="Create Final Test"
-              onClick={handleCreateTest}
-            />
-          )}
+          {!searchTerm && <BtnWithIcon content="Create Final Test" onClick={handleCreateTest} />}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {filteredTests.map((test) => (
             <FinalTestCard
               key={test.id}
-              id={test.id!}
-              name={test.name}
+              id={test.id}
+              name={test.title}
               description={test.description}
-              duration={test.duration}
+              testDuration={test.testDuration}
               withSections={test.withSections}
               createdAt={test.createdAt}
-              questionsCount={test.questionsCount}
+              numberOfQuestions={test.numberOfQuestions}
               onEdit={handleEditTest}
               onDelete={handleDeleteTest}
             />
@@ -278,12 +299,22 @@ const FinalTestManagement: FC = () => {
               <h4 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 Create Final Test for: {getSelectedCourseName()}
               </h4>
-              <button onClick={() => setCreateTestModal(false)} className="text-gray-500 hover:text-red-600 hover:scale-110 transition-transform duration-200">
-                ✕
+              <button
+                onClick={() => setCreateTestModal(false)}
+                className="text-gray-500 hover:text-red-600 hover:scale-110 transition-transform duration-200"
+              >
+                <AiOutlineClose />
               </button>
             </div>
 
-            <CreateFinalTest />
+            <CreateFinalTest
+              courseId={selectedCourseId}
+              onClose={() => {
+                setCreateTestModal(false)
+              }}
+              onSuccess={() => fetchTests(selectedCourseId)}
+              initialData={null}
+            />
           </div>
         </Box>
       </Modal>
@@ -291,7 +322,10 @@ const FinalTestManagement: FC = () => {
       {/* Edit Test Modal */}
       <Modal
         open={editTestModal}
-        onClose={() => setEditTestModal(false)}
+        onClose={() => {
+          setEditTestModal(false)
+          setEditingTest(null)
+        }}
         sx={{
           display: "flex",
           alignItems: "center",
@@ -299,7 +333,7 @@ const FinalTestManagement: FC = () => {
         }}
       >
         <Box
-          className="modal-content-wrapper"
+          className="modal-content-wrapper bg-[#F5F5F5] dark:bg-slate-900 rounded-sm shadow-xl"
           sx={{
             maxWidth: 1200,
             width: "95%",
@@ -308,32 +342,54 @@ const FinalTestManagement: FC = () => {
           }}
         >
           <div className="p-2">
-
-            <div className="flex justify-between items-center mb-3">
-              <h4 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Edit Final Test</h4>
+            <div className="flex justify-between items-center mb-6">
+              <h4 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                Edit Final Test: {editingTest?.title}
+              </h4>
+              <button
+                onClick={() => {
+                  setEditTestModal(false)
+                  setEditingTest(null)
+                }}
+                className="text-gray-500 hover:text-red-600 hover:scale-110 transition-transform duration-200"
+              >
+                <AiOutlineClose />
+              </button>
             </div>
 
-            <div className="text-center p-8">
-              <p className="mb-4">Edit functionality to be implemented</p>
-              <BtnWithIcon content="Close"
-                onClick={() => setEditTestModal(false)} />
-            </div>
+            {isEditTest ? (
+              <div className="flex justify-center p-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+              </div>
+            ) : (
+              <CreateFinalTest
+                courseId={selectedCourseId}
+                onClose={() => {
+                  setEditTestModal(false)
+                  setEditingTest(null)
+                }}
+                onSuccess={() => fetchTests(selectedCourseId)}
+                initialData={editingTest}
+              />
+            )}
           </div>
         </Box>
       </Modal>
 
-      {/* Delete Test Confirmation Modal */}
-      <Modal open={deleteTestModal} onClose={() => setDeleteTestModal(false)}>
+      {/* Delete Modal */}
+      <Modal open={deleteTestModal} onClose={() => setDeleteTestModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <Box className="modal-content-wrapper">
-          <h4 className="form-title">Are you sure you want to delete this final test?</h4>
+          <h4 className="form-title"> Are you sure to delete this final test?</h4>
           <div className="mt-4 w-[70%] flex justify-between mx-auto pb-4">
-            <BtnWithIcon content="Cancel"
-              onClick={() => setDeleteTestModal(false)} />
-            <BtnWithLoading
+            <BtnWithIcon
+              content="Cancel"
+              onClick={() => setDeleteTestModal(false)}
+            />
+            <BtnWithIcon
               content="Delete"
-              isLoading={isDeletingTest}
-              customClasses="!bg-red-700 !w-fit"
-              type="button"
               onClick={handleDeleteTestConfirm}
             />
           </div>

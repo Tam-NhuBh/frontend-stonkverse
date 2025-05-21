@@ -1,13 +1,15 @@
 import { FC } from "react";
 import CourseVideosAccordion from "./course-video-accordion";
-import { ICourseData } from "@/types";
+import { ICourseData, IFinalTest } from "@/types";
 
 interface Props {
   list: ICourseData[];
   courseLength: number;
+  finalTest?: IFinalTest[];
+
 }
 
-const CourseContentList: FC<Props> = ({ list, courseLength }): JSX.Element => {
+const CourseContentList: FC<Props> = ({ list, finalTest, courseLength }): JSX.Element => {
   const rawSections = new Set<string>(list?.map((item) => item.videoSection));
 
   const uniqueSections: string[] = [...rawSections];
@@ -23,6 +25,8 @@ const CourseContentList: FC<Props> = ({ list, courseLength }): JSX.Element => {
         videosBySection={videosBySection}
         countLectures={list?.length}
         courseLength={courseLength}
+        finalTest={finalTest}
+
       />
     </div>
   );

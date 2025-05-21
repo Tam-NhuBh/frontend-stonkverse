@@ -4,7 +4,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { HiExternalLink } from "react-icons/hi";
 import QuestionAndAnswer from "./question-and-answer";
 import CourseReviews from "./course-reviews";
-import { ICourseData, ILink, IQuestion } from "@/types";
+import { ICourseData, IFinalTest, ILink, IQuestion, ITitleFinalTest } from "@/types";
 import CourseLectureList from "./course-lecture-list";
 import { getAnswersQuiz } from "@/lib/fetch-data";
 import toast from "react-hot-toast";
@@ -15,11 +15,12 @@ interface Props {
   refetch: any;
   activeVideo: number;
   setActiveVideo: Dispatch<SetStateAction<number>>;
-  setActiveContentType: Dispatch<SetStateAction<string>>; 
+  setActiveContentType: Dispatch<SetStateAction<string>>;
   quizCompleted: boolean[];
+  finalTest?: IFinalTest[];
+  onFinalTestClick?: () => void;
   completedVideos: string[];
   setCompletedVideos: Dispatch<SetStateAction<string[]>>;
-
 }
 
 const panelItemClasses =
@@ -33,15 +34,16 @@ const LectureTabContent: FC<Props> = ({
   refetch,
   courseData,
   activeVideo,
+  finalTest,
+  onFinalTestClick,
   setActiveVideo,
   setActiveContentType,
+  quizCompleted,
   completedVideos,
   setCompletedVideos,
-  
 }): JSX.Element => {
   const [active, setActive] = useState(0);
   const notComputer = useMediaQuery("(max-width:1100px)");
-  const [quizCompleted, setQuizCompleted] = useState<boolean[]>(Array(courseData?.length).fill(false));
 
   const description = courseData?.[activeVideo]?.description;
   const resources = courseData?.[activeVideo]?.links;
@@ -49,36 +51,22 @@ const LectureTabContent: FC<Props> = ({
   const contentId = courseData?.[activeVideo]?._id.toString();
   const activeTitle = courseData?.[activeVideo]?.title;
 
-  useEffect(() => {
-    const fetchQuizCompletionStatus = async () => {
-      try {
-        if (!courseData || !courseData?.[activeVideo]) return;
-        const answers = await getAnswersQuiz(courseData?.[activeVideo]?._id.toString());
-        if (answers && answers.answers && answers.answers[courseData?.[activeVideo]?._id.toString()]) {
-          setQuizCompleted((prevCompleted) => {
-            const newCompleted = [...prevCompleted];
-            newCompleted[activeVideo] = true;
-            return newCompleted;
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching quiz answers:", error);
-        toast.error("An error occurred while fetching quiz answers.");
-      }
-    };
+  const completedCount = courseData?.filter((video, index) => {
+    const videoCompleted = completedVideos.includes(video._id.toString())
+    const quizCompleted1 = !video.quiz?.length || quizCompleted[index]
+    return videoCompleted && quizCompleted1
+  }).length || 0
   
-    fetchQuizCompletionStatus();
-  }, [activeVideo, courseData]);
-  
+  const totalCount = courseData?.length || 0
+  const isAllContentCompleted = completedCount === totalCount
 
   return (
     <>
       <div className="bg-[#fbfafa] dark:bg-slate-800 grid grid-cols-4 max-[1100px]:grid-cols-5 custom-shadow w-full">
         {notComputer && (
           <div
-            className={`${panelItemClasses} ${
-              active === -1 && activePanelItemClasses
-            }`}
+            className={`${panelItemClasses} ${active === -1 && activePanelItemClasses
+              }`}
             onClick={() => setActive(-1)}
           >
             Course Content
@@ -86,34 +74,30 @@ const LectureTabContent: FC<Props> = ({
         )}
 
         <div
-          className={`${panelItemClasses} ${
-            active === 0 && activePanelItemClasses
-          }`}
+          className={`${panelItemClasses} ${active === 0 && activePanelItemClasses
+            }`}
           onClick={() => setActive(0)}
         >
           Overview
         </div>
         <div
-          className={`${panelItemClasses} ${
-            active === 1 && activePanelItemClasses
-          }`}
+          className={`${panelItemClasses} ${active === 1 && activePanelItemClasses
+            }`}
           onClick={() => setActive(1)}
         >
           Resources
         </div>
         <div
-          className={`${panelItemClasses} ${
-            active === 2 && activePanelItemClasses
-          }`}
+          className={`${panelItemClasses} ${active === 2 && activePanelItemClasses
+            }`}
           onClick={() => setActive(2)}
         >
           Q&A
         </div>
 
         <div
-          className={`${panelItemClasses} ${
-            active === 3 && activePanelItemClasses
-          }`}
+          className={`${panelItemClasses} ${active === 3 && activePanelItemClasses
+            }`}
           onClick={() => setActive(3)}
         >
           Reviews
@@ -127,11 +111,14 @@ const LectureTabContent: FC<Props> = ({
             activeVideo={activeVideo}
             setActiveVideo={setActiveVideo}
             setActiveContentType={setActiveContentType}
-            quizCompleted={quizCompleted} 
+            quizCompleted={quizCompleted}
             completedVideos={completedVideos}
             courseId={courseId}
-            setCompletedVideos={setCompletedVideos}          
-            />
+            setCompletedVideos={setCompletedVideos}
+            finalTest={finalTest}
+            onFinalTestClick={onFinalTestClick}
+            isAllContentCompleted={isAllContentCompleted}
+          />
         )}
 
         {active === 0 && <div>{description}</div>}

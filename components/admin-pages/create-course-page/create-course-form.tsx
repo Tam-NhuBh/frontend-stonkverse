@@ -9,6 +9,7 @@ import CoursePreview from "./course-preview";
 import { useCreateCourseMutation } from "@/store/course/course-api";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
+import useUserInfo from "@/hooks/useUserInfo";
 
 interface Props { }
 
@@ -47,7 +48,7 @@ const initialCourseContentData = [
     videoLength: 0,
     links: [{ title: "", url: "" }],
     suggestion: "",
-    quiz: [{title: "", correctAnswer: [""], mockAnswer: [""]}]
+    quiz: [{ title: "", correctAnswer: [""], mockAnswer: [""] }]
   },
 ];
 
@@ -71,8 +72,8 @@ export type CourseContentDataType = {
 
 const CreateCourseForm: FC<Props> = (props): JSX.Element => {
   const [active, setActive] = useState(0);
-
   const [courseInfo, setCourseInfo] = useState(initialCourseInfo);
+  const user = useUserInfo();
 
   const [benefits, setBenefits] = useState([{ title: "" }]);
   const [prerequisites, setPrerequisites] = useState([{ title: "" }]);
@@ -91,6 +92,7 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
       benefits,
       prerequisites,
       forWho,
+      createdBy: user._id,
       courseData: courseContentData,
     };
 
@@ -141,7 +143,7 @@ const CreateCourseForm: FC<Props> = (props): JSX.Element => {
             setCourseInfo={setCourseInfo}
           />
         )} */}
-        
+
         {active === 1 && (
           <CourseData
             active={active}

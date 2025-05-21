@@ -196,7 +196,7 @@ const PromotionManagement: FC<Props> = ({
     <>
       <Modal open={open} onClose={onClose}>
         <Box
-          className="modal-content-wrapper bg-[#F5F5F5] dark:bg-slate-900 rounded-lg shadow-xl p-4 sm:p-6 max-h-[90vh] overflow-auto"
+          className="modal-content-wrapper bg-[#F5F5F5] dark:bg-slate-900 rounded-md shadow-xl p-4 sm:p-6 max-h-[90vh] overflow-auto"
           sx={{
             maxWidth: { xs: "95%", sm: "90%", md: 900 },
             width: "100%",
