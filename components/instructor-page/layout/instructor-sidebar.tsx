@@ -21,7 +21,7 @@ import Link from "next/link";
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
 import { MenuItem, Menu, ProSidebar } from "react-pro-sidebar";
 import { TicketsPlaneIcon } from "lucide-react";
-import { usePathname } from "next/navigation"; // Thêm hook này để lấy đường dẫn hiện tại
+import { usePathname } from "next/navigation"; 
 
 interface itemProps {
   title: string;
@@ -55,7 +55,9 @@ const menuItems = [
   { title: "Create Course", to: "/instructor/create-course", icon: <VideoCall /> },
   { title: "Course Overview", to: "/instructor/courses", icon: <OndemandVideo /> },
   { title: "Create Final Test", to: "/instructor/final-test", icon: <Checklist /> },
+
     { title: "My Courses User", to: "/instructor/my-courses/users", icon: <GroupsIcon /> },
+
 
 
 ];

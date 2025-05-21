@@ -41,6 +41,15 @@ export const userApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    // Get course users
+    getCourseUsers: builder.query({
+      query: () => ({
+        url: "my-courses/users",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+
     // Update user role
     updateUserRole: builder.mutation({
       query: ({ email, role }) => ({
@@ -75,6 +84,7 @@ export const {
   useEditProfileMutation,
   useUpdatePasswordMutation,
   useGetAllUsersQuery,
+  useGetCourseUsersQuery,
   useUpdateUserRoleMutation,
   useDeleteUserMutation,
     useGetCourseUsersQuery,
