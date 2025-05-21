@@ -1,43 +1,33 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Check } from "lucide-react"
+import { Check } from 'lucide-react'
 import { toast } from "react-hot-toast"
 import TestSettings from "./final-test-settings"
 import TestOverview from "./final-test-overview"
-import type { ITitleFinalTest, TestSettings as TestSettingsType } from "@/types"
-import TestInformation from "./final-test-infomation"
+import type { ITitleFinalTest, TestSettings as TestSettingsType, IFinalTest } from "@/types"
 import { createFinalTest, editFinalTest } from "@/lib/mutation-data"
-import { ITest } from "./final-test-management"
+import TestInformation from "./final-test-infomation"
 
 interface Props {
   courseId: string;
   onClose: () => void;
   onSuccess: () => void;
-  initialData?: ITest | null;
+  initialData?: IFinalTest | null;
 }
 
 const CreateFinalTest = ({ courseId, onClose, onSuccess, initialData }: Props) => {
   const [activeStep, setActiveStep] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [finalTests, setFinalTests] = useState<ITitleFinalTest[]>([])
+  const [testTitle, setTestTitle] = useState("")
+  const [testDescription, setTestDescription] = useState("")
 
   const [testSettings, setTestSettings] = useState<TestSettingsType>({
-    testDuration: { days: 0, hours: 1, minutes: 0, seconds: 0 },
+    testDuration: { hours: 1, minutes: 0 },
     numberOfQuestions: 10,
     pageLayout: "all",
     gradingDisplay: "score",
-    enableProctoring: false,
-    quizWeight: 20,
-    finalTestWeight: 80,
-    passingGrade: 50,
-    displaySettings: {
-      requireInstructions: true,
-      showInstructions: true,
-      showDuration: true,
-      showPassingMark: true,
-      showQuestionCount: true,
-    },
     instructionsMessage: "",
     completionMessage: "",
   })
@@ -50,27 +40,34 @@ const CreateFinalTest = ({ courseId, onClose, onSuccess, initialData }: Props) =
 
   useEffect(() => {
     if (initialData) {
-      setFinalTests([
-        {
-          title: initialData.title,
-          description: initialData.description,
-          correctAnswer: [],
-          mockAnswer: [],
-          maxScore: 10,
-          answers: [],
-          type: "single"
-        },
-      ])
-      setTestSettings((prev) => ({
-        ...prev,
-        testDuration: initialData.testDuration,
-        numberOfQuestions: initialData.numberOfQuestions || 10,
-      }))
+      setTestTitle(initialData.title)
+      setTestDescription(initialData.description || "")
+      
+      if (initialData.tests && Array.isArray(initialData.tests) && initialData.tests.length > 0) {
+        setFinalTests(initialData.tests)
+      }
+      
+      if (initialData.settings) {
+        setTestSettings({
+          ...testSettings,
+          ...initialData.settings,
+          testDuration: initialData.settings.testDuration || testSettings.testDuration,
+          numberOfQuestions: initialData.settings.numberOfQuestions || testSettings.numberOfQuestions,
+          instructionsMessage: initialData.settings.instructionsMessage || testSettings.instructionsMessage,
+          completionMessage: initialData.settings.completionMessage || testSettings.completionMessage,
+         
+        })
+      }
     }
   }, [initialData])
 
   const handleNext = () => setActiveStep((prev) => prev + 1)
   const handleBack = () => setActiveStep((prev) => prev - 1)
+  
+  const updateTitleAndDescription = (title: string, description: string) => {
+    setTestTitle(title)
+    setTestDescription(description)
+  }
 
   const handleSubmit = async () => {
     if (!finalTests || finalTests.length === 0) {
@@ -86,23 +83,32 @@ const CreateFinalTest = ({ courseId, onClose, onSuccess, initialData }: Props) =
     try {
       setIsSubmitting(true)
 
+      const finalTestSettings: TestSettingsType = {
+        ...testSettings,
+        course: courseId,
+      };
+
+      const finalTestData: IFinalTest = {
+        title: testTitle,
+        description: testDescription,
+        tests: finalTests,
+        score: 0,
+        settings: finalTestSettings 
+      };
+
       if (initialData?.id) {
-        await editFinalTest(initialData.id, {
-          finalTest: finalTests,
-          settings: {
-            ...testSettings,
-            course: courseId,
-          },
-        })
+        finalTestData.id = initialData.id;
+      }
+
+      const payload = {
+        finalTest: finalTestData
+      };
+
+      if (initialData?.id) {
+        await editFinalTest(initialData.id, payload)
         toast.success("Final test updated successfully!")
       } else {
-        await createFinalTest(courseId, {
-          finalTest: finalTests,
-          settings: {
-            ...testSettings,
-            course: courseId,
-          },
-        })
+        await createFinalTest(courseId, payload)
         toast.success("Final test created successfully!")
       }
 
@@ -145,7 +151,16 @@ const CreateFinalTest = ({ courseId, onClose, onSuccess, initialData }: Props) =
           </div>
 
           <div className="mb-12">
-            {activeStep === 0 && <TestInformation finalTests={finalTests} setFinalTests={setFinalTests} onNext={handleNext} />}
+            {activeStep === 0 && (
+              <TestInformation 
+                finalTests={finalTests} 
+                setFinalTests={setFinalTests} 
+                onNext={handleNext} 
+                initialTitle={testTitle}
+                initialDescription={testDescription}
+                onTitleDescriptionUpdate={updateTitleAndDescription}
+              />
+            )}
 
             {activeStep === 1 && (
               <TestSettings
@@ -164,6 +179,8 @@ const CreateFinalTest = ({ courseId, onClose, onSuccess, initialData }: Props) =
                 onSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
                 courseId={courseId}
+                testTitle={testTitle}
+                testDescription={testDescription}
               />
             )}
           </div>

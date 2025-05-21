@@ -4,12 +4,12 @@ import { FC, useState } from "react";
 import LoadingSpinner from "../loading-spinner";
 import Heading from "../heading";
 import CourseContentMedia from "./course-content-media";
-import { ICourseData } from "@/types";
+import { ICourseData, IFinalTest, ITitleFinalTest } from "@/types";
 
 interface Props {
   id: string;
   courseData: ICourseData[];
-  finalTest?: any;
+  finalTest?: IFinalTest[];
   courseDataLoading: boolean;
   refetch: any;
 }

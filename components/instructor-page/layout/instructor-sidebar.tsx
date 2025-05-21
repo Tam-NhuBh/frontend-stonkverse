@@ -55,7 +55,9 @@ const menuItems = [
   { title: "Create Course", to: "/instructor/create-course", icon: <VideoCall /> },
   { title: "Course Overview", to: "/instructor/courses", icon: <OndemandVideo /> },
   { title: "Create Final Test", to: "/instructor/final-test", icon: <Checklist /> },
-  { title: "Users", to: "/instructor/users", icon: <GroupsIcon /> },
+    { title: "My Courses User", to: "/instructor/my-courses/users", icon: <GroupsIcon /> },
+
+
 ];
 
 const InstructorSidebar: FC<Props> = ({

@@ -1,11 +1,11 @@
 import { FC } from "react";
-import CourseVideosAccordion, { ITitleFinalTest } from "./course-video-accordion";
-import { ICourseData } from "@/types";
+import CourseVideosAccordion from "./course-video-accordion";
+import { ICourseData, IFinalTest } from "@/types";
 
 interface Props {
   list: ICourseData[];
   courseLength: number;
-  finalTest?: ITitleFinalTest[];
+  finalTest?: IFinalTest[];
 
 }
 

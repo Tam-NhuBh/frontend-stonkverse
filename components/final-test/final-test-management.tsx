@@ -1,4 +1,3 @@
-// file: final-test-management.tsx
 "use client"
 
 import { type FC, useEffect, useState } from "react"
@@ -6,113 +5,31 @@ import { toast } from "react-hot-toast"
 import { Modal, Box } from "@mui/material"
 import { useGetAllCoursesQuery } from "@/store/course/course-api"
 import BtnWithIcon from "@/components/btn-with-icon"
-import BtnWithLoading from "@/components/btn-with-loading"
 import CreateFinalTest from "./create-final-test"
 import FinalTestCard from "../final-test-card"
 import Selector from "../layout/selector"
 import SearchBox from "../layout/search-box"
 import { getFinalTests, getFinalTestsByID } from "@/lib/fetch-data"
-import { deleteFinalTest, editFinalTest } from "@/lib/mutation-data"
+import { deleteFinalTest } from "@/lib/mutation-data"
 import { AiOutlineClose } from "react-icons/ai"
-import type { ITitleFinalTest, QuestionType, TestSettings as TestSettingsType } from "@/types"
+import type { ITitleFinalTest, QuestionType, TestSettings, IFinalTest, IAnswerFinalTest } from "@/types"
 
 interface ICourse {
   _id: string
   name: string
 }
 
-export interface ITest {
-  id?: string
+interface ITestCard {
+  id: string
   title: string
   description: string
-  course: string
   testDuration: {
-    days: number
     hours: number
     minutes: number
-    seconds: number
   }
   withSections: boolean
   createdAt: string
-  numberOfQuestions?: number
-  correctAnswer?: string[]
-  mockAnswer?: string[]
-  maxScore?: number
-  type?: QuestionType
-  answers?: any[]
-  settings?: {
-    testDuration?: any
-    numberOfQuestions?: number
-    pageLayout?: string
-    gradingDisplay?: string
-    enableProctoring?: boolean
-    quizWeight?: number
-    finalTestWeight?: number
-    passingGrade?: number
-    displaySettings?: {
-      requireInstructions?: boolean
-      showInstructions?: boolean
-      showDuration?: boolean
-      showPassingMark?: boolean
-      showQuestionCount?: boolean
-    }
-    instructionsMessage?: string
-    completionMessage?: string
-  }
-  imageUrl?: string
-}
-
-export const convertToITitleFinalTest = (test: ITest): ITitleFinalTest => {
-  const defaultSettings: TestSettingsType = {
-    testDuration: test.testDuration || { days: 0, hours: 1, minutes: 0, seconds: 0 },
-    numberOfQuestions: test.numberOfQuestions || 10,
-    pageLayout: "all",
-    gradingDisplay: "score",
-    enableProctoring: false,
-    displaySettings: {
-      requireInstructions: true,
-      showInstructions: true,
-      showDuration: true,
-      showPassingMark: true,
-      showQuestionCount: true,
-    },
-    instructionsMessage: "",
-    completionMessage: "",
-  };
-  
-  if (test.settings) {
-    if (test.settings.pageLayout) defaultSettings.pageLayout = test.settings.pageLayout;
-    if (test.settings.gradingDisplay) defaultSettings.gradingDisplay = test.settings.gradingDisplay;
-    defaultSettings.enableProctoring = !!test.settings.enableProctoring;
-    if (test.settings.quizWeight) defaultSettings.quizWeight = test.settings.quizWeight;
-    if (test.settings.finalTestWeight) defaultSettings.finalTestWeight = test.settings.finalTestWeight;
-    if (test.settings.passingGrade) defaultSettings.passingGrade = test.settings.passingGrade;
-    if (test.settings.instructionsMessage) defaultSettings.instructionsMessage = test.settings.instructionsMessage;
-    if (test.settings.completionMessage) defaultSettings.completionMessage = test.settings.completionMessage;
-    
-    if (test.settings.displaySettings) {
-      defaultSettings.displaySettings = {
-        requireInstructions: test.settings.displaySettings.requireInstructions ?? true,
-        showInstructions: test.settings.displaySettings.showInstructions ?? true,
-        showDuration: test.settings.displaySettings.showDuration ?? true,
-        showPassingMark: test.settings.displaySettings.showPassingMark ?? true,
-        showQuestionCount: test.settings.displaySettings.showQuestionCount ?? true,
-      };
-    }
-  }
-
-  return {
-    id: test.id,
-    title: test.title,
-    description: test.description,
-    correctAnswer: test.correctAnswer || [],
-    mockAnswer: test.mockAnswer || [],
-    maxScore: test.maxScore || 10,
-    type: test.type || "single",
-    answers: test.answers || [],
-    imageUrl: test.imageUrl,
-    settings: defaultSettings
-  }
+  numberOfQuestions: number
 }
 
 const FinalTestManagement: FC = () => {
@@ -126,26 +43,12 @@ const FinalTestManagement: FC = () => {
   const [deleteTestModal, setDeleteTestModal] = useState(false)
   const [selectedCourseId, setSelectedCourseId] = useState("")
   const [selectedTestId, setSelectedTestId] = useState("")
-  const [testsData, setTestsData] = useState<ITest[]>([])
+  const [testsData, setTestsData] = useState<ITestCard[]>([])
   const [isLoadingTests, setIsLoadingTests] = useState(false)
   const [isDeletingTest, setIsDeletingTest] = useState(false)
   const [isEditTest, setIsEditTest] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
-  const [editingTest, setEditingTest] = useState<ITest | null>(null)
-  const [isEditingTest, setIsEditingTest] = useState(false)
-  const [editForm, setEditForm] = useState({
-    title: "",
-    description: "",
-    type: "",
-    correctAnswer: [] as string[],
-    mockAnswer: [] as string[],
-    maxScore: 10,
-    imageUrl: "",
-    settings: {
-      testDuration: 0,
-      numberOfQuestions: 0,
-    },
-  })
+  const [editingTest, setEditingTest] = useState<IFinalTest | null>(null)
 
   const fetchTests = async (courseID: string) => {
     if (!courseID) return
@@ -154,22 +57,14 @@ const FinalTestManagement: FC = () => {
       const result = await getFinalTests(courseID)
       const mappedTests = (result.finalTests || []).map((test: any) => ({
         id: test._id,
-        title: test.title, 
+        title: test.title,
         description: test.description || "",
-        course: courseID,
         testDuration: test.settings?.testDuration
-          ? {
-              days: 0,
-              hours: Math.floor(test.settings.testDuration / 60),
-              minutes: test.settings.testDuration % 60,
-              seconds: 0,
-            }
+          ? test.settings.testDuration
           : {
-              days: 0,
-              hours: 0,
-              minutes: 0,
-              seconds: 0,
-            },
+            hours: 0,
+            minutes: 0,
+          },
         withSections: false,
         createdAt: test.createdAt,
         numberOfQuestions: test.settings?.numberOfQuestions || 0,
@@ -208,91 +103,62 @@ const FinalTestManagement: FC = () => {
     setCreateTestModal(true)
   }
 
-  const handleEditTestConfirm = async () => {
-    if (!selectedTestId) return
-
-    setIsEditingTest(true)
-    try {
-      await editFinalTest(selectedTestId, editForm)
-      toast.success("Final test edited successfully!")
-      setEditTestModal(false)
-
-      if (selectedCourseId) {
-        fetchTests(selectedCourseId)
-      }
-    } catch (error) {
-      toast.error("Failed to edit final test")
-    } finally {
-      setIsEditingTest(false)
-    }
-  }
-
   const handleEditTest = async (testId: string) => {
     try {
       setIsEditTest(true)
       setSelectedTestId(testId)
 
-      const testData = await getFinalTestsByID(testId)
+      const response = await getFinalTestsByID(testId)
 
-      if (!testData) throw new Error("Test not found")
+      const testData = response.data || response
 
-      setEditingTest({
+      if (!testData) {
+        throw new Error("Test data not found")
+      }
+
+      console.log("Extracted test data:", testData)
+
+      const finalTest: IFinalTest = {
         id: testData._id,
         title: testData.title,
         description: testData.description || "",
-        course: selectedCourseId,
-        correctAnswer: testData.correctAnswer || [],
-        mockAnswer: testData.mockAnswer || [],
-        maxScore: testData.maxScore || 10,
-        type: testData.type || "single",
-        createdAt: testData.createdAt,
-        withSections: false,
-        testDuration: testData.settings?.testDuration
-          ? {
-              days: 0,
-              hours: Math.floor(testData.settings.testDuration / 60),
-              minutes: testData.settings.testDuration % 60,
-              seconds: 0,
-            }
-          : {
-              days: 0,
-              hours: 0,
-              minutes: 0,
-              seconds: 0,
-            },
-        answers: testData.answers || [],
+        tests: (testData.tests || []).map((test: any) => ({
+          id: test._id,
+          title: test.title,
+          description: test.description || "",
+          answers: test.answers || [],
+          correctAnswer: test.correctAnswer || [],
+          mockAnswer: test.mockAnswer || [],
+          maxScore: test.maxScore || 10,
+          type: test.type as QuestionType,
+          imageUrl: test.imageUrl || "",
+          createdAt: test.createdAt ? new Date(test.createdAt) : undefined,
+        })),
+        score: testData.score || 0,
+        createdAt: testData.createdAt ? new Date(testData.createdAt) : undefined,
         settings: {
-          testDuration: testData.settings?.testDuration,
+          course: selectedCourseId,
+          testDuration: testData.settings?.testDuration
+            ? testData.settings.testDuration 
+            : { hours: 1, minutes: 0 },
           numberOfQuestions: testData.settings?.numberOfQuestions || 10,
-          pageLayout: testData.settings?.pageLayout || "all",
-          gradingDisplay: testData.settings?.gradingDisplay || "score",
-          enableProctoring: testData.settings?.enableProctoring || false,
-          quizWeight: testData.settings?.quizWeight || 20,
-          finalTestWeight: testData.settings?.finalTestWeight || 80,
-          passingGrade: testData.settings?.passingGrade || 50,
-          displaySettings: testData.settings?.displaySettings || {
-            requireInstructions: true,
-            showInstructions: true,
-            showDuration: true,
-            showPassingMark: true,
-            showQuestionCount: true,
-          },
+          pageLayout: "all",
+          gradingDisplay: "score",
           instructionsMessage: testData.settings?.instructionsMessage || "",
           completionMessage: testData.settings?.completionMessage || "",
-        },
-        imageUrl: testData.imageUrl || "",
-        numberOfQuestions: testData.settings?.numberOfQuestions || 0,
-      })
+        }
+      }
 
+      console.log("Final processed data:", finalTest)
+      setEditingTest(finalTest)
       setEditTestModal(true)
     } catch (err) {
-      console.error("Error fetching test data:", err)
+      console.error("Error in handleEditTest:", err)
       toast.error("Failed to load test data")
     } finally {
       setIsEditTest(false)
     }
   }
-
   const handleDeleteTestConfirm = async () => {
     if (!selectedTestId) return
 
@@ -312,17 +178,20 @@ const FinalTestManagement: FC = () => {
     }
   }
 
+  // Mở modal xác nhận xóa
   const handleDeleteTest = (testId: string) => {
     setSelectedTestId(testId)
     setDeleteTestModal(true)
   }
 
+  // Lấy tên course đã chọn
   const getSelectedCourseName = () => {
     if (!selectedCourseId || !coursesData?.courses) return "Select a course"
     const course = coursesData.courses.find((c: ICourse) => c._id === selectedCourseId)
     return course ? course.name : "Select a course"
   }
 
+  // Lọc danh sách tests theo từ khóa tìm kiếm
   const filteredTests = testsData.filter(
     (test) =>
       test.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -331,6 +200,7 @@ const FinalTestManagement: FC = () => {
 
   return (
     <div className="mt-8 w-full max-w-[1400px] px-4 mx-auto">
+      {/* Header với chọn khóa học và tìm kiếm */}
       <div className="mb-6 bg-[#475569] dark:bg-[#3E4396] rounded-sm border dark:border-gray-700 shadow-sm p-4">
         <div className="flex flex-col md:flex-row gap-4 items-stretch">
           {/* Course Component */}
@@ -347,11 +217,11 @@ const FinalTestManagement: FC = () => {
 
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-1/2">
             <div className="flex-grow">
-              <SearchBox value={searchTerm} onChange={setSearchTerm} placeholder="Searching..." />
+              <SearchBox value={searchTerm} onChange={setSearchTerm} placeholder="Search final tests..." />
             </div>
 
             <div className="flex-shrink-0">
-              <BtnWithIcon content="Create" onClick={handleCreateTest} customClasses="w-full" />
+              <BtnWithIcon content="Create Test" onClick={handleCreateTest} customClasses="w-full" />
             </div>
           </div>
         </div>
@@ -391,7 +261,7 @@ const FinalTestManagement: FC = () => {
           {filteredTests.map((test) => (
             <FinalTestCard
               key={test.id}
-              id={test.id!}
+              id={test.id}
               name={test.title}
               description={test.description}
               testDuration={test.testDuration}
@@ -441,10 +311,9 @@ const FinalTestManagement: FC = () => {
               courseId={selectedCourseId}
               onClose={() => {
                 setCreateTestModal(false)
-                setEditingTest(null)
               }}
               onSuccess={() => fetchTests(selectedCourseId)}
-              initialData={editingTest}
+              initialData={null}
             />
           </div>
         </Box>
@@ -508,16 +377,19 @@ const FinalTestManagement: FC = () => {
       </Modal>
 
       {/* Delete Modal */}
-      <Modal open={deleteTestModal} onClose={() => setDeleteTestModal(false)}>
+      <Modal open={deleteTestModal} onClose={() => setDeleteTestModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <Box className="modal-content-wrapper">
-          <h4 className="form-title">Are you sure you want to delete this final test?</h4>
+          <h4 className="form-title"> Are you sure to delete this final test?</h4>
           <div className="mt-4 w-[70%] flex justify-between mx-auto pb-4">
-            <BtnWithIcon content="Cancel" onClick={() => setDeleteTestModal(false)} />
-            <BtnWithLoading
+            <BtnWithIcon
+              content="Cancel"
+              onClick={() => setDeleteTestModal(false)}
+            />
+            <BtnWithIcon
               content="Delete"
-              isLoading={isDeletingTest}
-              customClasses="!bg-red-700 !w-fit"
-              type="button"
               onClick={handleDeleteTestConfirm}
             />
           </div>

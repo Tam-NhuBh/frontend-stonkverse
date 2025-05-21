@@ -90,19 +90,17 @@ export interface ICourseData {
   quiz: IQuestionQuiz[];
 }
 
-export type QuestionType = "single" | "multiple" | "fillBlank" | "image"
+export type QuestionType = "single" | "multiple" | "fillBlank";
 
 export interface IAnswerFinalTest {
-  // user: IUser;
   answer: string[];
-  imageUrl?: string
+  imageUrl?: string;
   score: number;
-  createdAt: Date;
+  createdAt?: Date;
 }
 
 export interface ITitleFinalTest {
-  // user: IUser;
-  id?: string
+  id?: string;
   title: string;
   description?: string;
   answers: IAnswerFinalTest[];
@@ -111,35 +109,32 @@ export interface ITitleFinalTest {
   maxScore: number;
   type: QuestionType;
   createdAt?: Date;
-  settings?: TestSettings,
-  imageUrl?: string
+  imageUrl?: string;
 }
 
 export interface TestSettings {
   course?: string;
   testDuration: {
-    days: number
-    hours: number
-    minutes: number
-    seconds: number
-  }
-  pageLayout: string
-  gradingDisplay: string
-  enableProctoring: boolean
-  displaySettings: {
-    requireInstructions: boolean
-    showInstructions: boolean
-    showDuration: boolean
-    showPassingMark: boolean
-    showQuestionCount: boolean
-  }
-  instructionsMessage?: string
-  completionMessage?: string
-  numberOfQuestions: number
-  quizWeight?: number
-  finalTestWeight?: number
-  passingGrade?: number
-};
+    hours: number;
+    minutes: number;
+  };
+  numberOfQuestions: number;
+  pageLayout: string;
+  gradingDisplay: string;
+ 
+  instructionsMessage: string;
+  completionMessage: string;
+}
+
+export interface IFinalTest {
+  id?: string;
+  title: string;
+  description?: string;
+  tests: ITitleFinalTest[];
+  score: number;
+  createdAt?: Date;
+  settings: TestSettings;
+}
 
 export interface ICourse {
   name: string;
@@ -163,7 +158,7 @@ export interface ICourse {
   forWho: { title: string }[];
   reviews: IReview[];
   courseData: ICourseData[];
-  finalTest: ITitleFinalTest[];
+  finalTest: IFinalTest[];
   ratings?: number;
   purchased?: number;
   status: 'APPROVED' | 'REJECTED' | 'PENDING_REVIEW';

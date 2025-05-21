@@ -9,10 +9,8 @@ import { AiOutlineDelete } from "react-icons/ai"
 import { FiEdit } from "react-icons/fi"
 
 interface IDuration {
-  days: number
   hours: number
   minutes: number
-  seconds: number
 }
 
 interface IFinalTestCardProps {
@@ -29,10 +27,8 @@ interface IFinalTestCardProps {
 
 const formatDuration = (testDuration: IDuration) => {
   const parts = []
-  if (testDuration.days > 0) parts.push(`${testDuration.days}d`)
   if (testDuration.hours > 0) parts.push(`${testDuration.hours}h`)
   if (testDuration.minutes > 0) parts.push(`${testDuration.minutes}m`)
-  if (testDuration.seconds > 0) parts.push(`${testDuration.seconds}s`)
   return parts.join(" ") || "No time limit"
 }
 
@@ -76,21 +72,13 @@ const FinalTestCard: FC<IFinalTestCardProps> = ({
         </div>
 
         <div className="flex justify-between items-center pt-3 border-t dark:border-gray-700 mt-auto flex-shrink-0">
-          <button
-            className="flex items-center text-[#475569] dark:text-[#3E4399] hover:underline"
-            onClick={() => {
-              toast("Preview quiz to be implemented")
-            }}
-          >
-            <MdVisibility className="h-4 w-5 mr-1" />
-            <span className="truncate font-semibold text-sm">Preview</span>
+          <button className="dark:text-[#3E4399] text-slate-700 hover:scale-110 transition-transform duration-200"
+            onClick={() => onEdit(id)} title="Edit Quiz">
+            <FiEdit size={17} />
           </button>
 
+
           <div className="flex gap-2 flex-shrink-0">
-            <button className="dark:text-[#3E4399] text-slate-700 hover:scale-110 transition-transform duration-200"
-              onClick={() => onEdit(id)} title="Edit Quiz">
-              <FiEdit size={17} />
-            </button>
 
             <button className="text-red-600 hover:scale-110 transition-transform duration-200"
               onClick={() => onDelete(id)} title="Delete Quiz">

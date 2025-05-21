@@ -1,7 +1,7 @@
 import axios from "axios";
 import axiosClientV2 from './api-client-v2';
 import axiosClient from "./api-client-v1";
-import { ICourse, ITitleFinalTest, TestSettings } from "@/types";
+import { ICourse, IFinalTest, ITitleFinalTest, TestSettings } from "@/types";
 
 export const createPaymentIntent = async (amount: number) => {
   try {
@@ -28,6 +28,7 @@ export const createOrder = async (courseId: string, payment_info: any) => {
         withCredentials: true,
       }
     );
+      console.log("data body order:",payment_info)
 
     return data.order;
   } catch (error: any) {
@@ -249,8 +250,7 @@ export const getCourseByInstructor = async (id: string) => {
 export const createFinalTest = async (
   courseId: string,
   data: {
-    finalTest: ITitleFinalTest[],
-    settings: TestSettings,
+    finalTest: IFinalTest  
   }
 ) => {
   try {
@@ -262,9 +262,23 @@ export const createFinalTest = async (
   }
 };
 
+export const editFinalTest = async (
+  testId: string,
+  data: {
+    finalTest: IFinalTest  
+  }
+) => {
+  try {
+    const response = await axiosClient.patch(`/final-test/edit/${testId}`, data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to edit final test:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export const deleteFinalTest = async (id: string) => {
   try {
-    console.log("id ft:",id)
     const response = await axiosClient.delete(`/final-test/delete/${id}`)
     return response.data
   } catch (error: any) {
@@ -273,37 +287,62 @@ export const deleteFinalTest = async (id: string) => {
   }
 }
 
-export const editFinalTest = async (id: string, updatedData: any) => {
+export const addAnswerFinalTest = async (
+  courseId: string,
+  finalTestId: string,
+  answers: {
+    questionId: string,
+    answer: string[],
+  }[],
+) => {
   try {
-    const formattedData = {
-      finalTest: updatedData.finalTest || [],
-      settings: updatedData.settings || {}
-    };
+    const { data } = await axios.put(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/add-answer-final-test`,
+      { courseId, answers, finalTestId},
+      {
+        withCredentials: true,
+      }
+    );
+
+    return data;
+  } catch (error: any) {
+    console.log(error.response.data.message);
+  }
+};
+
+
+interface CalculateAndSubmitFinalTestParams {
+  courseId: string;
+  finalTestId: string;
+  answers: Record<string, string[]>;
+}
+
+// Function to calculate and submit a final test
+export const calculateAndSubmitFinalTest = async (params: CalculateAndSubmitFinalTestParams) => {
+  try {
+    const config = { withCredentials: true };
+    const { courseId, finalTestId, answers } = params;
     
-    const response = await axiosClient.patch(`/final-test/edit/${id}`, formattedData);
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_SERVER_URL_V1}/courses/${courseId}/calculate-submit-final-test`,
+      { finalTestId, answers },
+      config
+    );
+    
     return response.data;
   } catch (error: any) {
-    console.error("Failed to edit final test:", error.response?.data?.message || error.message);
-    throw error;
+    const message = error.response?.data?.message || "Error calculating final test";
+    console.error("calculateAndSubmitFinalTest error:", message);
+    throw new Error(message);
   }
-}
+};
 
-export const createSetting = async (settingData: any) => {
+export const calculateFinalTestScore = async (courseId: string) => {
   try {
-    const response = await axiosClientV2.post("/admin/setting", settingData)
-    return response.data
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/final-test/score/${courseId}`);
+    return response.data;
   } catch (error: any) {
-    console.error("Failed to create setting:", error.response?.data?.message || error.message)
-    throw error
-  }
-}
-
-export const updateSetting = async (id: string, data: any) => {
-  try {
-    const response = await axiosClientV2.patch(`/admin/setting/${id}`, data)
-    return response.data
-  } catch (error: any) {
-    console.error("Failed to update setting:", error.response?.data?.message || error.message)
-    throw error
+    console.error('Error submitting final test score:', error.response?.data || error.message);
+    return { success: false, error: error.message };
   }
 }

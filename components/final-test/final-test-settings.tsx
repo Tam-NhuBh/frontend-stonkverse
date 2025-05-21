@@ -6,15 +6,14 @@ import { Info } from "lucide-react"
 import type { TestSettings } from "@/types"
 import BottomNavigator from "../admin-pages/create-course-page/bottom-navigator"
 import toast from "react-hot-toast"
-import { AiOutlineExclamationCircle, AiOutlineWarning } from "react-icons/ai"
-import { BsExclamation } from "react-icons/bs"
-import { HiOutlineShieldExclamation } from "react-icons/hi"
 
 interface SettingsProps {
   testSettings: TestSettings
   setTestSettings: React.Dispatch<React.SetStateAction<TestSettings>>
   onNext: () => void
   onBack: () => void
+  isReadOnly?: boolean
+
 }
 
 const Tooltip = ({ content }: { content: string }) => {
@@ -45,25 +44,22 @@ const TestSettingsComponent = ({ testSettings, setTestSettings, onNext, onBack }
   }
 
   const optionsHandler = () => {
-    const { days, hours, minutes, seconds } = testSettings.testDuration
+    const { hours, minutes } = testSettings.testDuration
     if (
-      (days === 0 || days === undefined) &&
       (hours === 0 || hours === undefined) &&
-      (minutes === 0 || minutes === undefined) &&
-      (seconds === 0 || seconds === undefined)
+      (minutes === 0 || minutes === undefined)
     ) {
       toast.error("Please set a time for the final test")
       return
     }
 
     if (!testSettings.numberOfQuestions || testSettings.numberOfQuestions < 1) {
-      toast.error("Number of questions must be at least 1.")
+      toast.error("Number of questions must be at least 1")
       return
     }
 
-    if (testSettings.displaySettings.showInstructions && 
-        (!testSettings.instructionsMessage || testSettings.instructionsMessage.trim() === "")) {
-      toast.error("Test instructions are required when 'Show test instructions' is enabled")
+    if (!testSettings.instructionsMessage || testSettings.instructionsMessage.trim() === "") {
+      toast.error("Please provide an instruction message")
       return
     }
 
@@ -89,25 +85,7 @@ const TestSettingsComponent = ({ testSettings, setTestSettings, onNext, onBack }
                   <label className="font-medium">Time to answer all questions</label>
                   <Tooltip content="Set the total time allowed for students to complete all questions in the test. At least one field must be filled." />
                 </div>
-                <div className="grid grid-cols-4 gap-4 mt-2">
-                  <div>
-                    <label className="text-sm text-gray-500 dark:text-gray-400">Days</label>
-                    <input
-                      type="number"
-                      min="0"
-                      className="w-full px-3 py-2 border rounded-sm dark:bg-gray-800 dark:border-gray-700"
-                      value={testSettings.testDuration.days || 0}
-                      onChange={(e) =>
-                        setTestSettings({
-                          ...testSettings,
-                          testDuration: {
-                            ...testSettings.testDuration,
-                            days: Number.parseInt(e.target.value) || 0,
-                          },
-                        })
-                      }
-                    />
-                  </div>
+                <div className="grid grid-cols-2 gap-4 mt-2">
                   <div>
                     <label className="text-sm text-gray-500 dark:text-gray-400">Hours</label>
                     <input
@@ -144,24 +122,7 @@ const TestSettingsComponent = ({ testSettings, setTestSettings, onNext, onBack }
                       }
                     />
                   </div>
-                  <div>
-                    <label className="text-sm text-gray-500 dark:text-gray-400">Seconds</label>
-                    <input
-                      type="number"
-                      min="0"
-                      className="w-full px-3 py-2 border rounded-sm dark:bg-gray-800 dark:border-gray-700"
-                      value={testSettings.testDuration.seconds || 0}
-                      onChange={(e) =>
-                        setTestSettings({
-                          ...testSettings,
-                          testDuration: {
-                            ...testSettings.testDuration,
-                            seconds: Number.parseInt(e.target.value) || 0,
-                          },
-                        })
-                      }
-                    />
-                  </div>
+                 
                 </div>
               </div>
             </div>
@@ -193,7 +154,7 @@ const TestSettingsComponent = ({ testSettings, setTestSettings, onNext, onBack }
               </div>
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b pb-2">
                 <div className="flex items-center gap-2 mb-2 md:mb-0">
-                  <label>One question per page</label>
+                  <label>Question per page</label>
                   <Tooltip content="Determines how questions are displayed to students. 'All questions' shows all questions on a single page." />
                 </div>
                 <div className="px-3 py-2 rounded-sm w-full md:w-[180px] bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 opacity-70 cursor-not-allowed">
@@ -211,75 +172,6 @@ const TestSettingsComponent = ({ testSettings, setTestSettings, onNext, onBack }
               </div>
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <label className="block text-sm font-medium">Test instructions display settings</label>
-                <Tooltip content="Configure how test instructions are displayed to students before they begin the test." />
-              </div>
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b pb-2">
-                <div className="flex items-center gap-2 mb-2 md:mb-0">
-                  <input
-                    type="checkbox"
-                    id="require-instructions"
-                    className="rounded border-gray-300"
-                    checked={testSettings.displaySettings.requireInstructions}
-                    onChange={(e) =>
-                      setTestSettings({
-                        ...testSettings,
-                        displaySettings: {
-                          ...testSettings.displaySettings,
-                          requireInstructions: e.target.checked,
-                        },
-                      })
-                    }
-                  />
-                  <label htmlFor="require-instructions">Require instructions acknowledgement</label>
-                  <Tooltip content="Students must acknowledge they have read the instructions before starting the test." />
-                </div>
-              </div>
-              <div className="flex items-center justify-between border-b pb-2">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="show-test-instructions"
-                    className="rounded border-gray-300"
-                    checked={testSettings.displaySettings.showInstructions}
-                    onChange={(e) =>
-                      setTestSettings({
-                        ...testSettings,
-                        displaySettings: {
-                          ...testSettings.displaySettings,
-                          showInstructions: e.target.checked,
-                        },
-                      })
-                    }
-                  />
-                  <label htmlFor="show-test-instructions">Show test instructions</label>
-                  <Tooltip content="Display test instructions to students before they begin the test." />
-                </div>
-              </div>
-              <div className="flex items-center justify-between border-b pb-2">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="show-test-duration"
-                    className="rounded border-gray-300"
-                    checked={testSettings.displaySettings.showDuration}
-                    onChange={(e) =>
-                      setTestSettings({
-                        ...testSettings,
-                        displaySettings: {
-                          ...testSettings.displaySettings,
-                          showDuration: e.target.checked,
-                        },
-                      })
-                    }
-                  />
-                  <label htmlFor="show-test-duration">Show test duration</label>
-                  <Tooltip content="Display the total time allowed for the test to students." />
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -337,7 +229,7 @@ const TestSettingsComponent = ({ testSettings, setTestSettings, onNext, onBack }
       </div>
 
       <BottomNavigator backHandler={onBack} nextHandler={optionsHandler} customClasses="w-full my-12 mx-auto" />
-      
+
     </form>
   )
 }

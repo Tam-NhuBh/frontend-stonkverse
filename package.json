@@ -31,6 +31,7 @@
     "next-themes": "^0.2.1",
     "query-string": "^9.1.1",
     "react": "latest",
+    "react-confetti": "^6.4.0",
     "react-dom": "latest",
     "react-hook-form": "^7.47.0",
     "react-hot-toast": "^2.4.1",

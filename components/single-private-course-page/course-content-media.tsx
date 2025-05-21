@@ -7,25 +7,28 @@ import CourseLectureList from "./course-lecture-list"
 import CourseLectureNavigator from "./course-lecture-navigator"
 import { BiSolidChevronsLeft } from "react-icons/bi"
 import LectureTabContent from "./lecture-tab-content"
-import type { ICourseData, IQuestionQuiz } from "@/types"
+import type { ICourseData, IFinalTest, IQuestionQuiz } from "@/types"
 import toast from "react-hot-toast"
 import { getAnswersQuiz } from "@/lib/fetch-data"
 import { useUpdateLessonCompletionMutation, useGetLessonCompletionQuery } from "@/store/course/course-api"
 import { IoMdClose } from "react-icons/io"
-import { Bot, BotIcon, Flame } from "lucide-react"
+import { Bot, Flame } from "lucide-react"
 import { BsQuestionCircleFill } from "react-icons/bs"
 import AIInstructor from "../ai"
+import { useRouter } from "next/navigation"
+import FinalTestModal from "../final-test-modal"
 
 interface Props {
   courseId: string
   courseData: ICourseData[]
-  finalTest?: any
+  finalTest?: IFinalTest[] // Updated to expect an array
   activeVideo: number
   setActiveVideo: Dispatch<SetStateAction<number>>
   refetch: any
 }
 
 const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, activeVideo, setActiveVideo, refetch }): JSX.Element => {
+  const router = useRouter()
   const [showQuizModal, setShowQuizModal] = useState(false)
   const [quizCompleted, setQuizCompleted] = useState<boolean[]>(Array(courseData?.length).fill(false))
   const [openSidebar, setOpenSidebar] = useState(true)
@@ -39,6 +42,7 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
   const [showAIInstructor, setShowAIInstructor] = useState(false)
   const [updateLessonCompletion] = useUpdateLessonCompletionMutation()
   const { data: lessonCompletionData } = useGetLessonCompletionQuery(courseId)
+  const [showFinalTestConfirmation, setShowFinalTestConfirmation] = useState(false)
 
   const filteredQuestions = (courseData?.[activeVideo]?.quiz ?? [])
     .filter((question: IQuestionQuiz) => question.title !== undefined)
@@ -50,40 +54,97 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
       maxScore: question.maxScore,
     }))
 
+  const completedCount = courseData?.filter((video, index) => {
+    const videoCompleted = completedVideos.includes(video._id.toString())
+    const quizCompleted1 = !video.quiz?.length || quizCompleted[index]
+    return videoCompleted && quizCompleted1
+  }).length || 0
+
+  const totalCount = courseData?.length || 0
+  const allContentCompleted = completedCount === totalCount
+
+  const finalTestItem = finalTest && finalTest.length > 0 ? finalTest[0] : null;
+  const [finalTestId, setFinalTestId] = useState<string>("")
+  const [showFinalTestModal, setShowFinalTestModal] = useState(false)
+
+  // Debug logging
+  useEffect(() => {
+    console.log("finalTest in CourseContentMedia:", finalTest);
+    console.log("finalTestItem:", finalTestItem);
+    console.log("finalTestId:", finalTestId);
+  }, [finalTest]);
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [activeVideo])
 
+  // Load completed videos from learningprogress api
   useEffect(() => {
     if (lessonCompletionData?.learningProgress?.progress) {
       setCompletedVideos(lessonCompletionData?.learningProgress?.progress)
     }
   }, [lessonCompletionData])
 
+  // Check current video has quiz
   useEffect(() => {
     setCurrentVideoHasQuiz(courseData?.[activeVideo]?.quiz?.length > 0)
   }, [activeVideo, courseData])
 
+  // Fetch all quiz completion status
   useEffect(() => {
-    const fetchQuizCompletionStatus = async () => {
+    const fetchAllQuizCompletionStatuses = async () => {
+      if (!courseData || courseData.length === 0) return
+
       try {
-        if (!courseData || !courseData?.[activeVideo]) return
-        const answers = await getAnswersQuiz(courseData?.[activeVideo]?._id.toString())
-        if (answers && answers.answers && answers.answers[courseData?.[activeVideo]?._id.toString()]) {
-          setQuizCompleted((prevCompleted) => {
-            const newCompleted = [...prevCompleted]
-            newCompleted[activeVideo] = true
-            return newCompleted
-          })
+        const newQuizCompletedState = [...quizCompleted]
+        let changesMade = false
+
+        //Loop through each video to check if quiz has
+        for (let i = 0; i < courseData.length; i++) {
+          if (courseData[i]?.quiz?.length > 0) {
+            const answers = await getAnswersQuiz(courseData[i]._id.toString())
+            if (answers && answers.answers && answers.answers[courseData[i]._id.toString()]) {
+              newQuizCompletedState[i] = true
+              changesMade = true
+            }
+          }
+        }
+
+        if (changesMade) {
+          setQuizCompleted(newQuizCompletedState)
         }
       } catch (error) {
         console.error("Error fetching quiz answers:", error)
-        toast.error("An error occurred while fetching quiz answers.")
       }
     }
 
-    fetchQuizCompletionStatus()
-  }, [activeVideo, courseData])
+    fetchAllQuizCompletionStatuses()
+  }, [courseData])
+
+ useEffect(() => {
+    if (finalTestItem && finalTestItem.id) {
+      setFinalTestId((finalTestItem as any)?._id?.toString());
+    }
+  }, [finalTestItem]);
+
+ const handleFinalTestClick = () => {
+    if (allContentCompleted) {
+      if (finalTest && Array.isArray(finalTest) && finalTest.length > 0) {
+        const testId = (finalTestItem as any)?._id?.toString();
+        if (testId) {
+          // console.log("Mở modal final test với ID:", testId);
+          setFinalTestId(testId);
+          setShowFinalTestModal(true);
+        } else {
+          toast.error("Final test is not available. Please try again later");
+        }
+      } else {
+        toast.error("Final exam is not available. Please try again later.");
+      }
+    } else {
+      toast.error("Please complete all videos and quizzes before taking the final test");
+    }
+  }
 
   const handleVideoClick = (videoIndex: number | ((prevIndex: number) => number)) => {
     if (typeof videoIndex === "number") {
@@ -100,6 +161,16 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
       setActiveVideo(videoIndex)
     }
   }
+
+    const handleFinalTestComplete = (passed: boolean) => {
+    // Refetch courses data to update completion status
+    refetch();
+    
+    // You could navigate or show additional UI based on the result
+    if (passed) {
+      toast.success("Congratulations! You've completed the course!");
+    }
+  };
 
   const handleTakeQuiz = () => {
     const quizId = courseData?.[activeVideo]?.quiz[0]?._id.toString()
@@ -128,7 +199,12 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
     } else {
       try {
         await updateLessonCompletion({ courseId, courseDataId: courseData?.[activeVideo]?._id.toString() })
-        setCompletedVideos((prev) => [...prev, courseData?.[activeVideo]?._id.toString()])
+        setCompletedVideos((prev) => {
+          if (prev.includes(courseData?.[activeVideo]?._id.toString())) {
+            return prev
+          }
+          return [...prev, courseData?.[activeVideo]?._id.toString()]
+        })
         setActiveVideo((prevIndex) => Math.min(prevIndex + 1, courseData?.length - 1))
       } catch (error) {
         toast.error("An error occurred while updating lesson completion")
@@ -151,7 +227,12 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
         return updatedCompleted
       })
       setQuizSubmitted(true)
-      setCompletedVideos((prev) => [...prev, courseData?.[activeVideo]?._id.toString()])
+      setCompletedVideos((prev) => {
+        if (prev.includes(courseData?.[activeVideo]?._id.toString())) {
+          return prev
+        }
+        return [...prev, courseData?.[activeVideo]?._id.toString()]
+      })
       if (nextVideoTriggered) {
         setNextVideoTriggered(false)
       }
@@ -171,6 +252,11 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
   const toggleAIInstructor = () => {
     setShowAIInstructor((prev) => !prev)
   }
+
+   const handleCloseFinalTestModal = () => {
+    setShowFinalTestModal(false);
+  }
+
 
   return (
     <div className="mt-[1px]">
@@ -256,6 +342,8 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
               quizCompleted={quizCompleted}
               completedVideos={completedVideos}
               setCompletedVideos={setCompletedVideos}
+              finalTest={finalTest}
+              onFinalTestClick={handleFinalTestClick}
             />
           </div>
         </div>
@@ -291,6 +379,13 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
         </div>
       )}
 
+      <FinalTestModal 
+        isOpen={showFinalTestModal}
+        onClose={handleCloseFinalTestModal}
+        courseId={courseId}
+        finalTestId={finalTestId}
+      />
+      
       <div
         className={`w-[25%] fixed top-[62px] right-0 h-full z-50 bg-white dark:bg-slate-900 border-l dark:border-slate-700 transition ${openSidebar ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"} max-[1100px]:hidden`}
       >
@@ -305,6 +400,9 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
           completedVideos={completedVideos}
           courseId={courseId}
           setCompletedVideos={setCompletedVideos}
+          finalTest={finalTest}
+          onFinalTestClick={handleFinalTestClick}
+          isAllContentCompleted={allContentCompleted}
         />
       </div>
 

@@ -27,8 +27,8 @@ const CoursePrivatePage: NextPage<Props> = ({ params }) => {
   });
 
   const courseData: ICourseData[] = getCourseContent?.data?.content;
-  const finalTest = getCourseContent?.data?.finalTest
-  const courseDataLoading: boolean = getCourseContent?.isLoading;
+  const finalTest = getCourseContent?.data?.finalTest;
+   const courseDataLoading: boolean = getCourseContent?.isLoading;
   const courseContentRefetch = getCourseContent?.refetch;
 
   // const [breadcrumbs, setBreadcrumbs] = useState<IBreadCrumb[]>([]);

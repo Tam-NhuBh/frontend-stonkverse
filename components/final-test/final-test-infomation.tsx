@@ -1,11 +1,10 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { toast } from "react-hot-toast"
 import { Trash2, FileText, CheckCircle, CheckSquare, ImageIcon, Upload } from "lucide-react"
-import type { ITitleFinalTest, QuestionType } from "@/types"
+import type { ITitleFinalTest, QuestionType, IAnswerFinalTest } from "@/types"
 import { AiOutlineCloudUpload, AiOutlinePlusCircle } from "react-icons/ai"
 import BtnWithIcon from "../btn-with-icon"
 import * as Yup from "yup"
@@ -18,6 +17,10 @@ interface TestInformationProps {
   finalTests: ITitleFinalTest[]
   setFinalTests: React.Dispatch<React.SetStateAction<ITitleFinalTest[]>>
   onNext: () => void
+  isReadOnly?: boolean
+  initialTitle?: string
+  initialDescription?: string
+  onTitleDescriptionUpdate?: (title: string, description: string) => void
 }
 
 // Schema with specific validation
@@ -31,7 +34,15 @@ const schema = Yup.object({
     .min(10, "Description must be at least 10 characters"),
 })
 
-const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationProps) => {
+const TestInformation = ({ 
+  finalTests, 
+  setFinalTests, 
+  onNext, 
+  initialTitle = "", 
+  initialDescription = "",
+  onTitleDescriptionUpdate 
+}: TestInformationProps) => {
+  // Use ITitleFinalTest[] for proper type checking
   const [questions, setQuestions] = useState<ITitleFinalTest[]>(finalTests.length > 0 ? finalTests : [])
   const [activeQuestionIndex, setActiveQuestionIndex] = useState<number | null>(null)
   const [activeTab, setActiveTab] = useState<string>("mockAnswer")
@@ -45,19 +56,21 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
     setValue,
   } = useForm({
     defaultValues: {
-      title: finalTests?.[0]?.title || "",
-      description: finalTests?.[0]?.description || "",
+      title: initialTitle || finalTests?.[0]?.title || "",
+      description: initialDescription || finalTests?.[0]?.description || "",
     },
     resolver: yupResolver(schema),
   })
 
   useEffect(() => {
     if (finalTests.length > 0) {
-      setValue("title", finalTests[0].title || "")
-      setValue("description", finalTests[0].description || "")
       setQuestions(finalTests)
     }
-  }, [finalTests, setValue])
+    
+    // Initialize form values with initial values or first question data
+    setValue("title", initialTitle || finalTests?.[0]?.title || "")
+    setValue("description", initialDescription || finalTests?.[0]?.description || "")
+  }, [finalTests, setValue, initialTitle, initialDescription])
 
   const questionTypeIcons = {
     single: <CheckCircle size={18} />,
@@ -70,7 +83,7 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
     { value: "single", label: "Single Choice" },
     { value: "multiple", label: "Multiple Choice" },
     { value: "fillBlank", label: "Fill in the Blank" },
-    { value: "image", label: "Image Question" },
+    // { value: "image", label: "Image Question" },
   ]
 
   const getQuestionTypeLabel = (value: string) => {
@@ -168,7 +181,7 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
     const option = updatedQuestions[questionIndex].mockAnswer[optionIndex]
 
     if (checked) {
-      if (updatedQuestions[questionIndex].type === "single" || updatedQuestions[questionIndex].type === "image") {
+      if (updatedQuestions[questionIndex].type === "single") {
         // For single choice or image questions, only one correct answer allowed
         updatedQuestions[questionIndex].correctAnswer = [option]
       } else {
@@ -260,13 +273,13 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
         return false
       }
 
-      // For image questions, check if an image is uploaded
-      if (question.type === "image" && !question.imageUrl) {
-        setActiveQuestionIndex(i)
-        setActiveTab("mockAnswer")
-        toast.error(`Question ${i + 1}: Please upload an image`)
-        return false
-      }
+      // // For image questions, check if an image is uploaded
+      // if (question.type === "image" && !question.imageUrl) {
+      //   setActiveQuestionIndex(i)
+      //   setActiveTab("mockAnswer")
+      //   toast.error(`Question ${i + 1}: Please upload an image`)
+      //   return false
+      // }
 
       // For all question types, check mockAnswer and correct answers
       if (question.type !== "fillBlank") {
@@ -313,15 +326,21 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
       return
     }
 
-    // Update the base info for all questions
+    // Update the questions with the form values
     const updatedQuestions = questions.map(question => ({
       ...question,
       title: question.title || formValues.title,
       description: question.description || formValues.description,
     }));
 
-    // Update finalTests
+    // Update finalTests state
     setFinalTests(updatedQuestions);
+    
+    // Update parent component with title/description if callback exists
+    if (onTitleDescriptionUpdate) {
+      onTitleDescriptionUpdate(formValues.title, formValues.description);
+    }
+    
     onNext();
   })
 
@@ -351,7 +370,7 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
       {/* Questions Section */}
       <div className="mt-8">
         <div className="flex justify-between items-center mb-3">
-          <h3 className="text-md font-bold text-gray-600 dark:text-white">Final test</h3>
+          <h3 className="text-md font-bold text-gray-600 dark:text-white">Questions</h3>
           <BtnWithIcon
             customClasses="text-dark_text !bg-slate-700 w-fit !rounded-sm"
             onClick={handleAddQuestion}
@@ -394,7 +413,7 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
                   </div>
                   
                   {/* Display small thumbnail for image questions */}
-                  {question.type === "image" && question.imageUrl && (
+                  {/* {question.type === "image" && question.imageUrl && (
                     <div className="mt-2 border dark:border-gray-700 rounded-sm overflow-hidden h-12">
                       <img 
                         src={question.imageUrl} 
@@ -402,7 +421,7 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
                         className="h-full w-auto object-cover"
                       />
                     </div>
-                  )}
+                  )} */}
                 </div>
               ))}
 
@@ -465,7 +484,7 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
                   </div>
 
                   {/* Image Upload for Image Questions */}
-                  {questions[activeQuestionIndex].type === "image" && (
+                  {/* {questions[activeQuestionIndex].type === "image" && (
                     <div className="mb-4">
                       <label className="block text-sm font-bold text-gray-600 dark:text-white mb-2">Question Image</label>
                       <div
@@ -518,12 +537,13 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
                         )}
                       </div>
                     </div>
-                  )}
+                  )} */}
 
                   {/* Tab Navigation */}
                   <div className="mb-4">
                     <div className="flex border-b border-gray-200 dark:border-gray-700">
                       <button
+                        type="button"
                         className={`py-2 px-4 font-medium text-sm ${activeTab === "mockAnswer"
                           ? "border-b-2 border-blue-500 text-blue-600"
                           : "text-gray-500 hover:text-gray-700"
@@ -533,6 +553,7 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
                         Options
                       </button>
                       <button
+                        type="button"
                         className={`py-2 px-4 font-medium text-sm ${activeTab === "correctAnswer"
                           ? "border-b-2 border-blue-500 text-blue-600"
                           : "text-gray-500 hover:text-gray-700"
@@ -614,6 +635,7 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
                     <div className="mb-4">
                       {questions[activeQuestionIndex].type === "fillBlank" ? (
                         <div>
+                          <label className="block text-sm font-bold text-gray-600 dark:text-white mb-2">Correct Answer</label>
                           <input
                             type="text"
                             value={questions[activeQuestionIndex].correctAnswer[0] || ""}
@@ -625,7 +647,7 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
                       ) : (
                         <div>
                           <p className="text-xs italic text-gray-500 mb-1">
-                            {questions[activeQuestionIndex].type === "single" || questions[activeQuestionIndex].type === "image"
+                            {questions[activeQuestionIndex].type === "single"
                               ? "Select one correct answer"
                               : "Select one or more correct answers"}
                           </p>
@@ -637,13 +659,14 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
                           {questions[activeQuestionIndex].mockAnswer.map((option, optionIndex) => (
                             <div key={optionIndex} className="flex items-start gap-2 mb-2 p-2 outline-none border dark:border-slate-700 bg-[#f5f5f5] dark:bg-transparent rounded-sm">
                               <input
-                                type={(questions[activeQuestionIndex].type === "single" || questions[activeQuestionIndex].type === "image") ? "radio" : "checkbox"}
+                                type={(questions[activeQuestionIndex].type === "single") ? "radio" : "checkbox"}
                                 checked={questions[activeQuestionIndex].correctAnswer.includes(option)}
                                 onChange={(e) =>
                                   handleCorrectAnswerChange(activeQuestionIndex, optionIndex, e.target.checked)
                                 }
                                 className="h-4 w-4 mt-2"
                                 disabled={!option.trim()}
+                                name={questions[activeQuestionIndex].type === "single" ? `correct-answer-${activeQuestionIndex}` : undefined}
                               />
                               <div className="flex-1 mt-1">
                                 <span className={`${!option.trim() ? "text-gray-400 italic" : ""}`}>
@@ -651,7 +674,7 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
                                 </span>
 
                                 {/* Preview of image if option is an image URL */}
-                                {isImageUrl(option) && (
+                                {/* {isImageUrl(option) && (
                                   <div className="mt-1 border rounded-sm p-2 bg-gray-50 dark:bg-gray-800">
                                     <div className="w-full h-16 flex items-center justify-center overflow-hidden">
                                       <img
@@ -659,13 +682,13 @@ const TestInformation = ({ finalTests, setFinalTests, onNext }: TestInformationP
                                         alt={`Option ${optionIndex + 1}`}
                                         className="max-h-full object-contain"
                                         onError={(e) => {
-                                          ; (e.target as HTMLImageElement).src = ""
-                                            ; (e.target as HTMLImageElement).alt = "Invalid image URL"
+                                          (e.target as HTMLImageElement).src = ""
+                                          ;(e.target as HTMLImageElement).alt = "Invalid image URL"
                                         }}
                                       />
                                     </div>
                                   </div>
-                                )}
+                                )} */}
                               </div>
                             </div>
                           ))}

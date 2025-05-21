@@ -1,23 +1,17 @@
 "use client";
 
+import DataTable from "@/components/admin-pages/data-table";
 import { formatShortDate } from "@/lib/format-data";
-import {
-  useGetAllUsersQuery,
-} from "@/store/user/user-api";
-import { Box, Button, Modal } from "@mui/material";
+import { useGetCourseUsersQuery } from "@/store/user/user-api";
+import { Box } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { FC, useEffect, useState } from "react";
-import { AiOutlineDelete, AiOutlineMail } from "react-icons/ai";
-import DataTable from "../data-table";
-import { FaUsers } from "react-icons/fa";
+import { FC } from "react";
+import { AiOutlineMail } from "react-icons/ai";
 
-interface Props { }
+interface Props {}
 
-const AllUsers: FC<Props> = (props): JSX.Element => {
-  const { isLoading, data, refetch } = useGetAllUsersQuery(
-    {},
-    { refetchOnMountOrArgChange: true }
-  );
+const CourseUsers: FC<Props> = (props): JSX.Element => {
+  const { isLoading, data } = useGetCourseUsersQuery({}, { refetchOnMountOrArgChange: true });
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", flex: 0.5 },
@@ -38,8 +32,13 @@ const AllUsers: FC<Props> = (props): JSX.Element => {
     },
     {
       field: "courses",
-      headerName: "Purchased",
+      headerName: "Enrolled Courses",
       flex: 0.5,
+      renderCell: (params: any) => {
+        return `${params.row.courses.length} ${
+          params.row.courses.length > 1 ? "courses" : "course"
+        }`;
+      },
     },
     {
       field: "created_at",
@@ -63,7 +62,6 @@ const AllUsers: FC<Props> = (props): JSX.Element => {
         );
       },
     },
-
   ];
 
   let rows = [];
@@ -74,28 +72,16 @@ const AllUsers: FC<Props> = (props): JSX.Element => {
       name: item.name,
       email: item.email,
       role: item.role[0].toUpperCase() + item.role.substring(1),
-      courses: `${item.courses.length} ${item.courses.length > 1 ? "courses" : "course"
-        }`,
+      courses: item.courses,
       created_at: formatShortDate(item.createdAt),
     }));
   }
 
   return (
-    <div className="mt-3 w-[90%] mx-auto ">
-
-      <div className="flex items-center gap-2 -mb-3">
-        <div className="p-1.5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full">
-          <FaUsers size={20} />
-        </div>
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
-          ALL USERS
-        </h2>
-      </div>
-
+    <div className="mt-8 w-[90%] mx-auto">
       <DataTable rows={rows} columns={columns} isLoading={isLoading} />
-
     </div>
   );
 };
 
-export default AllUsers;
+export default CourseUsers; 

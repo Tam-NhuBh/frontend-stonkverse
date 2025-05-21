@@ -1,22 +1,22 @@
 "use client";
 
-import AllUsers from "@/components/instructor-page/users-page/all-users";
+import CourseUsers from "@/components/instructor-page/users-page/course-users";
 import InstructorProtectedPage from "@/components/instructor-protected-page";
 import { useMount } from "@/hooks/useMount";
 import { NextPage } from "next";
 
 interface Props {}
 
-const UsersPage: NextPage<Props> = () => {
+const CourseUsersPage: NextPage<Props> = () => {
   const hasMounted = useMount();
 
   if (!hasMounted) return null;
 
   return (
     <InstructorProtectedPage>
-      <AllUsers />
+      <CourseUsers />
     </InstructorProtectedPage>
   );
 };
 
-export default UsersPage;
+export default CourseUsersPage; 
