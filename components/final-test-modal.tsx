@@ -10,7 +10,6 @@ import { IoMdHelpCircle } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import axiosClient from "@/lib/api-client-v1";
 import { MdTimer, MdWarning } from "react-icons/md";
-import Confetti from 'react-confetti';
 
 interface FinalTestModalProps {
   isOpen: boolean;
@@ -48,10 +47,8 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
   finalTestId,
   onTestComplete
 }) => {
-  // If modal isn't open, don't render content
   if (!isOpen) return null;
 
-  // Basic state
   const [loading, setLoading] = useState(true);
   const [finalTest, setFinalTest] = useState<IFinalTest | null>(null);
   const [userAnswers, setUserAnswers] = useState<Record<string, string[]>>({});
@@ -64,12 +61,11 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
   const [timeWarning, setTimeWarning] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // References
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const fullscreenRef = useRef<HTMLDivElement>(null);
 
-  // Prevent context menu (right click)
+  // Security & Protection
   useEffect(() => {
     const handleContextMenu = (e: MouseEvent) => {
       if (!showCompletionMessage && !isFinished) {
@@ -78,16 +74,13 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
       }
     };
 
-    // Prevent F12, Ctrl+Shift+I
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!showCompletionMessage && !isFinished) {
-        // F12 key
         if (e.keyCode === 123) {
           e.preventDefault();
           return false;
         }
-        
-        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+
         if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
           e.preventDefault();
           return false;
@@ -104,7 +97,7 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
     };
   }, [showCompletionMessage, isFinished]);
 
-  // Fullscreen mode
+  // Fullscreen Management
   const enterFullscreen = () => {
     if (fullscreenRef.current) {
       if (fullscreenRef.current.requestFullscreen) {
@@ -136,7 +129,7 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
     };
   }, []);
 
-  // Fetch test data
+  // Data Fetching
   useEffect(() => {
     const fetchTest = async () => {
       if (!finalTestId || finalTestId === "") {
@@ -153,7 +146,6 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
         const testData = response.data || response;
 
         if (testData) {
-          // Convert API data to IFinalTest format
           const processedTest: IFinalTest = {
             id: testData._id,
             title: testData.title,
@@ -179,16 +171,15 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
               instructionsMessage: testData.settings?.instructionsMessage || "Complete all questions within the time limit",
               pageLayout: testData.settings?.pageLayout || "",
               gradingDisplay: testData.settings?.gradingDisplay || "",
-              completionMessage: testData.settings?.completionMessage || "Completion message"
+              completionMessage: testData.settings?.completionMessage || "Once submitted, you won't be able to change your answers."
             }
           };
 
           setFinalTest(processedTest);
 
-          // Set up time
           const duration = ((processedTest.settings.testDuration.hours || 0) * 60 +
             (processedTest.settings.testDuration.minutes || 0)) * 60;
-          setTimeLeft(duration || 1800); // Default 30 minutes if not set
+          setTimeLeft(duration || 1800);
 
         } else {
           toast.error("Could not load test. Please try again later.");
@@ -212,7 +203,7 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
     };
   }, [isOpen, finalTestId, onClose]);
 
-  // Handle outside click
+  // Event Handlers
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node) &&
@@ -230,7 +221,6 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
     };
   }, [isOpen, onClose, isFinished, showCompletionMessage]);
 
-  // Prevent body scroll
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -242,20 +232,17 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
     };
   }, [isOpen]);
 
-  // Start the test
   const startTest = () => {
     setShowCompletionMessage(false);
-    // Reset user answers when starting the test
     setUserAnswers({});
-    // Start countdown
+
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
-        // Show warning when 5 minutes remaining
         if (prevTime === 300) {
           setTimeWarning(true);
           toast.error("5 minutes remaining!");
         }
-        
+
         if (prevTime <= 1) {
           if (timerRef.current) clearInterval(timerRef.current);
           handleSubmitTest();
@@ -264,12 +251,10 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
         return prevTime - 1;
       });
     }, 1000);
-    
-    // Enter fullscreen when starting test
+
     enterFullscreen();
   };
 
-  // Format time as HH:MM:SS
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -277,7 +262,6 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  // Handle answer selection
   const handleAnswerSelect = (answer: string, questionType: QuestionType, questionId: string) => {
     if (!finalTest) return;
 
@@ -299,9 +283,7 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
     });
   };
 
-  // Show confirmation modal before submitting
   const confirmSubmitTest = () => {
-    // Check if all questions are answered
     if (finalTest) {
       const unansweredQuestions = finalTest.tests.filter(question => {
         const questionId = (question as any)._id.toString();
@@ -310,8 +292,7 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
 
       if (unansweredQuestions.length > 0) {
         toast.error(`You have ${unansweredQuestions.length} unanswered questions. Please complete all questions before submitting.`);
-        
-        // Scroll to the first unanswered question
+
         const firstUnansweredQuestion = unansweredQuestions[0];
         const questionElement = document.getElementById(`question-${(firstUnansweredQuestion as any)._id}`);
         if (questionElement) {
@@ -321,32 +302,28 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
             questionElement.classList.remove('highlight-question');
           }, 2000);
         }
-        
+
         return;
       }
     }
-    
+
     setShowConfirmation(true);
   };
 
-  // Submit test
   const handleSubmitTest = async () => {
     if (isSubmitting || !finalTest) return;
     setIsSubmitting(true);
     setShowConfirmation(false);
 
-    // Stop timer
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
 
-    // Exit fullscreen
     if (isFullscreen) {
       exitFullscreen();
     }
 
     try {
-      // Prepare answers data
       const answers = finalTest.tests.map(question => {
         const questionId = (question as any)._id.toString();
         return {
@@ -355,34 +332,23 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
         };
       });
 
-      // Call API
       const response = await axiosClient.put('add-answer-final-test', {
         courseId,
         finalTestId,
         answers
       });
 
-      if (response.data.success) {
-        // Set result and display
-        setTestResult(response.data.data);
-        
-        // Show appropriate toast
-        if (response.data.data.passed) {
-          toast.success("Congratulations! You've passed the final test! 🎉");
-        } else {
-          toast.error(`You need ${response.data.data.passingGrade}% to pass. Try again!`);
-        }
+      if (response) {
+        setTestResult(response.data);
+        toast.success("Final test submitted successfully!");
 
-        // Notify parent component
         if (onTestComplete) {
-          onTestComplete(response.data.data.passed);
+          onTestComplete(response.data?.passed || false);
         }
-      } else {
-        throw new Error("API returned unsuccessful response");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting test:", error);
-      toast.error("An error occurred while submitting the test.");
+      toast.error("An error occurred while submitting your test. Please try again!");
     } finally {
       setIsFinished(true);
       setShowCompletionMessage(true);
@@ -390,7 +356,7 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
     }
   };
 
-  // Render time warning
+  // Render Methods
   const renderTimeWarning = () => {
     if (!timeWarning) return null;
 
@@ -399,63 +365,59 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-full shadow-lg z-50 flex items-center"
+        className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center"
       >
-        <MdTimer className="mr-2" size={24} />
-        <span className="font-bold">Time is running out! {formatTime(timeLeft)}</span>
+        <MdTimer className="mr-2" size={20} />
+        <span className="font-medium">Time is running out! {formatTime(timeLeft)}</span>
       </motion.div>
     );
   };
 
-  // Render confirmation dialog
   const renderConfirmation = () => {
     if (!showConfirmation) return null;
 
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
+        initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        className="fixed inset-0 bg-black bg-opacity-70 z-[10000] flex items-center justify-center p-4"
+        exit={{ opacity: 0, scale: 0.9 }}
+        className="fixed inset-0 bg-black bg-opacity-50 z-[10000] flex items-center justify-center p-4"
       >
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 max-w-md w-full">
-          <div className="text-center mb-6">
-            <div className="inline-block p-4 rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300 mb-4">
-              <FaExclamationTriangle size={36} />
+        <div className="bg-white dark:bg-gray-800 rounded-md shadow-xl p-6 max-w-md w-full">
+          <div className="text-center mb-4">
+            <div className="inline-block p-3 rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300 mb-3">
+              <FaExclamationTriangle size={24} />
             </div>
-            
-            <h3 className="text-2xl font-bold mb-2">Submit Your Test?</h3>
-            <p className="text-gray-600 dark:text-gray-300">
+
+            <h3 className="text-lg font-semibold mb-2">Submit Test</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
               Are you sure you want to submit your test? This action cannot be undone.
             </p>
           </div>
-          
-          <div className="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 p-4 mb-6 text-left">
+
+          <div className="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 p-3 mb-4 text-left">
             <p className="text-sm text-yellow-700 dark:text-yellow-200">
-              {finalTest?.settings.completionMessage || "Once submitted, you won't be able to change your answers."}
+              {finalTest?.settings.completionMessage}
             </p>
           </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
+
+          <div className="flex gap-3 justify-between">
+            <BtnWithIcon
+              content="Cancel"
               onClick={() => setShowConfirmation(false)}
-              className="px-6 py-3 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium order-2 sm:order-1"
-            >
-              Cancel
-            </button>
-            <button
+              customClasses="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+            />
+            <BtnWithIcon
+              content="Submit"
               onClick={handleSubmitTest}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium order-1 sm:order-2"
-            >
-              Yes, Submit Test
-            </button>
+              customClasses="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+            />
           </div>
         </div>
       </motion.div>
     );
   };
 
-  // Render completion message
   const renderCompletionMessage = () => {
     if (!finalTest) return null;
 
@@ -465,81 +427,65 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 max-w-3xl mx-auto relative overflow-hidden"
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 max-w-2xl mx-auto"
         >
-          {testResult.passed && <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={200} />}
-          
-          <div className={`absolute inset-0 h-2 top-0 ${testResult.passed ? "bg-green-500" : "bg-red-500"}`}></div>
-          
           <div className="text-center">
-            <div className="mb-8">
-              <div className={`inline-block p-5 rounded-full mb-4 ${
-                testResult.passed 
-                  ? "bg-green-100 text-green-500 dark:bg-green-900/50 dark:text-green-300"
-                  : "bg-red-100 text-red-500 dark:bg-red-900/50 dark:text-red-300"
-              }`}>
-                {testResult.passed ? <FaCheckCircle size={56} /> : <FaTimesCircle size={56} />}
+            <div className="mb-6">
+              <div className={`inline-block p-4 rounded-full mb-4 ${testResult.passed
+                ? "bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-300"
+                : "bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-300"
+                }`}>
+                {testResult.passed ? <FaCheckCircle size={32} /> : <FaTimesCircle size={32} />}
               </div>
-              
-              <h2 className="text-3xl font-bold mb-4">
-                {testResult.passed ? "Congratulations!" : "Test Completed"}
+
+              <h2 className="text-2xl font-bold mb-3">
+                {testResult.passed ? "Test Passed" : "Test Completed"}
               </h2>
 
-              <div className="text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <div className="text-4xl font-bold mb-4 text-gray-800 dark:text-gray-200">
                 {testResult.finalScore.toFixed(1)}%
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-md p-6 transform transition-transform hover:scale-[1.02]">
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Quiz Score</p>
-                  <p className="text-2xl font-bold">{testResult.quizScore.toFixed(1)}%</p>
-                  <div className="mt-2 inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs">
-                    Weight: {testResult.weightedDetails.quizContribution}%
-                  </div>
+                  <p className="text-xl font-semibold">{testResult.quizScore.toFixed(1)}%</p>
+                  <p className="text-xs text-gray-500">Weight: {testResult.weightedDetails.quizContribution}%</p>
                 </div>
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-md p-6 transform transition-transform hover:scale-[1.02]">
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Test Score</p>
-                  <p className="text-2xl font-bold">{testResult.testScore.toFixed(1)}%</p>
-                  <div className="mt-2 inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs">
-                    Weight: {testResult.weightedDetails.testContribution}%
-                  </div>
+                  <p className="text-xl font-semibold">{testResult.testScore.toFixed(1)}%</p>
+                  <p className="text-xs text-gray-500">Weight: {testResult.weightedDetails.testContribution}%</p>
                 </div>
               </div>
 
-              <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-8">
-                <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-lg">
-                  <span className="text-blue-700 dark:text-blue-300">Correct Answers:</span>
-                  <span className="font-bold text-blue-800 dark:text-blue-200">{testResult.correctAnswers} / {testResult.totalQuestions}</span>
-                </div>
-                <div className="flex items-center gap-2 bg-purple-50 dark:bg-purple-900/30 px-4 py-2 rounded-lg">
-                  <span className="text-purple-700 dark:text-purple-300">Passing Grade:</span>
-                  <span className="font-bold text-purple-800 dark:text-purple-200">{testResult.passingGrade}%</span>
-                </div>
+              <div className="flex justify-center items-center gap-4 mb-6 text-sm">
+                <span>Correct: {testResult.correctAnswers}/{testResult.totalQuestions}</span>
+                <span>•</span>
+                <span>Passing Grade: {testResult.passingGrade}%</span>
               </div>
 
-              <div className={`inline-block px-6 py-3 rounded-lg text-lg ${
-                testResult.passed
-                  ? "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-100 ring-4 ring-green-500/30"
-                  : "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-100 ring-4 ring-red-500/30"
-              } font-bold mb-8 tracking-wide`}>
+              <div className={`inline-block px-4 py-2 rounded-lg text-sm font-medium mb-6 ${testResult.passed
+                ? "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-100"
+                : "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-100"
+                }`}>
                 {testResult.passed ? "PASSED" : "FAILED"}
               </div>
 
               {testResult.isFirstTimePassing && testResult.passed && (
-                <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-400 p-4 mb-8 text-left">
-                  <p className="text-blue-700 dark:text-blue-200">
-                    <span className="font-bold">First-time pass! 🎉</span> Congratulations on passing the course for the first time! A confirmation email has been sent to your inbox.
+                <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-400 p-4 mb-6 text-left">
+                  <p className="text-sm text-blue-700 dark:text-blue-200">
+                    <strong>First-time pass!</strong> A confirmation email has been sent to your inbox.
                   </p>
                 </div>
               )}
             </div>
 
-            <button
+            <BtnWithIcon
+              content="Close"
               onClick={onClose}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-            >
-              Close
-            </button>
+              customClasses="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+            />
           </div>
         </motion.div>
       );
@@ -550,67 +496,65 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 max-w-3xl mx-auto relative overflow-hidden"
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 max-w-2xl mx-auto"
       >
-        <div className="absolute inset-0 h-2 top-0 bg-blue-500"></div>
-        
         <div className="text-center">
-          <div className="mb-8">
-            <div className="inline-block p-5 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300 mb-4">
-              <IoMdHelpCircle size={56} />
+          <div className="mb-6">
+            <div className="inline-block p-4 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300 mb-4">
+              <IoMdHelpCircle size={32} />
             </div>
-            
-            <h2 className="text-3xl font-bold mb-4">{finalTest.title}</h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-xl mx-auto">
+
+            <h2 className="text-2xl font-bold mb-3">{finalTest.title}</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               {finalTest.description}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-md p-6 transform transition-transform hover:scale-[1.02]">
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center justify-center mb-2">
-                <MdTimer className="text-blue-500 dark:text-blue-400 mr-2" size={24} />
+                <MdTimer className="text-blue-500 dark:text-blue-400 mr-2" size={20} />
                 <p className="text-sm text-gray-500 dark:text-gray-400">Time Limit</p>
               </div>
-              <p className="text-2xl font-bold">
+              <p className="text-lg font-semibold">
                 {finalTest.settings.testDuration.hours}h {finalTest.settings.testDuration.minutes}m
               </p>
             </div>
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-md p-6 transform transition-transform hover:scale-[1.02]">
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center justify-center mb-2">
-                <FaLock className="text-blue-500 dark:text-blue-400 mr-2" size={20} />
-                <p className="text-sm text-gray-500 dark:text-gray-400">Number of questions</p>
+                <FaLock className="text-blue-500 dark:text-blue-400 mr-2" size={16} />
+                <p className="text-sm text-gray-500 dark:text-gray-400">Questions</p>
               </div>
-              <p className="text-2xl font-bold">{finalTest.settings.numberOfQuestions}</p>
+              <p className="text-lg font-semibold">{finalTest.settings.numberOfQuestions}</p>
             </div>
           </div>
 
-          <div className="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 p-5 mb-8 text-left rounded-r-lg">
+          <div className="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 p-4 mb-6 text-left">
             <div className="flex">
-              <MdWarning className="text-yellow-500 dark:text-yellow-400 mt-1 mr-3 flex-shrink-0" size={24} />
-              <p className="text-yellow-700 dark:text-yellow-200">
+              <MdWarning className="text-yellow-500 dark:text-yellow-400 mt-0.5 mr-3 flex-shrink-0" size={20} />
+              <p className="text-sm text-yellow-700 dark:text-yellow-200">
                 {finalTest.settings.instructionsMessage}
               </p>
             </div>
           </div>
 
           <BtnWithIcon
-          content={"START"}
+            content="Start"
             onClick={startTest}
-            customClasses="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-1"           >
-          </BtnWithIcon>
+            customClasses="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+          />
         </div>
       </motion.div>
     );
   };
 
-  // Render all questions at once
   const renderAllQuestions = () => {
     if (!finalTest || showCompletionMessage || isFinished) return null;
 
-    // Calculate progress
     const totalQuestions = finalTest.tests.length;
-    const answeredQuestions = Object.keys(userAnswers).length;
+    const answeredQuestions = Object.keys(userAnswers).filter(key =>
+      userAnswers[key] && userAnswers[key].length > 0
+    ).length;
     const progressPercent = (answeredQuestions / totalQuestions) * 100;
 
     return (
@@ -620,128 +564,120 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
         exit={{ opacity: 0 }}
         className="max-w-4xl mx-auto"
       >
-        {/* Fixed header with timer and progress */}
-        <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-md rounded-lg mb-6 p-4">
+        {/* Fixed Header */}
+        <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700 mb-6 p-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <div className={`text-xl font-mono px-5 py-3 rounded-lg flex items-center ${
-                timeLeft < 300 ? "bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-300 animate-pulse" : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-              }`}>
-                <MdTimer className="mr-2" size={20} />
+              <div className={`px-4 py-2 rounded-md flex items-center text-sm font-medium ${timeLeft < 300
+                ? "bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300"
+                : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                }`}>
+                <MdTimer className="mr-2" size={16} />
                 {formatTime(timeLeft)}
               </div>
             </div>
 
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600 dark:text-gray-300">
-                {answeredQuestions} of {totalQuestions} answered
+                {answeredQuestions}/{totalQuestions} Answered
               </div>
-              
-              {/* Progress bar */}
-              <div className="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                <div 
-                  className="bg-blue-600 h-3 rounded-full transition-all duration-500"
+
+              <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${progressPercent}%` }}
                 ></div>
               </div>
-              
-              <button
-                onClick={confirmSubmitTest}
-                disabled={isSubmitting}
-                className="px-5 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center font-medium shadow-md hover:shadow-lg"
-              >
-                {isSubmitting ? "Submitting..." : "Submit Test"}
-              </button>
+
             </div>
           </div>
         </div>
 
         {/* Questions */}
-        <div className="space-y-8 pb-20">
+        <div className="space-y-6 pb-20">
           {finalTest.tests.map((question, index) => {
             const questionId = (question as any)._id.toString();
             const selectedAnswers = userAnswers[questionId] || [];
-            
+            const isAnswered = selectedAnswers.length > 0;
+
             return (
               <motion.div
                 key={questionId}
                 id={`question-${questionId}`}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all highlight-animation"
+                transition={{ delay: index * 0.02 }}
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 highlight-animation"
               >
-                <div className="mb-6">
-                  <div className="flex items-center mb-4">
-                    <div className="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                <div className="mb-4">
+                  <div className="flex items-start mb-3">
+                    <div className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-medium">
                       {index + 1}
                     </div>
-                    <h3 className="text-xl font-medium">{question.title}</h3>
-                  </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-medium mb-2">{question.title}</h3>
 
-                  {question.imageUrl && (
-                    <div className="mb-4">
-                      <img
-                        src={question.imageUrl}
-                        alt={`Question ${index + 1}`}
-                        className="max-h-60 object-contain mx-auto rounded-lg shadow-md"
-                      />
+                      {question.imageUrl && (
+                        <div className="mb-4">
+                          <img
+                            src={question.imageUrl}
+                            alt={`Question ${index + 1}`}
+                            className="max-h-48 object-contain rounded-md shadow-sm"
+                          />
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
 
-                {/* Answer options */}
+                {/* Answer Options */}
                 {question.type === "fillBlank" ? (
-                  <div className="relative">
+                  <div className="mb-4">
                     <input
                       type="text"
-                      className="w-full p-4 text-lg border-2 rounded-xl dark:bg-gray-700 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                      placeholder="Type your answer here..."
+                      className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                      placeholder="Enter your answer..."
                       value={selectedAnswers[0] || ""}
                       onChange={(e) => handleAnswerSelect(e.target.value, "fillBlank", questionId)}
                     />
-                    <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">Fill in the blank with the correct answer</div>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-2 mb-4">
                     {question.mockAnswer.map((option, optIndex) => (
                       <div
                         key={optIndex}
-                        className={`p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                          selectedAnswers.includes(option)
-                            ? "bg-blue-50 border-blue-500 dark:bg-blue-900/50 dark:border-blue-400 shadow-md"
-                            : "hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-500 border-gray-200 dark:border-gray-700"
-                        }`}
+                        className={`p-3 border rounded-md cursor-pointer transition-all ${selectedAnswers.includes(option)
+                          ? "bg-blue-50 border-blue-300 dark:bg-blue-900/30 dark:border-blue-600"
+                          : "hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-600"
+                          }`}
                         onClick={() => handleAnswerSelect(option, question.type, questionId)}
                       >
                         <div className="flex items-center">
-                          <div className={`w-6 h-6 flex items-center justify-center border-2 rounded-${
-                            question.type === "multiple" ? "md" : "full"
-                          } mr-3 transition-colors ${
-                            selectedAnswers.includes(option)
-                              ? "bg-blue-500 border-blue-500 text-white"
+                          <div className={`w-5 h-5 flex items-center justify-center border rounded-${question.type === "multiple" ? "sm" : "full"
+                            } mr-3 transition-colors ${selectedAnswers.includes(option)
+                              ? "bg-blue-600 border-blue-600 text-white"
                               : "border-gray-300 dark:border-gray-500"
-                          }`}>
+                            }`}>
                             {selectedAnswers.includes(option) && (
-                              <FaCheckCircle size={14} />
+                              <FaCheckCircle size={12} />
                             )}
                           </div>
-                          <span className="text-lg">{option}</span>
+                          <span>{option}</span>
                         </div>
                       </div>
                     ))}
                   </div>
                 )}
 
-                {/* Question status indicator */}
-                <div className="mt-4 flex justify-end">
-                  {selectedAnswers.length > 0 ? (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">
-                      <FaCheckCircle className="mr-1" /> Answered
+                {/* Status Indicator */}
+                <div className="flex justify-end">
+                  {isAnswered ? (
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">
+                      <FaCheckCircle className="mr-1" size={10} /> Answered
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200">
-                      <FaExclamationTriangle className="mr-1" /> Not answered
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200">
+                      <FaExclamationTriangle className="mr-1" size={10} /> Not answered
                     </span>
                   )}
                 </div>
@@ -750,26 +686,17 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
           })}
         </div>
 
-        {/* Fixed bottom submit button */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 p-4 shadow-lg border-t border-gray-200 dark:border-gray-700 z-10 flex justify-center">
-          <button
-            onClick={confirmSubmitTest}
-            disabled={isSubmitting}
-            className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center font-medium shadow-md hover:shadow-lg"
-          >
-            {isSubmitting ? (
-              <>
-                <LoadingSpinner /> Submitting...
-              </>
-            ) : (
-              <>
-                Submit Test
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-              </>
-            )}
-          </button>
+        {/* Fixed Bottom Submit */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 p-4 shadow-lg border-t border-gray-200 dark:border-gray-700 z-10">
+          <div className="max-w-4xl mx-auto flex justify-center">
+           
+              <BtnWithIcon
+                content={isSubmitting ? "Submitting..." : "Submit"}
+                onClick={confirmSubmitTest}
+                disabled={isSubmitting}
+                customClasses="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+              />
+          </div>
         </div>
       </motion.div>
     );
@@ -778,36 +705,36 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div ref={fullscreenRef} className="fixed inset-0 bg-gray-100 dark:bg-gray-900 z-[9999] overflow-y-auto">
+        <div
+          ref={fullscreenRef}
+          className="fixed inset-0 bg-gray-50 dark:bg-gray-900 z-[9999] overflow-y-auto"
+        >
           <style jsx global>{`
             .highlight-animation {
-              transition: all 0.3s ease;
+              transition: all 0.2s ease;
             }
             .highlight-question {
-              box-shadow: 0 0 0 3px #4f46e5, 0 8px 16px -4px rgba(79, 70, 229, 0.3);
-              transform: translateY(-2px);
+              box-shadow: 0 0 0 2px #3b82f6;
+              transform: translateY(-1px);
             }
           `}</style>
-          
-          <div className="min-h-screen px-4 py-8">
+
+          <div className="min-h-screen px-4 py-6">
             {renderTimeWarning()}
-            
+
             <div ref={modalRef} className="relative">
-              {/* Close button */}
               {(isFinished || showCompletionMessage) && (
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg z-10 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className="absolute top-4 right-4 p-2 bg-white dark:bg-gray-800 rounded-full shadow-md z-10 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
-                  <IoMdClose size={24} className="text-gray-600 dark:text-gray-300" />
+                  <IoMdClose size={20} className="text-gray-600 dark:text-gray-300" />
                 </button>
               )}
 
-              {/* Content */}
               {loading ? (
                 <div className="flex flex-col items-center justify-center min-h-[400px]">
-                  <LoadingSpinner/>
-                  <p className="text-gray-600 dark:text-gray-300 animate-pulse">Loading test...</p>
+                  <LoadingSpinner />
                 </div>
               ) : showCompletionMessage ? (
                 renderCompletionMessage()
@@ -816,7 +743,7 @@ const FinalTestModal: React.FC<FinalTestModalProps> = ({
               )}
             </div>
           </div>
-          
+
           {renderConfirmation()}
         </div>
       )}

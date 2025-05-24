@@ -5,6 +5,7 @@ import { NextPage } from "next";
 import { useMount } from "@/hooks/useMount";
 import InstructorProtectedPage from "@/components/instructor-protected-page";
 import DashboardComp from "@/components/instructor-page/dashboard-page/dashboard-comp";
+import CourseUsers from "@/components/instructor-page/users-page/course-users";
 
 interface Props {}
 
@@ -16,9 +17,13 @@ const InstructorPage: NextPage<Props> = () => {
   return (
     <InstructorProtectedPage>
       <Heading
-        title="Instructor Dashboard"
-      />
-      <DashboardComp isDashboard />
+        // title="Instructor Dashboard"
+        title="Overview learner"
+
+/>
+      <CourseUsers />
+
+      {/* <DashboardComp isDashboard /> */}
     </InstructorProtectedPage>
   );
 };

@@ -50,13 +50,13 @@ interface Props {
 }
 
 const menuItems = [
-  { title: "Dashboard", to: "/instructor", icon: <HomeOutlined /> },
+  // { title: "Dashboard", to: "/instructor", icon: <HomeOutlined /> },
+      { title: "My Courses User", to: "/instructor/my-courses/users", icon: <GroupsIcon /> },
   { title: "Live Website", to: "/", icon: <Public /> },
   { title: "Create Course", to: "/instructor/create-course", icon: <VideoCall /> },
   { title: "Course Overview", to: "/instructor/courses", icon: <OndemandVideo /> },
   { title: "Create Final Test", to: "/instructor/final-test", icon: <Checklist /> },
 
-    { title: "My Courses User", to: "/instructor/my-courses/users", icon: <GroupsIcon /> },
 
 
 
@@ -230,13 +230,13 @@ const InstructorSidebar: FC<Props> = ({
               />
             ))}
 
-            <Typography
+            {/* <Typography
               variant='h6'
               className="admin-nav-title"
               sx={{ m: "15px 20px 5px 25px" }}
             >
               {!isCollapsed && "Controller"}
-            </Typography>
+            </Typography> */}
 
             {menuItems.slice(5).map((item) => (
               <Item
