@@ -27,10 +27,17 @@ import NoContentYet from "../no-content-yet"
 import type { ICourseData, IReview } from "@/types"
 import { useRouter } from "next/navigation"
 import { toast } from "react-hot-toast"
+import CustomModal from "../custom-modal"
+import Login from "../auth/login"
+import { useSession } from "next-auth/react"
+import { useSocialAuthMutation } from "@/store/auth/auth-api"
+import { useLoadUserQuery } from "@/store/api-slice"
 
 interface Props {
   courseDetail: IFetchedCourse
   courseId: string
+  refetch?: () => void
+
 }
 
 const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
@@ -43,6 +50,13 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   const [couponDiscount, setCouponDiscount] = useState(0)
   const [openModal, setOpenModal] = useState(false)
   const [isApplying, setIsApplying] = useState(false)
+  const [openModalLogin, setOpenModalLogin] = useState(false)
+  const [route, setRoute] = useState("login")
+  const {
+    data: userData,
+    isLoading,
+    refetch,
+  } = useLoadUserQuery(undefined, {});
 
   const isPurchased = user?.courses?.find((course: { courseId: string }) => {
     return course.courseId === courseId
@@ -62,12 +76,23 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
   const orderHandler = () => {
     if (!user) {
       setOpenModal(false)
+      setOpenModalLogin(true)
+      setRoute("login")
+
       return
     }
     setOpenModal(true)
+    setOpenModalLogin(false)
+
   }
 
   const orderHandlerCouponApply = async () => {
+    if (!user) {
+      setOpenModalLogin(true)
+      setRoute("login")
+      return
+    }
+
     setIsApplying(true)
     const promotionData = {
       course: courseId,
@@ -77,7 +102,6 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
     try {
       const response = await getVerifyPromotion(promotionData)
       if (response?.data?.valid) {
-        // Use the discount from the data object in the response
         setCouponDiscount(response.data.discount || 0)
         toast.success("Coupon applied successfully!")
       } else {
@@ -350,8 +374,8 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
                 </div>
                 <BtnWithIcon
                   content={`Buy Now ${couponDiscount > 0
-                      ? "$" + (courseDetail?.price - (courseDetail?.price * couponDiscount) / 100).toFixed(2)
-                      : "$" + courseDetail?.price
+                    ? "$" + (courseDetail?.price - (courseDetail?.price * couponDiscount) / 100).toFixed(2)
+                    : "$" + courseDetail?.price
                     }`}
                   customClasses="w-full mt-4"
                   onClick={orderHandler}
@@ -381,6 +405,15 @@ const CourseDetail: FC<Props> = ({ courseDetail, courseId }): JSX.Element => {
             )}
           </Box>
         </Modal>
+      )}
+
+      {openModalLogin && (
+        <CustomModal
+          openModal={openModalLogin}
+          setOpenModal={setOpenModalLogin}
+          setRoute={setRoute}
+          Component={Login}
+          refetch={refetch} />
       )}
     </div>
   )

@@ -33,25 +33,37 @@ const AddReviewModal: FC<Props> = ({
 }): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const submitHandler = async () => {
-    if (
-      ratingValue === null ||
-      ratingValue === 0 ||
-      comment.trim().length < 1
-    ) {
-      toast.error("Please Leave Your Rating!");
+const submitHandler = async () => {
+  if (
+    ratingValue === null ||
+    ratingValue === 0 ||
+    comment.trim().length < 1
+  ) {
+    toast.error("Please Complete Your Rating!");
+    return;
+  }
+  
+  setIsLoading(true);
+  
+  try {
+    const res = await createReview(courseId, ratingValue, comment);
+    
+    if (res?.success) {
+      setOpenModal(false);
+      setReviews(res.reviews.reverse());
+      setAverageRatings(res.ratings);
+      setHasReviewed(true);
+      toast.success("Review added successfully!");
     } else {
-      setIsLoading(true);
-      const res = await createReview(courseId, ratingValue, comment);
-      if (res.success) {
-        setOpenModal(false);
-        setIsLoading(false);
-        setReviews(res.reviews.reverse());
-        setAverageRatings(res.ratings);
-        setHasReviewed(true);
-      }
+      toast.error(res?.message || "Cannot create answer with inappropriate content");
     }
-  };
+  } catch (error: any) {
+    setIsLoading(false);
+    toast.error("Something went wrong");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <>
@@ -62,7 +74,7 @@ const AddReviewModal: FC<Props> = ({
         aria-describedby="modal-modal-description"
       >
         <Box className="modal-content-wrapper text-center">
-          <p className="form-title">Why did you leave this rating?</p>
+          <p className="form-title">What made you give this rating?</p>
           <p className="form-input-label mt-2 !text-lg">Select your rating</p>
           <Rating
             size="large"
@@ -83,6 +95,8 @@ const AddReviewModal: FC<Props> = ({
             placeholder="Tell us about your own personal experience taking this course. Was it a good match for you?"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
+            preventLinks={true}
+            maxLength={100}
           />
 
           <BtnWithLoading

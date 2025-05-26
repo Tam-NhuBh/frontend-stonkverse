@@ -189,6 +189,8 @@ const Comment: FC<Props> = ({
             id="reply"
             label="Write your response"
             placeholder="Eg: I think you shoud solve this problem by this way ..."
+            preventLinks={true}
+            maxLength={100}
             value={answer}
             onChange={(e) => setAnswer(e?.target?.value)}
           />

@@ -93,7 +93,7 @@ const ProfileInfo: FC<Props> = (props): JSX.Element => {
             label="Name"
             id="Name"
             value={name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
               setName(e.target.value)
             }
           />

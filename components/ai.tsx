@@ -15,6 +15,7 @@ interface Message {
   content: string
 }
 
+
 const AIInstructor: React.FC<AIInstructorProps> = ({ courseId, sessionId }) => {
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Hello! I'm your AI instructor. How can I help you with your course today?" },
@@ -22,6 +23,10 @@ const AIInstructor: React.FC<AIInstructorProps> = ({ courseId, sessionId }) => {
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const [inputError, setInputError] = useState<string | null>(null)
+  const MAX_CHARS = 500
+  const linkRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/gi
+  const forbiddenChars = /[<>{}[\]\\]/g
 
   useEffect(() => {
     scrollToBottom()
@@ -41,6 +46,11 @@ const AIInstructor: React.FC<AIInstructorProps> = ({ courseId, sessionId }) => {
     setIsLoading(true)
 
     try {
+      console.log("Sending request to AI instructor:", {
+        chatInput: userMessage,
+        sessionId: sessionId,
+      })
+
       const response = await fetch(
         "https://automation.immergreen.cc/webhook/8ad45c5a-8c9d-484b-89d3-da843e68d24f/chat",
         {
@@ -56,17 +66,38 @@ const AIInstructor: React.FC<AIInstructorProps> = ({ courseId, sessionId }) => {
       )
 
       if (!response.ok) {
-        throw new Error("Failed to get response from AI instructor")
+        throw new Error(`API Error: ${response.status} ${response.statusText}`)
       }
 
-      const data = await response.json()
+      const responseText = await response.text()
+      console.log("Raw response:", responseText)
 
-      // Update to use the 'output' field from the response
+      let data
+      try {
+        data = JSON.parse(responseText)
+        console.log("Parsed response data:", data)
+      } catch (parseError) {
+        console.error("Error parsing JSON response:", parseError)
+        throw new Error("Failed to parse API response")
+      }
+
+      if (!data) {
+        throw new Error("Empty response from API")
+      }
+
+      // Check all possible response fields
+      const aiResponse = data.output || data.response || data.answer || data.content || data.message || data.text || data.result
+
+      if (!aiResponse) {
+        console.error("No recognized response field in data:", data)
+        throw new Error("Invalid response format from API")
+      }
+
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: data.output || "I apologize, but I couldn't process your request at the moment.",
+          content: aiResponse,
         },
       ])
     } catch (error) {
@@ -81,6 +112,30 @@ const AIInstructor: React.FC<AIInstructorProps> = ({ courseId, sessionId }) => {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+
+    if (value.length > MAX_CHARS) {
+      setInputError(`Exceeds ${MAX_CHARS} character limit`)
+      return
+    }
+
+    if (linkRegex.test(value)) {
+      setInputError("Links are not allowed")
+      return
+    }
+
+    const filteredValue = value.replace(forbiddenChars, '')
+
+    if (filteredValue !== value) {
+      setInputError("Some special characters are not allowed")
+    } else {
+      setInputError(null)
+    }
+
+    setInput(filteredValue)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -142,11 +197,12 @@ const AIInstructor: React.FC<AIInstructorProps> = ({ courseId, sessionId }) => {
           <input
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder="Ask your AI instructor..."
-            className="flex-1 px-3 py-2 border dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#0da5b5]"
+            className={`w-full px-3 py-2 overflow-auto border ${inputError ? 'border-red-500' : 'dark:border-slate-600'} rounded-md bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 ${inputError ? 'focus:ring-red-500' : 'focus:ring-[#0da5b5]'}`}
             disabled={isLoading}
+            maxLength={MAX_CHARS}
           />
           <button
             onClick={handleSubmit}

@@ -56,9 +56,10 @@ const QuestionAndAnswer: FC<Props> = ({
 
   const { errors } = formState;
 
-  const onSubmit = async (data: FormValues) => {
-    setIsLoading(true);
-
+const onSubmit = async (data: FormValues) => {
+  setIsLoading(true);
+  
+  try {
     const res = await createQuestion(
       data.title,
       data.question,
@@ -67,12 +68,19 @@ const QuestionAndAnswer: FC<Props> = ({
     );
 
     if (res?.success) {
-      setIsLoading(false);
       toast.success("Add New Question Successfully!");
       reset();
       refetch();
+    } else {
+      toast.error(res?.message || "Cannot create answer with inappropriate content");
     }
-  };
+  } catch (error: any) {
+    setIsLoading(false);
+    toast.error("Something went wrong");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const formattedQuestion = [...(questions || [])]?.reverse() as IQuestion[];
 
@@ -99,6 +107,8 @@ const QuestionAndAnswer: FC<Props> = ({
           register={register("title")}
           errorMsg={errors.title?.message}
           placeholder="Eg: Why do we have to use Functional Component in React?"
+          preventLinks={true}
+          maxLength={50}
         />
         <FormInput
           textarea
@@ -108,6 +118,8 @@ const QuestionAndAnswer: FC<Props> = ({
           register={register("question")}
           errorMsg={errors.question?.message}
           placeholder="Eg: At 05:28, I didn't understand this part, here is a screenshot of what I tried..."
+          preventLinks={true}
+          maxLength={100}
         />
 
         <BtnWithLoading content="PUBLISH" isLoading={isLoading} type="submit" />
