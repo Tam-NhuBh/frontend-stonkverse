@@ -67,9 +67,8 @@ const CoursePreviewInstructor: FC<Props> = ({
             <div className="dark:bg-secondary/70 bg-tertiary/70 text-dark_text w-fit px-2 py-1 rounded-[5px]">
               {courseData?.tags}
             </div>
-{/* XẺ */}
             <div className="flex items-center gap-1">
-              <DotSpan /> <span>3</span>{" "}
+              <DotSpan /> <span>0</span>{" "}
               <span className="text-slate-500">Students</span>
             </div>
 

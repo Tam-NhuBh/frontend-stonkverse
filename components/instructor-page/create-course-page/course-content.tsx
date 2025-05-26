@@ -6,7 +6,6 @@ import FormInput from "@/components/form-input";
 import { BsLink45Deg } from "react-icons/bs";
 import toast from "react-hot-toast";
 import BtnWithIcon from "@/components/btn-with-icon";
-import { title } from "process";
 import BottomNavigator from "@/components/admin-pages/create-course-page/bottom-navigator";
 
 interface Props {
@@ -92,11 +91,20 @@ const CourseContentInstructor: FC<Props> = ({
     setCourseContentData(updatedData);
   };
 
-  const handleAddChooseAnswer = (index: number, quizIndex: number) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].quiz[quizIndex].mockAnswer.push("");
-    setCourseContentData(updatedData);
-  };
+ const handleAddChooseAnswer = (index: number, quizIndex: number) => {
+    const updatedData = courseContentData.map((item, i) => {
+      if (i === index) {
+        const updatedQuiz = [...item.quiz]
+        updatedQuiz[quizIndex] = {
+          ...updatedQuiz[quizIndex],
+          mockAnswer: [...updatedQuiz[quizIndex].mockAnswer, ""],
+        }
+        return { ...item, quiz: updatedQuiz }
+      }
+      return item
+    })
+    setCourseContentData(updatedData)
+  }
 
   // const handleAnswerChange = (sectionIndex: number, questionIndex: number, option: string) => {
   //   const updatedAnswers = [...userAnswers];
@@ -245,13 +253,13 @@ const CourseContentInstructor: FC<Props> = ({
                   <div className="relative">
                     <input
                       type="text"
-                      readOnly
                       className="w-full cursor-pointer outline-slate-900 bg-gradient-to-r from-[#098b99] to-[#057fa8] text-dark_text text-2xl py-3 pl-6"
                       onChange={(e) => {
                         const updatedData = [...courseContentData];
                         updatedData[index].videoSection = e.target.value;
                         setCourseContentData(updatedData);
                       }}
+                      placeholder="Section Title"
                       value={item.videoSection}
                     />
                   </div>
@@ -419,7 +427,7 @@ const CourseContentInstructor: FC<Props> = ({
 
                       {item.quiz.map((quizs: any, quizIndex: number) => (
                         <div key={quizIndex} className="mb-4">
-                          
+
                           <div className="flex justify-between items-center mb-1">
                             <label className="form-input-label">{`Quiz Title ${quizIndex + 1}`}</label>
                             <AiOutlineDelete
@@ -427,11 +435,11 @@ const CourseContentInstructor: FC<Props> = ({
                               onClick={() => handleRemoveQuiz(index, quizIndex)}
                               size={18}
                             />
-                          </div>  
-                          
+                          </div>
+
                           <FormInput
                             id={`quiz-title-${quizIndex}`}
-                            label={`Quiz Title ${quizIndex + 1}`}
+                            label={""}
                             value={quizs.title}
                             onChange={(e) => {
                               const updatedData = [...courseContentData];
@@ -477,11 +485,7 @@ const CourseContentInstructor: FC<Props> = ({
                             />
                           </div>
 
-                          <AiOutlineDelete
-                            className="cursor-pointer dark:text-dark_text mt-4"
-                            onClick={() => handleRemoveQuiz(index, quizIndex)}
-                          />
-                        </div>
+                       </div>
                       ))}
 
                       <div className="mb-4">
