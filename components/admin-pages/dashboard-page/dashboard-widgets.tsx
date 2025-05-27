@@ -15,29 +15,29 @@ interface Props {
   value?: number;
 }
 
-// const CircularProgressWithLabel: FC<Props> = ({ open, value }): JSX.Element => {
-//   return (
-//     <Box sx={{ position: "relative", display: "inline-flex" }}>
-//       <CircularProgress
-//         variant="determinate"
-//         value={value}
-//         size={45}
-//         color={value && value > 90 ? "info" : "error"}
-//         thickness={4}
-//         style={{ zIndex: open ? -1 : 1 }}
-//       />
-//       <Box
-//         sx={{
-//           inset: 0,
-//           position: "absolute",
-//           display: "flex",
-//           alignItems: "center",
-//           justifyContent: "center",
-//         }}
-//       ></Box>
-//     </Box>
-//   );
-// };
+const CircularProgressWithLabel: FC<Props> = ({ open, value }): JSX.Element => {
+  return (
+    <Box sx={{ position: "relative", display: "inline-flex" }}>
+      <CircularProgress
+        variant="determinate"
+        value={value}
+        size={45}
+        color={value && value > 90 ? "info" : "error"}
+        thickness={4}
+        style={{ zIndex: open ? -1 : 1 }}
+      />
+      <Box
+        sx={{
+          inset: 0,
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      ></Box>
+    </Box>
+  );
+};
 
 const DashboardWidgets: FC<Props> = ({ open }): JSX.Element => {
   const [ordersComparePercentage, setOrdersComparePercentage] = useState<any>();
@@ -115,16 +115,7 @@ const DashboardWidgets: FC<Props> = ({ open }): JSX.Element => {
                 </h5>
               </div>
 
-              <div className="">
-                <CircularProgressWithLabel open={open} value={100} />
-                <h5 className="text-center pt-4">
-                  {ordersComparePercentage?.percentageChange > 0
-                    ? "+" + ordersComparePercentage?.percentageChange.toFixed(2)
-                    : "-" +
-                      ordersComparePercentage?.percentageChange.toFixed(2)}
-                  %
-                </h5>
-              </div>
+           
             </div>
           </div>
 
@@ -137,15 +128,7 @@ const DashboardWidgets: FC<Props> = ({ open }): JSX.Element => {
                 </h5>
               </div>
 
-              <div className="">
-                <CircularProgressWithLabel open={open} value={100} />
-                <h5 className="text-center pt-4">
-                  {usersComparePercentage?.percentageChange > 0
-                    ? "+" + usersComparePercentage?.percentageChange.toFixed(2)
-                    : "-" + usersComparePercentage?.percentageChange.toFixed(2)}
-                  %
-                </h5>
-              </div>
+         
             </div>
           </div>
         </div> */}

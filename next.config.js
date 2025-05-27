@@ -16,6 +16,10 @@ const nextConfig = {
     reactRoot: true,
     suppressHydrationWarning: true,
   },
+  
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig;

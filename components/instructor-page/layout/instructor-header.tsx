@@ -2,7 +2,7 @@
 
 import ThemeSwitcher from "@/components/layout/theme-switcher"
 import { useGetAllNotificationsQuery, useUpdateNotifcationStatusMutation } from "@/store/notification/notification-api"
-import { type FC, useState, useEffect } from "react"
+import { type FC, useState, useEffect, useMemo } from "react"
 import { IoMdNotificationsOutline, IoMdCheckmarkCircleOutline } from "react-icons/io"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en"
@@ -27,6 +27,10 @@ const InstructorHeader: FC<Props> = (): JSX.Element => {
 
   const [notifications, setNotifications] = useState([])
 
+  const unreadCount = useMemo(() => {
+    return notifications.filter((item: any) => item.status === 'unread').length
+  }, [notifications])
+
   useEffect(() => {
     if (data) {
       setNotifications(data.notifications || [])
@@ -34,7 +38,7 @@ const InstructorHeader: FC<Props> = (): JSX.Element => {
   }, [data])
 
   const handleNotificationStatusChange = async (id: string) => {
-    await updateNotificationStatus({ id })
+    await updateNotificationStatus( id )
     refetch()
   }
 
@@ -75,9 +79,11 @@ const InstructorHeader: FC<Props> = (): JSX.Element => {
             <ThemeSwitcher />
             <div className="relative cursor-pointer" onClick={() => setOpen(!open)}>
               <IoMdNotificationsOutline className="text-2xl cursor-pointer dark:text-dark_text text-black" />
-              <span className="absolute -top-2 -right-2 bg-[#3ccba0] rounded-full w-5 h-5 text-xs flex items-center justify-center text-white">
-                {notifications.length}
-              </span>
+               {unreadCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#3ccba0] rounded-full w-5 h-5 text-xs flex items-center justify-center text-white">
+                  {unreadCount}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -99,13 +105,13 @@ const InstructorHeader: FC<Props> = (): JSX.Element => {
                   >
                     <div className="flex items-center justify-between">
                       <p className="font-semibold text-gray-800 dark:text-gray-200">{item.title}</p>
-                      {item.read ? (
-                        <IoMdCheckmarkCircleOutline
+                      {item.status === 'read' ? (
+                        <IoCheckmarkDoneSharp
                           className="text-green-500 cursor-pointer"
                           onClick={() => handleNotificationStatusChange(item._id)}
                         />
                       ) : (
-                        <IoCheckmarkDoneSharp
+                        <IoMdCheckmarkCircleOutline
                           className="text-gray-400 dark:text-gray-500 cursor-pointer hover:text-gray-600 dark:hover:text-gray-300"
                           onClick={() => handleNotificationStatusChange(item._id)}
                         />

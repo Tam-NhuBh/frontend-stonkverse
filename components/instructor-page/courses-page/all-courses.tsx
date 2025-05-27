@@ -5,7 +5,7 @@ import {
   useDeleteCourseMutation, //XEM LẠI
   useGetAllCoursesInstructorQuery,
 } from "@/store/course/course-api";
-import { Box, Modal } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { FC, useEffect, useState } from "react";
 import BtnWithIcon from "@/components/btn-with-icon";
@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import DataTable from "@/components/admin-pages/data-table";
 import { Visibility } from "@mui/icons-material";
+import { AiFillDelete } from "react-icons/ai";
 
 interface Props { }
 
@@ -80,6 +81,29 @@ const AllCourses: FC<Props> = (): JSX.Element => {
       },
 
     },
+    //   {
+    //   field: " ",
+    //   headerName: "Delete",
+    //   flex: 0.2,
+    //   renderCell: (params: any) => {
+    //     return (
+    //       <div className="flex items-center justify-center w-full">
+    //         <Button
+    //           onClick={() => {
+    //             setDeleteModal(true);
+    //             setCurrentCourseId(params.row.id);
+    //           }}
+    //         >
+    //           <AiFillDelete
+    //             size={20}
+    //             style={{ cursor: "pointer" }}
+    //             className="text-[#475569] dark:text-[#3E4396]"
+    //           />
+    //         </Button>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       field: "",
       headerName: "",

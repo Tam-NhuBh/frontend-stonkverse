@@ -26,21 +26,21 @@ interface TestInformationProps {
 // Schema with specific validation
 const schema = Yup.object({
   title: Yup.string()
-    .required("Please enter test's name")
+    .required("Please enter final test name")
     .min(3, "Title must be at least 3 characters")
     .max(100, "Title must be less than 100 characters"),
   description: Yup.string()
-    .required("Please enter test's description")
+    .required("Please enter final test description")
     .min(10, "Description must be at least 10 characters"),
 })
 
-const TestInformation = ({ 
-  finalTests, 
-  setFinalTests, 
-  onNext, 
-  initialTitle = "", 
+const TestInformation = ({
+  finalTests,
+  setFinalTests,
+  onNext,
+  initialTitle = "",
   initialDescription = "",
-  onTitleDescriptionUpdate 
+  onTitleDescriptionUpdate
 }: TestInformationProps) => {
   // Use ITitleFinalTest[] for proper type checking
   const [questions, setQuestions] = useState<ITitleFinalTest[]>(finalTests.length > 0 ? finalTests : [])
@@ -66,7 +66,7 @@ const TestInformation = ({
     if (finalTests.length > 0) {
       setQuestions(finalTests)
     }
-    
+
     // Initialize form values with initial values or first question data
     setValue("title", initialTitle || finalTests?.[0]?.title || "")
     setValue("description", initialDescription || finalTests?.[0]?.description || "")
@@ -80,8 +80,8 @@ const TestInformation = ({
   }
 
   const questionTypes = [
-    { value: "single", label: "Single Choice" },
-    { value: "multiple", label: "Multiple Choice" },
+    { value: "single", label: "Single Correct Answer" },
+    { value: "multiple", label: "Multiple Correct Answers" },
     { value: "fillBlank", label: "Fill in the Blank" },
     // { value: "image", label: "Image Question" },
   ]
@@ -312,12 +312,12 @@ const TestInformation = ({
 
   const handleNext = handleSubmit((formValues) => {
     if (!formValues.title.trim()) {
-      toast.error("Please enter a test title")
+      toast.error("Please enter final test title")
       return
     }
 
     if (!formValues.description.trim()) {
-      toast.error("Please enter a test description")
+      toast.error("Please enter final test description")
       return
     }
 
@@ -335,12 +335,12 @@ const TestInformation = ({
 
     // Update finalTests state
     setFinalTests(updatedQuestions);
-    
+
     // Update parent component with title/description if callback exists
     if (onTitleDescriptionUpdate) {
       onTitleDescriptionUpdate(formValues.title, formValues.description);
     }
-    
+
     onNext();
   })
 
@@ -381,7 +381,7 @@ const TestInformation = ({
 
         <div className="flex flex-col md:flex-row gap-6">
           {/* Question List */}
-          <div className="w-full md:w-1/3">
+          <div className="w-full md:w-1/2">
             <div className="border border-gray-200 dark:border-gray-700 rounded-sm p-4 h-[400px] overflow-y-auto">
               {questions.map((question, index) => (
                 <div
@@ -394,8 +394,8 @@ const TestInformation = ({
                 >
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">Question {index + 1}</span>
-                      <div className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-gray-100 dark:bg-gray-700">
+                      <span className="font-medium truncate">Question {index + 1}</span>
+                      <div className="inline-flex truncate items-center px-2 py-1 text-xs font-medium rounded-full bg-gray-100 dark:bg-gray-700">
                         <span className="mr-1">{questionTypeIcons[question.type]}</span>
                         <span>{getQuestionTypeLabel(question.type)}</span>
                       </div>
@@ -411,7 +411,7 @@ const TestInformation = ({
                   <div className="mt-2 text-sm text-gray-600 dark:text-gray-400 truncate">
                     {question.title || "Untitled question"}
                   </div>
-                  
+
                   {/* Display small thumbnail for image questions */}
                   {/* {question.type === "image" && question.imageUrl && (
                     <div className="mt-2 border dark:border-gray-700 rounded-sm overflow-hidden h-12">
@@ -429,7 +429,7 @@ const TestInformation = ({
                 <div className="text-center py-16">
                   <FileText className="mx-auto h-12 w-12 text-gray-400" />
                   <p className="mt-2 text-gray-500">No questions added yet</p>
-                  <p className="text-sm text-gray-400">Click "Add Question" to get started</p>
+                  <p className="text-sm text-gray-400">Click Add Question to get started</p>
                 </div>
               )}
             </div>
@@ -654,7 +654,7 @@ const TestInformation = ({
                           {questions[activeQuestionIndex].correctAnswer.length === 0 && (
                             <p className="text-yellow-500 italic text-sm mb-3">Please select at least one correct answer</p>
                           )}
-                          
+
                           {/* Correct answer selection */}
                           {questions[activeQuestionIndex].mockAnswer.map((option, optionIndex) => (
                             <div key={optionIndex} className="flex items-start gap-2 mb-2 p-2 outline-none border dark:border-slate-700 bg-[#f5f5f5] dark:bg-transparent rounded-sm">
