@@ -221,7 +221,7 @@ const FinalTestManagement: FC = () => {
             </div>
 
             <div className="flex-shrink-0">
-              <BtnWithIcon content="Create Test" onClick={handleCreateTest} customClasses="w-full" />
+              <BtnWithIcon content="Create" onClick={handleCreateTest} customClasses="w-full" />
             </div>
           </div>
         </div>
@@ -251,10 +251,7 @@ const FinalTestManagement: FC = () => {
             </svg>
           </div>
           <h3 className="text-lg font-semibold mb-2 text-tertiary dark:text-dark_text">No final tests found</h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-4">
-            {searchTerm ? "Try adjusting your search terms" : "Create your first final test for this course"}
-          </p>
-          {!searchTerm && <BtnWithIcon content="Create Final Test" onClick={handleCreateTest} />}
+
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">

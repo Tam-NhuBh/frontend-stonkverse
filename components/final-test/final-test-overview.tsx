@@ -45,9 +45,9 @@ const TestOverview: FC<TestOverviewProps> = ({
   const getQuestionTypeLabel = (type: string) => {
     switch (type) {
       case "single":
-        return "Single Choice";
+        return "Single Correct Answer";
       case "multiple":
-        return "Multiple Choice";
+        return "Multiple Correct Answers";
       case "fillBlank":
         return "Fill in the Blank";
       // case "image":

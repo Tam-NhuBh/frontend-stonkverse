@@ -27,7 +27,6 @@ const CheckOutForm: FC<Props> = ({ courseDetail, setOpenModal }) => {
   const [loadUser, setLoadUser] = useState(false);
   const {} = useLoadUserQuery({ skip: loadUser ? false : true });
   const user = useUserInfo();
-
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
@@ -47,16 +46,33 @@ const CheckOutForm: FC<Props> = ({ courseDetail, setOpenModal }) => {
       setIsLoading(false);
       setMessage(error.message as string);
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
-      setIsLoading(false);
-      const orderData = await createOrder(
-        courseDetail._id.toString(),
-        paymentIntent
-      );
-
-      if (orderData) {
-        toast.success("Purchased Course Sucessfully!");
-        setLoadUser(true);
-        router.push(`/course-access/${courseDetail._id}`);
+      setOpenModal(false);
+      
+      try {
+        const orderData = await createOrder(
+          courseDetail._id.toString(),
+          paymentIntent
+        );
+        
+        if (orderData) {
+          toast.success("Purchased course successfully");
+          setLoadUser(true);
+          
+          window.location.reload();
+          
+          setTimeout(() => {
+            router.push(`/course-access/${courseDetail._id}`);
+          }, 300);
+        } else {
+          toast.success("Purchased course successfully");
+          window.location.reload();
+        }
+      } catch (err) {
+        console.error("Order creation error:", err);
+        toast.success("Purchased course successfully");
+        window.location.reload();
+      } finally {
+        setIsLoading(false);
       }
     }
   };

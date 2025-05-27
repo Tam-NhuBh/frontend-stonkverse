@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState, useMemo } from "react";
 import {
   Area,
   AreaChart,
@@ -19,6 +19,40 @@ const AnalyticsAreaChart: FC<Props> = ({
   data,
   title,
 }): JSX.Element => {
+  const [selectedRange, setSelectedRange] = useState<number>(0);
+
+  // Debug logs
+  console.log("=== ANALYTICS CHART DEBUG ===");
+  console.log("Original data:", data);
+  console.log("Data length:", data?.length);
+  console.log("Selected range:", selectedRange);
+  console.log("Is Dashboard:", isDashboard);
+
+  // Filter data
+  const displayData = useMemo(() => {
+    console.log("Computing display data...");
+    
+    if (!data || data.length === 0) {
+      console.log("No data available");
+      return [];
+    }
+    
+    if (selectedRange === 0) {
+      console.log("Showing all data");
+      return data;
+    }
+    
+    const filtered = data.slice(-selectedRange);
+    console.log(`Showing last ${selectedRange} items:`, filtered);
+    return filtered;
+  }, [data, selectedRange]);
+
+  // Handle button click
+  const handleRangeChange = (value: number) => {
+    console.log("Button clicked, changing to:", value);
+    setSelectedRange(value);
+  };
+
   return (
     <div
       className={`${
@@ -34,8 +68,36 @@ const AnalyticsAreaChart: FC<Props> = ({
       >
         {title}
       </h1>
+
       {!isDashboard && (
-        <p className="text-center">(Last 12 months analytics data)</p>
+        <>
+          {/* Test buttons - Very simple */}
+          <div className="flex justify-center gap-2 mb-4">
+            <button
+              onClick={() => handleRangeChange(0)}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              All (Click me!)
+            </button>
+            <button
+              onClick={() => handleRangeChange(3)}
+              className="px-4 py-2 bg-green-500 text-white rounded"
+            >
+              Last 3
+            </button>
+            <button
+              onClick={() => handleRangeChange(6)}
+              className="px-4 py-2 bg-red-500 text-white rounded"
+            >
+              Last 6
+            </button>
+          </div>
+
+          <p className="text-center">
+            Selected: {selectedRange === 0 ? "All" : `Last ${selectedRange}`} | 
+            Showing {displayData.length} items
+          </p>
+        </>
       )}
 
       <div
@@ -48,7 +110,7 @@ const AnalyticsAreaChart: FC<Props> = ({
           height={!isDashboard ? "50%" : "100%"}
         >
           <AreaChart
-            data={data}
+            data={displayData}
             margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
           >
             <XAxis dataKey="name" />
