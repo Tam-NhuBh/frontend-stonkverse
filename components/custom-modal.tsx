@@ -1,5 +1,5 @@
 import { Modal, Box } from "@mui/material";
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, JSX, SetStateAction } from "react";
 
 interface Props {
   openModal: boolean;

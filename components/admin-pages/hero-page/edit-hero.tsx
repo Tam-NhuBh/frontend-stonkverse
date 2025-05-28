@@ -6,7 +6,7 @@ import {
   useEditLayoutMutation,
   useGetHeroDataQuery,
 } from "@/store/layout/layout-api";
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, JSX, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineCamera } from "react-icons/ai";
 

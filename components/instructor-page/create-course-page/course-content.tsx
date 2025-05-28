@@ -1,4 +1,4 @@
-import { Dispatch, FC, FormEvent, SetStateAction, useState } from "react";
+import { Dispatch, FC, FormEvent, JSX, SetStateAction, useState } from "react";
 import { CourseContentDataTypeInstructor } from "./create-course-form";
 import { AiOutlineDelete, AiOutlinePlusCircle } from "react-icons/ai";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";

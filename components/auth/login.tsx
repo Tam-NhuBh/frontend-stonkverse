@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, FC, SetStateAction, useState, useEffect } from "react";
+import { Dispatch, FC, SetStateAction, useState, useEffect, JSX } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import {

@@ -1,6 +1,6 @@
 import LoadingSpinner from "@/components/loading-spinner";
 import { useGetCoursesAnalyticsQuery } from "@/store/analytics/analytics-api";
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import {
   BarChart,
   Bar,

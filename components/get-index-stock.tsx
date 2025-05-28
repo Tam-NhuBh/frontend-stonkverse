@@ -2,7 +2,7 @@
 
 import { getIndexStock } from "@/lib/fetch-data";
 import { CircularProgress } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { IoMdTrendingUp } from "react-icons/io";
 

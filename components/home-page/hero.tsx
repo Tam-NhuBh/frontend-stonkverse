@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, JSX } from "react";
 import NextImage from "../next-image";
 import { BiSearch } from "react-icons/bi";
 import Link from "next/link";

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import { BiBarChart } from "react-icons/bi";
 
 interface Props {}

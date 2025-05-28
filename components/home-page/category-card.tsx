@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, JSX } from "react";
 import { ICategory } from "./categories";
 import NextImage from "../next-image";
 import Link from "next/link";

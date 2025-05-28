@@ -18,7 +18,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import { Box, IconButton, Typography } from "@mui/material";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
+import { FC, useState, Dispatch, SetStateAction, useEffect, JSX } from "react";
 import { MenuItem, Menu, ProSidebar } from "react-pro-sidebar";
 import { TicketsPlaneIcon } from "lucide-react";
 import { usePathname } from "next/navigation"; 

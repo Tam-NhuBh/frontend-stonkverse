@@ -2,7 +2,7 @@
 
 import AdminHeader from "@/components/admin-pages/layout/admin-header";
 import AdminSidebar from "@/components/admin-pages/layout/admin-sidebar";
-import { FC, ReactNode, useState, useEffect } from "react";
+import { FC, ReactNode, useState, useEffect, JSX } from "react";
 import { useRouter } from "next/navigation";
 import useIsAdmin from "@/hooks/useIsAdmin";
 import NoContentYet from "@/components/no-content-yet";

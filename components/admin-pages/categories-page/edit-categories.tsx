@@ -6,7 +6,7 @@ import BtnWithLoading from "@/components/btn-with-loading";
 import FormInput from "@/components/form-input";
 import { useEditLayoutMutation } from "@/store/layout/layout-api";
 import { RemoveCircle } from "@mui/icons-material";
-import { FC, useEffect } from "react";
+import { FC, JSX, useEffect } from "react";
 import {
   FieldErrors,
   UseFieldArrayAppend,

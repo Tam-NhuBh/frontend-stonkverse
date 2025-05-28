@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, JSX } from "react";
 import NextImage from "../next-image";
 import ReviewsSwiper from "./reviews-swiper";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import NavItems from "./nav-items";
 import ThemeSwitcher from "./theme-switcher";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";

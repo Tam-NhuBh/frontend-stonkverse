@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, JSX, SetStateAction } from "react";
 import NavItems from "./nav-items";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";

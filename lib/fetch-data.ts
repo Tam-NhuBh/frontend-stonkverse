@@ -279,7 +279,7 @@ export const getFinalTestsByID = async (id: string) => {
     const response = await axiosClient(
       `/final-test-by-id/${id}`
     );
-    console.log("get final:", response.data)
+    // console.log("get final:", response.data)
     return response.data;
   } catch (error: any) {
     console.error("Failed to fetch final tests:", error.response?.data?.message || error.message);

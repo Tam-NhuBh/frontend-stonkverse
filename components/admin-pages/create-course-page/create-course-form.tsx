@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import CourseInfomation from "./course-infomation";
 import CourseOptions from "./course-options";
 import CourseData from "./course-data";

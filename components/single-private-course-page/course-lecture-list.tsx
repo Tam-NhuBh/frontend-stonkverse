@@ -1,6 +1,6 @@
 "use client"
 
-import { type FC, type Dispatch, type SetStateAction, useEffect, useState } from "react"
+import { type FC, type Dispatch, type SetStateAction, useEffect, useState, JSX } from "react"
 import { AccordionWrapper } from "../accordion-materials"
 import { AccordionDetails, AccordionSummary } from "@mui/material"
 import { formatVideoLength } from "@/lib/format-data"

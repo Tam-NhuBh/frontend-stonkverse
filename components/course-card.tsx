@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, JSX } from "react";
 import Link from "next/link";
 import NextImage from "./next-image";
 import { FaListUl } from "react-icons/fa";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const CourseCard: FC<Props> = ({ course }): JSX.Element => {
-  console.log("courseData:", course)
+  // console.log("courseData:", course)
   return (
     <div className="rounded-[5px] shadow-md dark:border-none dark:bg-slate-500 bg-white dark:bg-opacity-20 custom-hover cursor-pointer flex flex-col h-full">
       <Link

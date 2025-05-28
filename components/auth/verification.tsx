@@ -7,6 +7,7 @@ import {
   useState,
   useEffect,
   FormEvent,
+  JSX,
 } from "react";
 import { toast } from "react-hot-toast";
 import OtpInput from "react-otp-input";

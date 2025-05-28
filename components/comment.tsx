@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, JSX, SetStateAction, useState } from "react";
 import NextImage from "./next-image";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import StyledRating from "./styled-rating";

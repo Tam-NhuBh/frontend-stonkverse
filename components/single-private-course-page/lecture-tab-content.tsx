@@ -1,6 +1,6 @@
 "use client";
 import { useMediaQuery } from "@mui/material";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, FC, JSX, SetStateAction, useEffect, useState } from "react";
 import { HiExternalLink } from "react-icons/hi";
 import QuestionAndAnswer from "./question-and-answer";
 import CourseReviews from "./course-reviews";

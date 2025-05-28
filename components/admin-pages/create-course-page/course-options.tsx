@@ -1,4 +1,4 @@
-import type { Dispatch, FC, SetStateAction } from "react"
+import type { Dispatch, FC, JSX, SetStateAction } from "react"
 import { IoMdCheckmark } from "react-icons/io"
 
 interface Props {

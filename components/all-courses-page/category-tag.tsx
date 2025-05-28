@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import { ICategory } from "../home-page/categories";
 import { categoryColorsData } from "@/data/category-item";
 

@@ -3,7 +3,7 @@
 import { formatShortDate } from "@/lib/format-data";
 import { Box, Button, Modal } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import DataTable from "../data-table";
 import BtnWithIcon from "@/components/btn-with-icon";

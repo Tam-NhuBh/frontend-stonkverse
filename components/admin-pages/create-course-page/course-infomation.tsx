@@ -5,6 +5,7 @@ import {
   Dispatch,
   DragEvent,
   FC,
+  JSX,
   SetStateAction,
   useEffect,
   useState,
@@ -194,7 +195,7 @@ const CourseInfomation: FC<Props> = ({
       if (file && file.type === "application/pdf") {
         const pdfUrl = URL.createObjectURL(file);
         setValue("curriculum", pdfUrl);
-        console.log("curriculum: ", pdfUrl)
+        // console.log("curriculum: ", pdfUrl)
       } else {
         toast.error("Only PDF files are allowed for the course curriculum.");
       }

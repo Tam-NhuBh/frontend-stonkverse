@@ -2,7 +2,7 @@
 
 import ThemeSwitcher from "@/components/layout/theme-switcher"
 import { useGetAllNotificationsQuery, useUpdateNotifcationStatusMutation } from "@/store/notification/notification-api"
-import { type FC, useState, useEffect, useMemo } from "react"
+import { type FC, useState, useEffect, useMemo, JSX } from "react"
 import { IoMdNotificationsOutline, IoMdCheckmarkCircleOutline } from "react-icons/io"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en"

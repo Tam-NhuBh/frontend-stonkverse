@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, JSX, useEffect, useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { AiOutlineWarning } from "react-icons/ai";
 

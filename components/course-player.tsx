@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, JSX, useEffect, useRef, useState } from "react";
 
 interface Props {
   videoUrl: string;

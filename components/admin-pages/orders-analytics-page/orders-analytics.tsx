@@ -2,7 +2,7 @@
 
 import LoadingSpinner from "@/components/loading-spinner";
 import { useGetOrderssAnalyticsQuery } from "@/store/analytics/analytics-api";
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import AnalyticsAreaChart from "../../analytics-area-chart";
 
 interface Props {

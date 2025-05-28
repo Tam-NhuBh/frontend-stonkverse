@@ -1,6 +1,6 @@
 "use client"
 
-import { type Dispatch, type FC, type FormEvent, type SetStateAction, useState } from "react"
+import { type Dispatch, type FC, type FormEvent, JSX, type SetStateAction, useState } from "react"
 import type { CourseContentDataType } from "./create-course-form"
 import { AiOutlineDelete, AiOutlinePlusCircle } from "react-icons/ai"
 import { MdOutlineKeyboardArrowDown } from "react-icons/md"

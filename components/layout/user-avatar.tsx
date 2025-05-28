@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import { useSelector } from "react-redux";
 import NextImage from "../next-image";
 import { HiOutlineUserCircle } from "react-icons/hi";

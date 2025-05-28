@@ -1,6 +1,6 @@
 "use client"
 
-import type { FC } from "react"
+import type { FC, JSX } from "react"
 import type { ITitleFinalTest, TestSettings } from "@/types"
 import { CheckCircle, CheckSquare, FileText, ImageIcon } from "lucide-react"
 import BottomNavigator from "../admin-pages/create-course-page/bottom-navigator"

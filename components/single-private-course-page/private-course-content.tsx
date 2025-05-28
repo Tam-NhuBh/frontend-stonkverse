@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, JSX, useState } from "react";
 import LoadingSpinner from "../loading-spinner";
 import Heading from "../heading";
 import CourseContentMedia from "./course-content-media";

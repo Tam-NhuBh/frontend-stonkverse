@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, JSX } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { AiOutlineWarning } from "react-icons/ai";
 

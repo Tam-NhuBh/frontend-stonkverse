@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, JSX, SetStateAction } from "react";
 import { profileItemsData } from "@/data/profile-items";
 import { signOut } from "next-auth/react";
 import LoggedinUserAvatar from "../loggedin-user-avatar";
