@@ -25,7 +25,7 @@ interface Props {
   register: UseFormRegister<FaqFormValues>;
   remove: UseFieldArrayRemove;
   append: UseFieldArrayAppend<FaqFormValues, "questions">;
-  handleSubmit: UseFormHandleSubmit<FaqFormValues, undefined>;
+  handleSubmit: UseFormHandleSubmit<FaqFormValues>;
 }
 
 export default function FAQAccordion({
