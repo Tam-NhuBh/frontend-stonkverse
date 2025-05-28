@@ -2,7 +2,7 @@ import BottomNavigator from "@/components/admin-pages/create-course-page/bottom-
 import FormInput from "@/components/form-input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
-import { Dispatch, FC, SetStateAction, useEffect } from "react";
+import { Dispatch, FC, JSX, SetStateAction, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as yup from "yup";
 

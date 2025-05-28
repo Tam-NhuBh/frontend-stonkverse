@@ -1,7 +1,7 @@
 import { navItemsData } from "@/data/nav-items";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FC } from "react";
+import { FC, JSX } from "react";
 
 interface Props {
   isMobile?: boolean;

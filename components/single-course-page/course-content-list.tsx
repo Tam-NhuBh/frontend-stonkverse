@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, JSX } from "react";
 import CourseVideosAccordion from "./course-video-accordion";
 import { ICourseData, IFinalTest } from "@/types";
 

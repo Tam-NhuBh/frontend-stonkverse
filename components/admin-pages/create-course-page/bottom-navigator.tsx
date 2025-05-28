@@ -1,5 +1,5 @@
 import BtnWithIcon from "@/components/btn-with-icon";
-import { FC } from "react";
+import { FC, JSX } from "react";
 
 interface Props {
   backHandler?: () => void;

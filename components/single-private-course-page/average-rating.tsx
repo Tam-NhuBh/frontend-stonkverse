@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, JSX } from "react";
 import StyledRating from "../styled-rating";
 import { calculatePercentage } from "@/lib/calculate";
 import { IReview } from "@/types";

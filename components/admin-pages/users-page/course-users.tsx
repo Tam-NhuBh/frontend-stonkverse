@@ -4,7 +4,7 @@ import { formatShortDate } from "@/lib/format-data";
 import { useGetCourseUsersQuery } from "@/store/user/user-api";
 import { Box } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import DataTable from "../data-table";
 

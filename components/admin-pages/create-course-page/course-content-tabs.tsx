@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, JSX, useState } from "react";
 
 interface Props {
   prerequisites: { title: string }[];

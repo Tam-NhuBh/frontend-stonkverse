@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, JSX, useEffect } from "react";
 
 import FormInput from "../form-input";
 import BtnWithLoading from "../btn-with-loading";

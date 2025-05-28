@@ -1,5 +1,5 @@
 import { Box, Modal, Rating } from "@mui/material";
-import { FC, Dispatch, SetStateAction, useState } from "react";
+import { FC, Dispatch, SetStateAction, useState, JSX } from "react";
 import FormInput from "../form-input";
 import BtnWithLoading from "../btn-with-loading";
 import toast from "react-hot-toast";

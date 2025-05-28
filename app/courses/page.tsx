@@ -4,7 +4,7 @@ import Heading from "@/components/heading";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import { getAllCategories, getAllCoursesData } from "@/lib/fetch-data";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import { ICategory } from "@/components/home-page/categories";
 import { IFetchedCourse } from "@/components/home-page/courses";
 import SearchBar from "@/components/home-page/search-bar";

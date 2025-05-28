@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
-import { FC, useState } from "react";
+import { FC, JSX, useState } from "react";
 
 interface Props {
   src: string | StaticImageData;

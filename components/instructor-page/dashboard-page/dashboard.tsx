@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import UserAnalytics from "../users-analytics-page/users-analytics";
 import {
   useGetOrderssAnalyticsQuery,
@@ -56,7 +56,7 @@ const Dashboard: FC<Props> = ({ open }): JSX.Element => {
         const usersLastTwoMonths = data.users?.slice(-2);
         const ordersLastTwoMonths = ordersData.orders?.slice(-2);
 
-        console.log(ordersLastTwoMonths);
+        // console.log(ordersLastTwoMonths);
 
         if (
           usersLastTwoMonths?.length === 2 &&

@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, JSX, SetStateAction } from "react";
 import BtnWithIcon from "@/components/btn-with-icon";
 import DotSpan from "@/components/dot-span";
 import { formatShortDate, formatVideoLength } from "@/lib/format-data";

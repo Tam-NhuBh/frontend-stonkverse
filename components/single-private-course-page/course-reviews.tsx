@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import { getCourseReviews } from "@/lib/fetch-data";
 import useUserInfo from "@/hooks/useUserInfo";
 import AverageRating from "./average-rating";

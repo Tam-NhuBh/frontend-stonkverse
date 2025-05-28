@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, JSX, useState } from "react";
 import ProfileSidebar from "./profile-sidebar";
 import ProfileInfo from "./profile-info";
 import ChangePassword from "./change-password";

@@ -1,5 +1,5 @@
 import { featuresItemsData } from "@/data/feature-items";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import FeatureCard from "./feature-card";
 
 interface Props {}

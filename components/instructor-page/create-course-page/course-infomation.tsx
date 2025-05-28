@@ -5,6 +5,7 @@ import {
   Dispatch,
   DragEvent,
   FC,
+  JSX,
   SetStateAction,
   useEffect,
   useState,
@@ -78,7 +79,7 @@ const CourseInfomationInstructor: FC<Props> = ({
   };
 
   useEffect(() => {
-    console.log("Categories useEffect running");
+    // console.log("Categories useEffect running");
     getAllCategories();
   }, []);
   const { register, handleSubmit, formState, setValue, watch } = courseInfoForm;
@@ -127,7 +128,7 @@ const CourseInfomationInstructor: FC<Props> = ({
 
   const onSubmit = async (data: CourseInfoValuesInstructor) => {
     setActive(active + 1);
-    console.log(data);
+    // console.log(data);
 
     const file = await blobUrlToBase64(data.curriculum);
 
@@ -192,7 +193,7 @@ const CourseInfomationInstructor: FC<Props> = ({
       if (file && file.type === "application/pdf") {
         const pdfUrl = URL.createObjectURL(file);
         setValue("curriculum", pdfUrl);
-        console.log("curriculum: ", pdfUrl)
+        // console.log("curriculum: ", pdfUrl)
       } else {
         toast.error("Only PDF files are allowed for the course curriculum.");
       }

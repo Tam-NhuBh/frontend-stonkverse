@@ -46,10 +46,10 @@ const AIInstructor: React.FC<AIInstructorProps> = ({ courseId, sessionId }) => {
     setIsLoading(true)
 
     try {
-      console.log("Sending request to AI instructor:", {
-        chatInput: userMessage,
-        sessionId: sessionId,
-      })
+      // console.log("Sending request to AI instructor:", {
+      //   chatInput: userMessage,
+      //   sessionId: sessionId,
+      // })
 
       const response = await fetch(
         "https://automation.immergreen.cc/webhook/8ad45c5a-8c9d-484b-89d3-da843e68d24f/chat",
@@ -70,12 +70,12 @@ const AIInstructor: React.FC<AIInstructorProps> = ({ courseId, sessionId }) => {
       }
 
       const responseText = await response.text()
-      console.log("Raw response:", responseText)
+      // console.log("Raw response:", responseText)
 
       let data
       try {
         data = JSON.parse(responseText)
-        console.log("Parsed response data:", data)
+        // console.log("Parsed response data:", data)
       } catch (parseError) {
         console.error("Error parsing JSON response:", parseError)
         throw new Error("Failed to parse API response")

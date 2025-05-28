@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, FC, JSX, SetStateAction, useEffect, useState } from "react";
 import CoursePlayer from "../../course-player";
 import BtnWithIcon from "@/components/btn-with-icon";
 import DotSpan from "@/components/dot-span";

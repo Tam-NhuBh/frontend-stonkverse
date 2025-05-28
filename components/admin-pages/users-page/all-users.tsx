@@ -7,7 +7,7 @@ import {
 } from "@/store/user/user-api";
 import { Box, Button, Modal } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import { AiOutlineDelete, AiOutlineMail } from "react-icons/ai";
 import DataTable from "../data-table";
 import { FaUsers } from "react-icons/fa";

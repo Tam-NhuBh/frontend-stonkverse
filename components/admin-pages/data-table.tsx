@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import LoadingSpinner from "../loading-spinner";
 import { useTheme } from "next-themes";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";

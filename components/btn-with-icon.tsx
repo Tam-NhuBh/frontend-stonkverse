@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FC, FormEvent } from "react";
+import { FC, FormEvent, JSX } from "react";
 import { IconType } from "react-icons";
 
 interface Props {

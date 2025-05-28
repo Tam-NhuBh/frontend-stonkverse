@@ -5,7 +5,7 @@ import InstructorSidebar from "@/components/instructor-page/layout/instructor-si
 import NoContentYet from "@/components/no-content-yet"
 import useIsInstructor from "@/hooks/useIsInstructor"
 import { useRouter } from "next/navigation"
-import { type FC, type ReactNode, useEffect, useState } from "react"
+import { type FC, JSX, type ReactNode, useEffect, useState } from "react"
 
 interface Props {
   children: ReactNode

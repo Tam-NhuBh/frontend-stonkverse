@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import { IFetchedCourse } from "../home-page/courses";
 import LoadingSpinner from "../loading-spinner";
 import useUserInfo from "@/hooks/useUserInfo";

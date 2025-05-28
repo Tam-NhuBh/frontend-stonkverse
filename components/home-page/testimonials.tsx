@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import VerticalTestimonialCard from "./vertical-testimonial-card";
 import HorizontalTestimonialCard from "./horizontal-testimonial-card";
 import TextTransition from "react-text-transition";

@@ -1,4 +1,4 @@
-import { FC, useState, useMemo } from "react";
+import { FC, useState, useMemo, JSX } from "react";
 import {
   Area,
   AreaChart,
@@ -21,35 +21,22 @@ const AnalyticsAreaChart: FC<Props> = ({
 }): JSX.Element => {
   const [selectedRange, setSelectedRange] = useState<number>(0);
 
-  // Debug logs
-  console.log("=== ANALYTICS CHART DEBUG ===");
-  console.log("Original data:", data);
-  console.log("Data length:", data?.length);
-  console.log("Selected range:", selectedRange);
-  console.log("Is Dashboard:", isDashboard);
-
   // Filter data
   const displayData = useMemo(() => {
-    console.log("Computing display data...");
     
     if (!data || data.length === 0) {
-      console.log("No data available");
       return [];
     }
     
     if (selectedRange === 0) {
-      console.log("Showing all data");
       return data;
     }
     
     const filtered = data.slice(-selectedRange);
-    console.log(`Showing last ${selectedRange} items:`, filtered);
     return filtered;
   }, [data, selectedRange]);
 
-  // Handle button click
   const handleRangeChange = (value: number) => {
-    console.log("Button clicked, changing to:", value);
     setSelectedRange(value);
   };
 

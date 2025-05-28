@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, JSX } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useTheme } from "next-themes";
 import { useGetAllOrdersQuery } from "@/store/order/order-api";

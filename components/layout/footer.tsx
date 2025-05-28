@@ -1,5 +1,5 @@
 import { footerCol1, footerCol4 } from "@/data/footer-items"
-import type { FC } from "react"
+import type { FC, JSX } from "react"
 import Link from "next/link"
 import MailForm from "./mail-form"
 import NextImage from "../next-image"

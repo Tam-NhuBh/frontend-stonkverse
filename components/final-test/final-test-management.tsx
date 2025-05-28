@@ -116,7 +116,7 @@ const FinalTestManagement: FC = () => {
         throw new Error("Test data not found")
       }
 
-      console.log("Extracted test data:", testData)
+      // console.log("Extracted test data:", testData)
 
       const finalTest: IFinalTest = {
         id: testData._id,
@@ -149,7 +149,7 @@ const FinalTestManagement: FC = () => {
         }
       }
 
-      console.log("Final processed data:", finalTest)
+      // console.log("Final processed data:", finalTest)
       setEditingTest(finalTest)
       setEditTestModal(true)
     } catch (err) {

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, JSX, useEffect, useState } from "react";
 import LoadingSpinner from "../loading-spinner";
 import useUserInfo from "@/hooks/useUserInfo";
 import { getCurrentUserProgress } from "@/lib/fetch-data";

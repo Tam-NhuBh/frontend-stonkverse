@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, JSX } from "react";
 import BtnWithIcon from "../btn-with-icon";
 import { BiSolidArrowToLeft, BiSolidArrowToRight } from "react-icons/bi";
 

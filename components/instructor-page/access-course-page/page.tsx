@@ -1,6 +1,6 @@
 "use client"
 
-import { type FC, useEffect, useState } from "react"
+import { type FC, JSX, useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { useParams } from "next/navigation"
 import CourseInfomationInstructor from "../create-course-page/course-infomation"

@@ -1,5 +1,5 @@
 import useUserInfo from "@/hooks/useUserInfo";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import NextImage from "./next-image";
 
 interface Props {

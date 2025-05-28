@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import { BiMoon, BiSun } from "react-icons/bi";
 
 interface Props {}

@@ -1,6 +1,6 @@
 import { getAllCategories } from "@/lib/fetch-data";
 import { Types } from "mongoose";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import CategoryCard from "./category-card";
 
 interface Props {}
@@ -13,7 +13,7 @@ export interface ICategory {
 
 const Categories: FC<Props> = async (props): Promise<JSX.Element> => {
   const categories = (await getAllCategories()) as ICategory[];
-  console.log("count cate api:", categories)
+  // console.log("count cate api:", categories)
 
   return (
     <section className="my-14">

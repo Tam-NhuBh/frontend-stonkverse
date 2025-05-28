@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, useEffect, useState } from "react"
+import { type FC, JSX, useEffect, useState } from "react"
 import { useEditCourseMutation, useGetSingleCourseAdminQuery } from "@/store/course/course-api"
 import toast from "react-hot-toast"
 import { redirect, useParams } from "next/navigation"

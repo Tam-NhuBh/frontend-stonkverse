@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, JSX, useState } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";

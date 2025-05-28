@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, JSX, SetStateAction } from "react";
 import { IoMdCheckmark } from "react-icons/io";
 
 interface Props {

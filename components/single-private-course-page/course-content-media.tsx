@@ -1,6 +1,6 @@
 "use client"
 
-import { type FC, useState, useEffect, type SetStateAction, type Dispatch } from "react"
+import { type FC, useState, useEffect, type SetStateAction, type Dispatch, JSX } from "react"
 import CoursePlayer from "../course-player"
 import CourseQuiz from "../course-quiz"
 import CourseLectureList from "./course-lecture-list"
@@ -66,13 +66,6 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
   const finalTestItem = finalTest && finalTest.length > 0 ? finalTest[0] : null;
   const [finalTestId, setFinalTestId] = useState<string>("")
   const [showFinalTestModal, setShowFinalTestModal] = useState(false)
-
-  // Debug logging
-  useEffect(() => {
-    console.log("finalTest in CourseContentMedia:", finalTest);
-    console.log("finalTestItem:", finalTestItem);
-    console.log("finalTestId:", finalTestId);
-  }, [finalTest]);
 
   useEffect(() => {
     window.scrollTo(0, 0)

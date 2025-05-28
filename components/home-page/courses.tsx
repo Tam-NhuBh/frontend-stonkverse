@@ -1,5 +1,5 @@
 import { getAllCoursesData} from "@/lib/fetch-data";
-import { FC } from "react";
+import { FC, JSX } from "react";
 import CourseCard from "../course-card";
 import { Types } from "mongoose";
 import { ICourse } from "@/types";

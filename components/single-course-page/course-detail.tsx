@@ -1,6 +1,6 @@
 "use client"
 
-import { type FC, useEffect, useState } from "react"
+import { type FC, JSX, useEffect, useState } from "react"
 import type { IFetchedCourse } from "../home-page/courses"
 import useUserInfo from "@/hooks/useUserInfo"
 import DotSpan from "../dot-span"
