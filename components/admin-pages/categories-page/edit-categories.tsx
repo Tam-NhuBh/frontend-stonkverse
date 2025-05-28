@@ -22,7 +22,7 @@ interface Props {
   register: UseFormRegister<CategoriesFormValues>;
   remove: UseFieldArrayRemove;
   append: UseFieldArrayAppend<CategoriesFormValues, "categories">;
-  handleSubmit: UseFormHandleSubmit<CategoriesFormValues, undefined>;
+  handleSubmit: UseFormHandleSubmit<CategoriesFormValues>;
   errors: FieldErrors<CategoriesFormValues>;
 }
 
