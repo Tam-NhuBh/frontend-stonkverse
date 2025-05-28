@@ -32,7 +32,7 @@ const AllInvoices: FC<Props> = ({ isDashboard }): JSX.Element => {
         const user = usersData?.users?.find(
           (user: any) => user._id === item.userId
         );
-          
+
         const course = coursesData?.courses.find(
           (course: any) => course._id === item.courseId
         );
@@ -62,29 +62,29 @@ const AllInvoices: FC<Props> = ({ isDashboard }): JSX.Element => {
     ...(isDashboard
       ? []
       : [
-          { field: "userEmail", headerName: "Email", flex: 1 },
-          { field: "title", headerName: "Course Title", flex: 1 },
-        ]),
+        { field: "userEmail", headerName: "Email", flex: 1 },
+        { field: "title", headerName: "Course Title", flex: 1 },
+      ]),
     { field: "price", headerName: "Price", flex: 0.5 },
     ...(isDashboard
       ? [{ field: "created_at", headerName: "Created At", flex: 0.5 }]
       : [
-          {
-            field: " ",
-            headerName: "Email",
-            flex: 0.2,
-            renderCell: (params: any) => {
-              return (
-                <a href={`mailto:${params.row.userEmail}`}>
-                  <AiOutlineMail
-                    className="dark:text-dark_text text-tertiary"
-                    size={20}
-                  />
-                </a>
-              );
-            },
+        {
+          field: " ",
+          headerName: "Email",
+          flex: 0.2,
+          renderCell: (params: any) => {
+            return (
+              <a href={`mailto:${params.row.userEmail}`}>
+                <AiOutlineMail
+                  className="dark:text-dark_text text-tertiary"
+                  size={20}
+                />
+              </a>
+            );
           },
-        ]),
+        },
+      ]),
   ];
 
   return (
@@ -164,6 +164,13 @@ const AllInvoices: FC<Props> = ({ isDashboard }): JSX.Element => {
             rows={ordersData}
             columns={columns}
             components={isDashboard ? {} : { Toolbar: GridToolbar }}
+            autoHeight
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 10 },
+              },
+            }}
+            pageSizeOptions={[5, 10, 25, 50, 100]}
           />
         </Box>
       )}
