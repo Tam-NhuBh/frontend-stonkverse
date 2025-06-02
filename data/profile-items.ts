@@ -17,10 +17,10 @@ export const profileItemsData: {
     icon: GiBookmark,
     title: "Enrolled Courses",
   },
-  {
-    icon: BiCalendarPlus,
-    title: "List of quizzes",
-  },
+  // {
+  //   icon: BiCalendarPlus,
+  //   title: "List of quizzes",
+  // },
   {
     icon: RiAdminLine,
     title: "Admin Dashboard",
