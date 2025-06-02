@@ -14,12 +14,12 @@ const UserCourses: FC<Props> = (props): JSX.Element => {
   const user = useUserInfo();
   const courseIds = user.courses.map((course: any) => course.courseId);
 
-  const fetchUserCourses = async () => {
-    setIsLoading(true);
-    const fetchedCourses = await getUserCoursesData(courseIds);
-    setCourses(fetchedCourses);
-    setIsLoading(false);
-  };
+const fetchUserCourses = async () => {
+  setIsLoading(true);
+  const fetchedCourses = await getUserCoursesData(courseIds);
+  setCourses(fetchedCourses);
+  setIsLoading(false);
+};
 
   useEffect(() => {
     fetchUserCourses();
@@ -34,7 +34,8 @@ const UserCourses: FC<Props> = (props): JSX.Element => {
           {courses?.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 max-[668px]:grid-cols-1 pb-12">
               {courses.map((course) => (
-                <CourseCard key={course._id.toString()} course={course} />
+                <CourseCard key={course._id.toString()} course={course} 
+                  showProgress={true} />
               ))}
             </div>
           ) : (

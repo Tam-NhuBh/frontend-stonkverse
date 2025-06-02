@@ -69,7 +69,7 @@ const ChatBotClient: React.FC = () => {
             </button>
             <div className="chatbot">
                 <header >
-                    <h2 className="text-xl font-bold">CHATBOT</h2>
+                    <h2 className="text-xl font-bold">INDEX TRACKING CHATBOT</h2>
                     <span className="close-btn" onClick={handleToggleChatbot}>
                         <FaTimes className="icon" />
                     </span>

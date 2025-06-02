@@ -161,7 +161,17 @@ export interface ICourse {
   finalTest: IFinalTest[];
   ratings?: number;
   purchased?: number;
+  isFinalTest?: boolean;
   status: 'APPROVED' | 'REJECTED' | 'PENDING_REVIEW';
+   percentAccount?: number;
+  progressDetails?: {
+    completedLessons: number;
+    totalLessons: number;
+    completedQuizzes: number;
+    totalQuizzes: number;
+    finalTestCompleted: boolean;
+    hasFinalTest: boolean;
+  };
 }
 
 export interface CourseInfoValuesInstructor {

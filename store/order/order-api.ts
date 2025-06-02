@@ -9,7 +9,14 @@ export const orderApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getBuyersForMyCourses: builder.query({
+      query: () => ({
+        url: "get-all-orders-instructor",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllOrdersQuery } = orderApi;
+export const { useGetAllOrdersQuery, useGetBuyersForMyCoursesQuery } = orderApi;
