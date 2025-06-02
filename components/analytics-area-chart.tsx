@@ -23,15 +23,14 @@ const AnalyticsAreaChart: FC<Props> = ({
 
   // Filter data
   const displayData = useMemo(() => {
-    
     if (!data || data.length === 0) {
       return [];
     }
-    
+
     if (selectedRange === 0) {
       return data;
     }
-    
+
     const filtered = data.slice(-selectedRange);
     return filtered;
   }, [data, selectedRange]);
@@ -42,55 +41,49 @@ const AnalyticsAreaChart: FC<Props> = ({
 
   return (
     <div
-      className={`${
-        isDashboard
-          ? "shadow-md border dark:border-none rounded-sm dark:bg-[#111C43] pb-5"
-          : "mt-[50px]"
-      }`}
-    >
-      <h1
-        className={`text-center font-bold text-2xl mb-4 ${
-          isDashboard && "py-4 text-lg font-semibold"
+      className={`${isDashboard
+        ? "shadow-md border dark:border-none rounded-sm dark:bg-[#111C43] pb-5"
+        : "mt-[50px]"
         }`}
-      >
-        {title}
-      </h1>
-
-      {!isDashboard && (
-        <>
-          {/* Test buttons - Very simple */}
-          <div className="flex justify-center gap-2 mb-4">
-            <button
-              onClick={() => handleRangeChange(0)}
-              className="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              All (Click me!)
-            </button>
-            <button
-              onClick={() => handleRangeChange(3)}
-              className="px-4 py-2 bg-green-500 text-white rounded"
-            >
-              Last 3
-            </button>
-            <button
-              onClick={() => handleRangeChange(6)}
-              className="px-4 py-2 bg-red-500 text-white rounded"
-            >
-              Last 6
-            </button>
-          </div>
-
-          <p className="text-center">
-            Selected: {selectedRange === 0 ? "All" : `Last ${selectedRange}`} | 
-            Showing {displayData.length} items
-          </p>
-        </>
-      )}
+    >
+      <div className={`${isDashboard ? "px-6 py-4" : "px-6"}`}>
+        <div className="flex items-center justify-between">
+          <h1
+            className={`font-bold ${
+              isDashboard ? "text-lg font-semibold" : "text-2xl"
+            }`}
+          >
+            {title}
+          </h1>
+          
+          <select
+            value={selectedRange}
+            onChange={(e) => handleRangeChange(Number(e.target.value))}
+            className={`px-4 py-2 border rounded-sm text-sm ${
+              isDashboard
+                ? "dark:bg-[#1a2555] dark:border-gray-600 dark:text-white"
+                : "bg-white border-gray-300"
+            }`}
+          >
+            <option value={0}>All months</option>
+            <option value={1}>Last 1 month</option>
+            <option value={2}>Last 2 months</option>
+            <option value={3}>Last 3 months</option>
+            <option value={4}>Last 4 months</option>
+            <option value={5}>Last 5 months</option>
+            <option value={6}>Last 6 months</option>
+            <option value={7}>Last 7 months</option>
+            <option value={8}>Last 8 months</option>
+            <option value={9}>Last 9 months</option>
+            <option value={10}>Last 10 months</option>
+            <option value={11}>Last 11 months</option>
+          </select>
+        </div>
+      </div>
 
       <div
-        className={`w-full ${
-          isDashboard ? "aspect-[3]" : "h-screen"
-        } flex items-center justify-center`}
+        className={`w-full ${isDashboard ? "aspect-[3]" : "h-screen"
+          } flex items-center justify-center`}
       >
         <ResponsiveContainer
           width={isDashboard ? "100%" : "90%"}

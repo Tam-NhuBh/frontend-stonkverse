@@ -19,7 +19,7 @@ export const profileItemsData: {
   },
   {
     icon: BiCalendarPlus,
-    title: "My Learning Progress",
+    title: "List of quizzes",
   },
   {
     icon: RiAdminLine,

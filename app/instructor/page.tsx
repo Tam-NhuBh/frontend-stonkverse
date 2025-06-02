@@ -17,13 +17,10 @@ const InstructorPage: NextPage<Props> = () => {
   return (
     <InstructorProtectedPage>
       <Heading
-        // title="Instructor Dashboard"
-        title="Overview learner"
+        title="Instructor Dashboard"
+      />
 
-/>
-      <CourseUsers />
-
-      {/* <DashboardComp isDashboard /> */}
+      <DashboardComp isDashboard />
     </InstructorProtectedPage>
   );
 };

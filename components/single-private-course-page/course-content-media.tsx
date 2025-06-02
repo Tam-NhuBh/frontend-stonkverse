@@ -83,7 +83,6 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
     setCurrentVideoHasQuiz(courseData?.[activeVideo]?.quiz?.length > 0)
   }, [activeVideo, courseData])
 
-  // Fetch all quiz completion status
   useEffect(() => {
     const fetchAllQuizCompletionStatuses = async () => {
       if (!courseData || courseData.length === 0) return
@@ -92,7 +91,6 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
         const newQuizCompletedState = [...quizCompleted]
         let changesMade = false
 
-        //Loop through each video to check if quiz has
         for (let i = 0; i < courseData.length; i++) {
           if (courseData[i]?.quiz?.length > 0) {
             const answers = await getAnswersQuiz(courseData[i]._id.toString())
@@ -155,16 +153,6 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
     }
   }
 
-    const handleFinalTestComplete = (passed: boolean) => {
-    // Refetch courses data to update completion status
-    refetch();
-    
-    // You could navigate or show additional UI based on the result
-    if (passed) {
-      toast.success("Congratulations! You've completed the course!");
-    }
-  };
-
   const handleTakeQuiz = () => {
     const quizId = courseData?.[activeVideo]?.quiz[0]?._id.toString()
     if (quizId) {
@@ -181,35 +169,35 @@ const CourseContentMedia: FC<Props> = ({ courseId, courseData, finalTest, active
     }
   }
 
-  const handleNextVideo = async () => {
-    if (currentVideoHasQuiz && !quizCompleted[activeVideo]) {
-      const quizId = courseData?.[activeVideo]?.quiz[0]?._id.toString()
-      if (quizId) {
-        setCurrentQuizId(quizId)
-        setShowQuizModal(true)
-        setNextVideoTriggered(true)
-      }
-    } else {
-      try {
-        await updateLessonCompletion({ courseId, courseDataId: courseData?.[activeVideo]?._id.toString() })
-        setCompletedVideos((prev) => {
-          if (prev.includes(courseData?.[activeVideo]?._id.toString())) {
-            return prev
-          }
-          return [...prev, courseData?.[activeVideo]?._id.toString()]
-        })
-        setActiveVideo((prevIndex) => Math.min(prevIndex + 1, courseData?.length - 1))
-      } catch (error) {
-        toast.error("An error occurred while updating lesson completion")
-      }
+const handleNextVideo = async () => {
+  if (currentVideoHasQuiz && !quizCompleted[activeVideo]) {
+    const quizId = courseData?.[activeVideo]?.quiz[0]?._id.toString()
+    if (quizId) {
+      setCurrentQuizId(quizId)
+      setShowQuizModal(true)
+      setNextVideoTriggered(true)
+    }
+  } else {
+    try {
+      await updateLessonCompletion({ courseId, courseDataId: courseData?.[activeVideo]?._id.toString() })
+      setCompletedVideos((prev) => {
+        if (prev.includes(courseData?.[activeVideo]?._id.toString())) {
+          return prev
+        }
+        return [...prev, courseData?.[activeVideo]?._id.toString()]
+      })
+      setActiveVideo((prevIndex) => Math.min(prevIndex + 1, courseData?.length - 1))
+    } catch (error) {
+      toast.error("An error occurred while updating lesson completion")
     }
   }
+}
 
-  const handleBackVideo = () => {
-    if (activeVideo > 0) {
-      setActiveVideo((prevIndex) => Math.max(prevIndex - 1, 0))
-    }
+const handleBackVideo = () => {
+  if (activeVideo > 0) {
+    setActiveVideo((prevIndex) => Math.max(prevIndex - 1, 0))
   }
+}
 
   const handleQuizSubmit = async () => {
     try {

@@ -68,7 +68,6 @@ export const getUserCoursesData = async (courseIds: string[]) => {
   }
 };
 
-
 export const getCoursesByQuery = async (query: string) => {
   try {
     const { data } = await axios(
